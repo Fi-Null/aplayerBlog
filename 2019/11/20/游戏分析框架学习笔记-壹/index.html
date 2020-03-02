@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":300,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="游戏学的常用框架MDA M：Mechanics，机制——数据层面上的组件与算法。D：Dynamics ，动态——对输入输出的实时响应。A：Aethetics，美学——交互唤起的情绪反应。  需要注意的是，由于游戏机制上的一点点变化就会在动态上引发动态上的大变化，进而在美学上引发巨大变化，因此游戏机制的调整是应该慎之又慎的。   对于设计者，首先应该敲定想要玩家体会到的美学，据此来创造动态和机制。">
+<meta name="keywords" content="游戏,笔记,游戏学">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏分析框架学习笔记 壹">
+<meta property="og:url" content="https:&#x2F;&#x2F;hakurei.red&#x2F;2019&#x2F;11&#x2F;20&#x2F;%E6%B8%B8%E6%88%8F%E5%88%86%E6%9E%90%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A3%B9&#x2F;index.html">
+<meta property="og:site_name" content="博丽吹笛分社 | Macyrate">
+<meta property="og:description" content="游戏学的常用框架MDA M：Mechanics，机制——数据层面上的组件与算法。D：Dynamics ，动态——对输入输出的实时响应。A：Aethetics，美学——交互唤起的情绪反应。  需要注意的是，由于游戏机制上的一点点变化就会在动态上引发动态上的大变化，进而在美学上引发巨大变化，因此游戏机制的调整是应该慎之又慎的。   对于设计者，首先应该敲定想要玩家体会到的美学，据此来创造动态和机制。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-02T14:54:43.640Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://hakurei.red/2019/11/20/%E6%B8%B8%E6%88%8F%E5%88%86%E6%9E%90%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A3%B9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>游戏分析框架学习笔记 壹 | 博丽吹笛分社 | Macyrate</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta custom-logo">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span> 
+        <img src="/images/custom-logo-ei.png" > 
+        </span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    <!--
+      <a>
+        <img class="custom-logo-image" src="/images/custom-logo-ei.png" alt="博丽吹笛分社 | Macyrate">
+      </a>
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hakurei.red/2019/11/20/%E6%B8%B8%E6%88%8F%E5%88%86%E6%9E%90%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A3%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+      <meta itemprop="name" content="Macyrate">
+      <meta itemprop="description" content="&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博丽吹笛分社 | Macyrate">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          游戏分析框架学习笔记 壹
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-20 10:25:17" itemprop="dateCreated datePublished" datetime="2019-11-20T10:25:17+08:00">2019-11-20</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="游戏学的常用框架"><a href="#游戏学的常用框架" class="headerlink" title="游戏学的常用框架"></a>游戏学的常用框架</h1><h2 id="MDA"><a href="#MDA" class="headerlink" title="MDA"></a>MDA</h2><blockquote>
+<p>M：Mechanics，机制——数据层面上的组件与算法。<br>D：Dynamics ，动态——对输入输出的实时响应。<br>A：Aethetics，美学——交互唤起的情绪反应。</p>
+</blockquote>
+<p>需要注意的是，由于游戏机制上的一点点变化就会在动态上引发动态上的大变化，进而在美学上引发巨大变化，因此游戏机制的调整是应该慎之又慎的。  </p>
+<p>对于设计者，<strong>首先应该敲定想要玩家体会到的美学，据此来创造动态和机制。</strong> 怎样的动态能展现这样的美学？怎样的机制能产生这样的动态？</p>
+<p>而对于玩家，首先接触到的是机制，即游戏的规则，由此产生动态，在动态中体会到设计者预想的美学。</p>
+<a id="more"></a>
+
+<h2 id="形式、戏剧和动态元素"><a href="#形式、戏剧和动态元素" class="headerlink" title="形式、戏剧和动态元素"></a>形式、戏剧和动态元素</h2><blockquote>
+<p>形式：与媒体和互动无关的游戏的骨架，包括规则、资源和界限。<br>戏剧：剧情、叙事、设定。这使得游戏成型，使玩家理解规则，产生共鸣。<br>动态：游戏运行的状态，包括决策、行为、游戏实体间的联系。这里的动态范畴比MDA中的更大。</p>
+</blockquote>
+<h3 id="形式元素"><a href="#形式元素" class="headerlink" title="形式元素"></a>形式元素</h3><p>形式元素是不可或缺的部分，如果移除了若干形式元素，可能就无法被称得上是游戏。</p>
+<p>形式元素有以下几种：</p>
+<ul>
+<li>玩家交互模式：单人？团队？乱斗？合作？……</li>
+<li>目标：目的是什么？如何获取胜利？</li>
+<li>规则：玩家能做些什么？</li>
+<li>过程：在规则之下玩家做了什么？</li>
+<li>资源：哪些东西是有价值的？</li>
+<li>边界：游戏与现实的界限在哪里？</li>
+<li>结局：游戏如何结束？</li>
+</ul>
+<h3 id="戏剧元素"><a href="#戏剧元素" class="headerlink" title="戏剧元素"></a>戏剧元素</h3><ul>
+<li>前提：游戏世界的背景故事。</li>
+<li>角色：故事中的人物。是角色为玩家代言？还是玩家遵从角色意志？</li>
+<li>戏剧：游戏的情节，包含所有的叙事。</li>
+</ul>
+<h3 id="动态元素"><a href="#动态元素" class="headerlink" title="动态元素"></a>动态元素</h3><ul>
+<li>涌现：简单的规则带来动态的游戏体验。要充分理解规则的内涵。</li>
+<li>涌现叙事：玩法本身可能催生动态的叙事。</li>
+<li>试玩：多多试玩才能理解游戏的动态运行。</li>
+</ul>
+<h2 id="四元法"><a href="#四元法" class="headerlink" title="四元法"></a>四元法</h2><h3 id="机制"><a href="#机制" class="headerlink" title="机制"></a>机制</h3><p>四元法中的“机制”不同于MDA所说的机制，它指的基本上是上文提到的“形式元素”。</p>
+<h3 id="美学"><a href="#美学" class="headerlink" title="美学"></a>美学</h3><p>四元法的“美学”是能被五感直接感受到的艺术部分，这一点也与MDA中的美学不同（后者指的是游戏触动的情绪）。这是四元中最为明显的一个。</p>
+<h3 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h3><p>游戏使用的所有技术都包含于此——硬件、软件、渲染管线等等。桌面游戏的骰子、卡组、表格等等按照四元法角度也算在技术之中，而不是机制。这是四元中最隐蔽的一个。</p>
+<h3 id="剧情"><a href="#剧情" class="headerlink" title="剧情"></a>剧情</h3><p>四元法的剧情即是上文提到的“动态元素”。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>看到这里，我几乎是一脸懵逼，这三种分析方法都让我感到各有道理却又混乱不堪。尤其是四元法，初看总觉得哪里不太对？</p>
+<p>但是实际上，这就是把一个游戏拆分成几个职位各自的负责部分——分属于设计师，艺术家，程序员和编剧。</p>
+<p>最后我看到一句话：</p>
+<blockquote>
+<p>分层四元法结合并扩展了上述的所有框架。</p>
+</blockquote>
+<p><strong>所以既然这么好用，为什么不早点说！！</strong></p>
+<h1 id="分层四元法"><a href="#分层四元法" class="headerlink" title="分层四元法"></a>分层四元法</h1><p>分层四元法分为三层——内嵌层、动态层和文化层。每一层都由上面四元法的四种元素构成。但我们把“剧情”改称为“叙事”，这一概念更加广泛，可以涵盖背景、角色、情节。</p>
+<p>我的理解是，内嵌层上思考的重点是“游戏应该是怎样的？”；动态层上则是“玩家会怎样进行游戏？”；文化层上是“游戏能否具有某种现实意义？”。</p>
+<blockquote>
+<p>至于分层四元法的详细阐释与分析，明天再写吧。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.png" alt="Macyrate wechat" style="width: 200px; max-width: 100%;">
+  <div>唯一指定微信</div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%B8%E6%88%8F/" rel="tag"># 游戏</a>
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%AD%A6/" rel="tag"># 游戏学</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/18/Unity%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E8%B4%B0/" rel="next" title="Unity脚本开发学习笔记 贰">
+                  <i class="fa fa-chevron-left"></i> Unity脚本开发学习笔记 贰
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/21/%E6%94%B6%E9%9B%86%E4%B8%9C%E6%96%B9Alphes%E9%A3%8E%E7%AB%8B%E7%BB%98%E7%B4%A0%E6%9D%90/" rel="prev" title="收集东方Alphes风立绘素材">
+                  收集东方Alphes风立绘素材 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#游戏学的常用框架"><span class="nav-number">1.</span> <span class="nav-text">游戏学的常用框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MDA"><span class="nav-number">1.1.</span> <span class="nav-text">MDA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#形式、戏剧和动态元素"><span class="nav-number">1.2.</span> <span class="nav-text">形式、戏剧和动态元素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#形式元素"><span class="nav-number">1.2.1.</span> <span class="nav-text">形式元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#戏剧元素"><span class="nav-number">1.2.2.</span> <span class="nav-text">戏剧元素</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态元素"><span class="nav-number">1.2.3.</span> <span class="nav-text">动态元素</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四元法"><span class="nav-number">1.3.</span> <span class="nav-text">四元法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#机制"><span class="nav-number">1.3.1.</span> <span class="nav-text">机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#美学"><span class="nav-number">1.3.2.</span> <span class="nav-text">美学</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术"><span class="nav-number">1.3.3.</span> <span class="nav-text">技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#剧情"><span class="nav-number">1.3.4.</span> <span class="nav-text">剧情</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">1.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分层四元法"><span class="nav-number">2.</span> <span class="nav-text">分层四元法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Macyrate"
+    src="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+  <p class="site-author-name" itemprop="name">Macyrate</p>
+  <div class="site-description" itemprop="description">&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Macyrate" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;Macyrate" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:macyrate@foxmail.com" title="E-Mail &amp;rarr; mailto:macyrate@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/6010944415" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;6010944415" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.viseator.com/" title="https:&#x2F;&#x2F;www.viseator.com&#x2F;" rel="noopener" target="_blank">viseator</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.llgzone.com/" title="https:&#x2F;&#x2F;blog.llgzone.com&#x2F;" rel="noopener" target="_blank">Lean</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://jushen.xyz/" title="http:&#x2F;&#x2F;jushen.xyz&#x2F;" rel="noopener" target="_blank">JuShen巨神</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://touhoudog.net/" title="http:&#x2F;&#x2F;touhoudog.net&#x2F;" rel="noopener" target="_blank">充满魔力的土地下</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://kourindou.exblog.jp/" title="https:&#x2F;&#x2F;kourindou.exblog.jp&#x2F;" rel="noopener" target="_blank">博麗幻想書譜</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Macyrate & Hakurei Reimu</span>
+</div>
+  <div class="powered-by">由 <a href="https://thwiki.cc/%E5%8D%9A%E4%B8%BD%E7%81%B5%E6%A2%A6/%E4%B8%80%E8%AE%BE%E8%B5%84%E6%96%99" class="theme-link" rel="noopener" target="_blank">博麗大結界</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+<script src="/js/next-boot.js?v=7.4.1"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'Macyrate.github.io',
+      owner: 'macyrate',
+      admin: ['macyrate'],
+      id: '956ce2ca75af1125dd08309bcc2c40d3',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="2465890057" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.55" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>

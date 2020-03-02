@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":300,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="迭代设计游戏设计由1%的灵感和99%的重复组成。 分析-&amp;gt;设计-&amp;gt;实现-&amp;gt;测试-&amp;gt;分析…… 这就是迭代设计的流程。 分析面向的玩家群体？ 这决定了游戏里应该有哪些要素。无论，做这个游戏的目的是毕业设计，面向的群体就是评审老师我自己了。如果能有些弹幕爱好者玩就更好了。 这么一想，应该像STG一样有多难度级别，还要有计分系统给人刷。但是我向来都不在意分数。或者像《东方梦想曲》那">
+<meta name="keywords" content="游戏,笔记,游戏学">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏设计理论学习笔记 壹">
+<meta property="og:url" content="https:&#x2F;&#x2F;hakurei.red&#x2F;2019&#x2F;11&#x2F;24&#x2F;%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A3%B9&#x2F;index.html">
+<meta property="og:site_name" content="博丽吹笛分社 | Macyrate">
+<meta property="og:description" content="迭代设计游戏设计由1%的灵感和99%的重复组成。 分析-&amp;gt;设计-&amp;gt;实现-&amp;gt;测试-&amp;gt;分析…… 这就是迭代设计的流程。 分析面向的玩家群体？ 这决定了游戏里应该有哪些要素。无论，做这个游戏的目的是毕业设计，面向的群体就是评审老师我自己了。如果能有些弹幕爱好者玩就更好了。 这么一想，应该像STG一样有多难度级别，还要有计分系统给人刷。但是我向来都不在意分数。或者像《东方梦想曲》那">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;XEby5FwUW4Bs2QK.jpg">
+<meta property="og:updated_time" content="2020-03-02T14:54:43.641Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;XEby5FwUW4Bs2QK.jpg">
+  <link rel="canonical" href="https://hakurei.red/2019/11/24/%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A3%B9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>游戏设计理论学习笔记 壹 | 博丽吹笛分社 | Macyrate</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta custom-logo">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span> 
+        <img src="/images/custom-logo-ei.png" > 
+        </span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    <!--
+      <a>
+        <img class="custom-logo-image" src="/images/custom-logo-ei.png" alt="博丽吹笛分社 | Macyrate">
+      </a>
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hakurei.red/2019/11/24/%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1%E7%90%86%E8%AE%BA%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A3%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+      <meta itemprop="name" content="Macyrate">
+      <meta itemprop="description" content="&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博丽吹笛分社 | Macyrate">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          游戏设计理论学习笔记 壹
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-24 14:04:11" itemprop="dateCreated datePublished" datetime="2019-11-24T14:04:11+08:00">2019-11-24</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="迭代设计"><a href="#迭代设计" class="headerlink" title="迭代设计"></a>迭代设计</h1><p><strong>游戏设计由1%的灵感和99%的重复组成。</strong></p>
+<p>分析-&gt;设计-&gt;实现-&gt;测试-&gt;分析……</p>
+<p>这就是迭代设计的流程。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p><strong>面向的玩家群体？</strong> 这决定了游戏里应该有哪些要素。无论，做这个游戏的目的是毕业设计，面向的群体就是<del>评审老师</del>我自己了。如果能有些弹幕爱好者玩就更好了。</p>
+<p>这么一想，应该像STG一样有多难度级别，还要有计分系统给人刷。但是我向来都不在意分数。或者像《东方梦想曲》那样做得极难但不限重试次数，这就很亲民——其实更符合的应该是绀珠传。</p>
+<p><strong>我有什么资源？</strong> 当然，只有我自己的一百天左右时间，以及网络上配布的相关素材。</p>
+<p><strong>现有技术有什么？</strong> 现有技术指与要设计的作品相关联的<strong>现存游戏及其他媒介</strong>。对我来讲，具体的是Unity引擎，东方Project的大量官方以及同人游戏。同人游戏中可以着重参考的是登陆steam的几部作品，《东方红辉心》、《永远消失的幻想乡》、《东方华彩乱战》。还有些不属于东方但类型相似的游戏，比如《Enter the Gungeon》和其模仿者《元气骑士》等。</p>
+<p><strong>如何尽快制作原型？</strong> 高效利用时间，优先开发<strong>核心机制</strong>并进行测试。美工、音乐等外观要素可以在后期进行处理。</p>
+<p>设计、实现和测试，此处不必多讲。</p>
+<a id="more"></a>
+
+<h1 id="创新：头脑风暴"><a href="#创新：头脑风暴" class="headerlink" title="创新：头脑风暴"></a>创新：头脑风暴</h1><blockquote>
+<p>尽可能的多想点子，再扔掉那些不好的。</p>
+</blockquote>
+<ol>
+<li>拓展阶段，围绕一个主题，任意联想发散。</li>
+<li>收集阶段，将所有的想法依次写到卡片上。</li>
+<li>碰撞阶段，任取两张卡片用来思考。</li>
+<li>评分阶段，筛选出一些最好的点子。</li>
+</ol>
+<h1 id="开发阶段"><a href="#开发阶段" class="headerlink" title="开发阶段"></a>开发阶段</h1><p>设计与开发是非常曲折的过程。几乎没可能在不对原本想法进行任何变化的情况下直接实现成品，而是一个初始原型激发更多灵感，促使制作出第二个原型，然后逐步演化为一部优秀的作品。</p>
+<p>标准的游戏开发分为以下阶段：</p>
+<ol>
+<li>制作前：试验不同原型，最终制作出一个简短但能表现预期成品的整体样貌的Demo。</li>
+<li>制作：及早确定游戏机制等系统设计，然后是关卡设计、美学要素等。以Demo为核心作出相应的高完成度内容。</li>
+<li>内部测试：系统设计已经100%确定，针对测试中出现的问题和Bug进行修改。</li>
+<li>Beta测试：作品基本完成，只对找出的余下Bug进行修复，而不作出任何更改。</li>
+<li>黄金阶段：CD-ROM时代，压制盘碟的母盘是黄金制的。这个阶段代表游戏已经完全可以发布。</li>
+<li>发售后：修改、调整、开发DLC……</li>
+</ol>
+<p><strong>过多的内容是游戏项目的第一杀手！</strong> 裁剪！裁剪！裁剪！</p>
+<h1 id="以玩家为中心的目标"><a href="#以玩家为中心的目标" class="headerlink" title="以玩家为中心的目标"></a>以玩家为中心的目标</h1><h2 id="趣味性"><a href="#趣味性" class="headerlink" title="趣味性"></a>趣味性</h2><p>游戏的趣味性由<strong>乐趣性、吸引力和满足感</strong>组成。</p>
+<p>乐趣性是让人愉快的要素，包括竞争、赌博（概率性）、感知与模仿。</p>
+<p>吸引力是抓住玩家注意力，使玩家沉浸的要素。</p>
+<p>满足感是指作品的游玩过程需要满足玩家的一些愿望。</p>
+<h2 id="游戏性态度"><a href="#游戏性态度" class="headerlink" title="游戏性态度"></a>游戏性态度</h2><p>游戏性态度是指<strong>玩家愿意全身心投入到游戏中去的态度</strong>。只有玩家愿意全身心投入，才会保持良好的心态并遵守规则。从这个角度，应该注重<strong>尊重玩家而非利用他们</strong>。</p>
+<h2 id="心流"><a href="#心流" class="headerlink" title="心流"></a>心流</h2><p>对于玩家的能力，如果游戏难度一直太高，会导致挫败感；难度一直太低，就会无聊。</p>
+<p>需要让玩家感受到游戏的难度和<strong>获胜的机会</strong>。具有一定的挑战性让玩家刚刚好能够不断进步，并且要有明确的最优目标，让玩家的每次进步立刻能得到反馈（进步会让玩家更靠近最优目标，从而感受到自身的进步）。</p>
+<p>在这种<strong>挑战——提高——反馈——新一轮挑战</strong>的循环波动中，玩家能集中投入，进入“心流”，带来难以忘怀的体验。要注意的是，虽然心流是非常理想的状态，但其<strong>难以持续15-20分钟以上</strong>。因此，更好的做法是间断性地营造心流，其他时间可以降低些许难度，让玩家感受自己能力的提升与强大。这也许就是为什么高难度的BOSS战之后往往安排简单的关卡。</p>
+<h2 id="冲突对抗"><a href="#冲突对抗" class="headerlink" title="冲突对抗"></a>冲突对抗</h2><p>冲突是玩家的需求之一。可以是玩家之间的竞争，也可以是玩家与游戏系统之间的对抗。</p>
+<h2 id="力量感"><a href="#力量感" class="headerlink" title="力量感"></a>力量感</h2><p>拥有内在动力（即自己设立目标的自由）的时候，玩家可以在心流中获得更大的愉悦。可以给玩家选择的机会，并且用多变的游戏机制让选择的多样性成为可能，这是具有一定自由度的游戏设计。</p>
+<p>给玩家提供“表演”的权力，也是力量感的体现。</p>
+<h2 id="关注和投入"><a href="#关注和投入" class="headerlink" title="关注和投入"></a>关注和投入</h2><p>这个部分的原则和戏剧的三幕结构是基本吻合的。一个良好的兴趣曲线应该是以下的形式：</p>
+<p><img src="https://i.loli.net/2020/01/12/XEby5FwUW4Bs2QK.jpg" alt="兴趣曲线"></p>
+<p>大型的游戏里设立结构性的任务，任务本身具有相应的兴趣曲线，并且从整个游戏的视野看也有相似的兴趣曲线，这就是理想的设计。</p>
+<p><strong>这里试按照此兴趣曲线分析东方STG正作：</strong></p>
+<p><strong>对于单独的一面</strong>，B是关卡开始而尚没有报关卡名的那一段，许多时候在这里会安排一些代表性的敌人来揭示这一关的主要内容，如辉针城4面开头的的阴阳玉☯激光中玉自机狙+大蝴蝶🦋竖直米弹，这一段简直紧张至极；还有永夜抄五面、六面开头突然蹦出的兔子🐇，会把四处乱飞的玩家打个措手不及。</p>
+<p>接下来是C，短暂休息，出现关卡标题、BGM名称，音乐与场景随之进入正题，关卡正式开始。D是道中前半段，一般较有规律，稳扎稳打。随即进入E，道中BOSS出现。之后的F是道中后半段，可能较为混乱，也比较困难。最后短暂清空，到达G的关底BOSS处，开始激烈的符卡对决。</p>
+<p><strong>从全盘来看</strong>，不包括Extra关卡的话，一面到六面则正好对应这里的B~G。虽然“自古三面出神曲”，但是二三面其实都没有在游戏的主题核心上更进一步，而是到了四面才真正进入主题。红魔乡、地灵殿四面进入馆中；绀珠传四面抵达月球；风神录里甚至到了四面关底才得知守矢神社的存在。因此除终盘外兴趣最高的一面是四面也就很显然了。</p>
+<blockquote>
+<p>嗯，这是设计剧情的良好参考。</p>
+</blockquote>
+<h2 id="令人感兴趣的决定"><a href="#令人感兴趣的决定" class="headerlink" title="令人感兴趣的决定"></a>令人感兴趣的决定</h2><blockquote>
+<p>游戏应该是一系列有意义的决定组成的。<br>—— Sid Meier</p>
+</blockquote>
+<p>怎样的决定是“有意义的”？以下是设计选项的一些原则。</p>
+<ol>
+<li><strong>辨别性。</strong> 系统要能领会玩家的意图。</li>
+<li><strong>完整性。</strong> 玩家认为自己的决定能够造成长期影响。</li>
+<li><strong>含糊不清。</strong> 玩家并不能完全确定决定造成的影响，只能作出猜想。</li>
+<li><strong>清晰。</strong> 这与上一条并不冲突，清晰指的是选项表达的意思应该清晰明白，让玩家能凭直觉感受到选择可能带来的结果。</li>
+<li><strong>双重效果。</strong> 决定带来的结果有积极的一面，也有消极的一面。</li>
+<li><strong>新颖。</strong> 如果选项与玩家最近做出的决定有很大不同，那么选择就是新颖的。新颖的选择更能够吸引玩家的注意。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.png" alt="Macyrate wechat" style="width: 200px; max-width: 100%;">
+  <div>唯一指定微信</div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B8%B8%E6%88%8F/" rel="tag"># 游戏</a>
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F%E5%AD%A6/" rel="tag"># 游戏学</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/23/%E5%85%B3%E4%BA%8E%E2%80%9C%E6%B6%8C%E7%8E%B0%E2%80%9D%E7%9A%84%E6%80%9D%E8%80%83/" rel="next" title="关于“涌现”的思考">
+                  <i class="fa fa-chevron-left"></i> 关于“涌现”的思考
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/25/%E4%B8%BAHexo%E5%8D%9A%E5%AE%A2%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80APlayer%E6%92%AD%E6%94%BE%E5%99%A8/" rel="prev" title="为Hexo博客添加全局APlayer播放器">
+                  为Hexo博客添加全局APlayer播放器 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#迭代设计"><span class="nav-number">1.</span> <span class="nav-text">迭代设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">1.1.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创新：头脑风暴"><span class="nav-number">2.</span> <span class="nav-text">创新：头脑风暴</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开发阶段"><span class="nav-number">3.</span> <span class="nav-text">开发阶段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#以玩家为中心的目标"><span class="nav-number">4.</span> <span class="nav-text">以玩家为中心的目标</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#趣味性"><span class="nav-number">4.1.</span> <span class="nav-text">趣味性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#游戏性态度"><span class="nav-number">4.2.</span> <span class="nav-text">游戏性态度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#心流"><span class="nav-number">4.3.</span> <span class="nav-text">心流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#冲突对抗"><span class="nav-number">4.4.</span> <span class="nav-text">冲突对抗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#力量感"><span class="nav-number">4.5.</span> <span class="nav-text">力量感</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关注和投入"><span class="nav-number">4.6.</span> <span class="nav-text">关注和投入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#令人感兴趣的决定"><span class="nav-number">4.7.</span> <span class="nav-text">令人感兴趣的决定</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Macyrate"
+    src="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+  <p class="site-author-name" itemprop="name">Macyrate</p>
+  <div class="site-description" itemprop="description">&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Macyrate" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;Macyrate" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:macyrate@foxmail.com" title="E-Mail &amp;rarr; mailto:macyrate@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/6010944415" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;6010944415" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.viseator.com/" title="https:&#x2F;&#x2F;www.viseator.com&#x2F;" rel="noopener" target="_blank">viseator</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.llgzone.com/" title="https:&#x2F;&#x2F;blog.llgzone.com&#x2F;" rel="noopener" target="_blank">Lean</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://jushen.xyz/" title="http:&#x2F;&#x2F;jushen.xyz&#x2F;" rel="noopener" target="_blank">JuShen巨神</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://touhoudog.net/" title="http:&#x2F;&#x2F;touhoudog.net&#x2F;" rel="noopener" target="_blank">充满魔力的土地下</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://kourindou.exblog.jp/" title="https:&#x2F;&#x2F;kourindou.exblog.jp&#x2F;" rel="noopener" target="_blank">博麗幻想書譜</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Macyrate & Hakurei Reimu</span>
+</div>
+  <div class="powered-by">由 <a href="https://thwiki.cc/%E5%8D%9A%E4%B8%BD%E7%81%B5%E6%A2%A6/%E4%B8%80%E8%AE%BE%E8%B5%84%E6%96%99" class="theme-link" rel="noopener" target="_blank">博麗大結界</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+<script src="/js/next-boot.js?v=7.4.1"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'Macyrate.github.io',
+      owner: 'macyrate',
+      admin: ['macyrate'],
+      id: '0c76de72789cb4c2100d5bc60310ffe0',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="2465890057" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.55" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>

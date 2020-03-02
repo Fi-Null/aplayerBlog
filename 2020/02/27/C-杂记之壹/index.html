@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":300,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="此前虽然接触过C#中的一些较为高级的操作，但基本是只知其有，不知在哪些场景下可以应用。这几天写着代码就顿觉冗杂不堪，虽然能跑但看起来十分难受，希望寻求一些函数式编程之类的魔法来简化流程。 那首先要理解的还是委托和事件。虽然学完了也不一定会用，但看懂一点总是好的。 委托定义如之前所说，委托类似于函数指针。或者说，委托是一种存储函数引用的类型。由于函数的参数须是变量&#x2F;常量&#x2F;表达式，只要把函数变成一种引">
+<meta name="keywords" content="笔记,C Sharp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C#杂记之壹：委托与事件">
+<meta property="og:url" content="https:&#x2F;&#x2F;hakurei.red&#x2F;2020&#x2F;02&#x2F;27&#x2F;C-%E6%9D%82%E8%AE%B0%E4%B9%8B%E5%A3%B9&#x2F;index.html">
+<meta property="og:site_name" content="博丽吹笛分社 | Macyrate">
+<meta property="og:description" content="此前虽然接触过C#中的一些较为高级的操作，但基本是只知其有，不知在哪些场景下可以应用。这几天写着代码就顿觉冗杂不堪，虽然能跑但看起来十分难受，希望寻求一些函数式编程之类的魔法来简化流程。 那首先要理解的还是委托和事件。虽然学完了也不一定会用，但看懂一点总是好的。 委托定义如之前所说，委托类似于函数指针。或者说，委托是一种存储函数引用的类型。由于函数的参数须是变量&#x2F;常量&#x2F;表达式，只要把函数变成一种引">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;27&#x2F;xVONQiE1hJIrWf2.jpg">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;27&#x2F;yb6g3GTIoA1rB4R.jpg">
+<meta property="og:updated_time" content="2020-03-02T14:54:43.645Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;02&#x2F;27&#x2F;xVONQiE1hJIrWf2.jpg">
+  <link rel="canonical" href="https://hakurei.red/2020/02/27/C-%E6%9D%82%E8%AE%B0%E4%B9%8B%E5%A3%B9/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>C#杂记之壹：委托与事件 | 博丽吹笛分社 | Macyrate</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta custom-logo">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span> 
+        <img src="/images/custom-logo-ei.png" > 
+        </span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    <!--
+      <a>
+        <img class="custom-logo-image" src="/images/custom-logo-ei.png" alt="博丽吹笛分社 | Macyrate">
+      </a>
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hakurei.red/2020/02/27/C-%E6%9D%82%E8%AE%B0%E4%B9%8B%E5%A3%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+      <meta itemprop="name" content="Macyrate">
+      <meta itemprop="description" content="&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博丽吹笛分社 | Macyrate">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          C#杂记之壹：委托与事件
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-27 12:25:36" itemprop="dateCreated datePublished" datetime="2020-02-27T12:25:36+08:00">2020-02-27</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>此前虽然接触过C#中的一些较为高级的操作，但基本是只知其有，不知在哪些场景下可以应用。这几天写着代码就顿觉冗杂不堪，虽然能跑但看起来十分难受，希望寻求一些函数式编程之类的魔法来简化流程。</p>
+<p>那首先要理解的还是委托和事件。虽然学完了也不一定会用，但看懂一点总是好的。</p>
+<h1 id="委托"><a href="#委托" class="headerlink" title="委托"></a>委托</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>如之前所说，委托类似于函数指针。或者说，委托是一种存储函数引用的<strong>类型</strong>。由于函数的参数须是变量/常量/表达式，只要把函数变成一种引用类型的变量，就可以让一个函数作为其它函数的参数了。同样，也可以通过直接调用委托变量来调用委托变量所引用的函数。</p>
+<p>为什么要把<strong>类型</strong>加粗？因为声明一个委托类型并不是声明一个委托变量，而是一类委托的<strong>模板</strong>，说明了这类委托应具有的的返回值类型与参数列表。委托类型与具体的委托变量之关系，类似于“类”和“对象”的关系。</p>
+<p>委托类型声明和函数类似，拥有返回值类型和参数列表，但没有函数体，并且在前面用<code>delegate</code>关键字声明这是一个委托类型，再声明这个委托类型的变量：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//声明委托类型和委托变量</span></span><br><span class="line"><span class="function"><span class="keyword">delegate</span> <span class="keyword">double</span> <span class="title">ProcessDelegate</span>(<span class="params"><span class="keyword">double</span> param1, <span class="keyword">double</span> param2</span>)</span>;</span><br><span class="line">ProcessDelegate process;</span><br><span class="line"></span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//将函数Multiply注册到ProcessDelegate类型的委托变量process</span></span><br><span class="line">process = <span class="keyword">new</span> ProcessDelegate(Multiply);</span><br><span class="line"></span><br><span class="line"><span class="comment">//也可以简写</span></span><br><span class="line">process = Multiply;</span><br><span class="line"></span><br><span class="line"><span class="comment">//多播委托(虽然这里没什么用)</span></span><br><span class="line">process += Divide;</span><br><span class="line">process += Add;</span><br><span class="line"></span><br><span class="line"><span class="comment">//调用委托</span></span><br><span class="line">System.Console.WriteLine(<span class="string">$"Result:<span class="subst">&#123;process(<span class="number">12.1</span>, <span class="number">22.4</span>)&#125;</span>"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>实际上，委托确实是一种“类”。上面所展示的委托变量声明，其形式就和类的实例化完全一致。在委托变量后面打个点，你甚至能看到一堆委托类型包含的方法和属性：</p>
+<p><img src="https://i.loli.net/2020/02/27/xVONQiE1hJIrWf2.jpg" alt="委托也是类"></p>
+<a id="more"></a>
+
+<h2 id="何时用委托？"><a href="#何时用委托？" class="headerlink" title="何时用委托？"></a>何时用委托？</h2><p><strong>委托的一个有趣且有用的属性是，它不知道也不关心所引用的方法的类；只关心引用的方法是否具有与委托相同的参数和返回类型。</strong> </p>
+<p>这就像是当你饿了的时候，并不是非得去哪家特定的饭店吃饭，而是只要你给钱（参数）能得到食物（返回类型）就行了。这样，就无需先通过继承<code>建筑</code>类来构建一个<code>店铺</code>类，再实现一个<code>厨房</code>接口之类的东西，让其成为<code>饭店</code>——而是就算是大街上一个路人你能从TA那买到吃的，也算是能满足你的需求。</p>
+<p>因此，委托的大用处在于<strong>解耦</strong>。一个典型的例子是用在<code>LINQ</code>中。下面的示例选取numbers中小于10的数：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> smallNumbers = numbers.Where(n =&gt; n &lt; <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<p>LINQ的详细介绍留至以后，这可以说是C#中最为变态的武器之一，这里只说说Where方法。</p>
+<p>Where方法是接口<code>IEnumerable</code>和<code>IEnumerable&lt;T&gt;</code>中的方法，也只有实现了这两个接口之一或它们的派生接口（如<code>IQueryable&lt;T&gt;</code>）的类可以使用LINQ，这种类被称为<strong>可查询类型</strong>。Where方法的原型：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> IEnumerable&lt;TSource&gt; Where&lt;TSource&gt; (<span class="keyword">this</span> IEnumerable&lt;TSource&gt; source, Func&lt;TSource, <span class="keyword">bool</span>&gt; predicate);</span><br></pre></td></tr></table></figure>
+
+<p>分析一下。</p>
+<p>首先，这个方法是一个<code>static</code>方法，并且参数列表的第一个参数被<code>this</code>修饰，这是<strong>扩展方法</strong>的特征。这是因为Where方法之类的LINQ操作并不是直接定义在<code>IEnumerable&lt;T&gt;</code>接口里，而是在<code>System.Linq</code>命名空间中定义的扩展方法。扩展方法的第一个，被<code>this</code>所修饰的参数指明了这个扩展方法扩展的是什么类型。</p>
+<p><img src="https://i.loli.net/2020/02/27/yb6g3GTIoA1rB4R.jpg" alt="Where是扩展方法.jpg"></p>
+<p>可以看到，如果注释掉<code>using System.Linq</code>，虽然<code>List&lt;int&gt;</code>实现了<code>IEnumerable&lt;T&gt;</code>接口，但其中是无法查找到Where方法的。因此，方法原型中的<code>this IEnumerable&lt;TSource&gt; source</code>，指的就是“Where方法所扩展的是<code>IEnumerable&lt;TSource&gt;</code>接口”。</p>
+<p>而后面的<code>Func&lt;TSource, bool&gt; predicate</code>就是一个委托，并且是泛型委托。其中关系到“协变和逆变”之类的高深操作留待下次再说。</p>
+<p>这个委托用于对每个元素进行测试，看它们是否满足条件。自然，如果满足条件，这个委托将返回bool型的<code>true</code>。泛型委托的泛型参数中，最后一个即为委托的返回类型，故而是bool型。而前面的<code>TSource</code>指示了所封装的方法的参数类型。</p>
+<p>因此，这个<code>Func&lt;TSource, bool&gt; predicate</code>可以看作是：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">delegate</span> <span class="keyword">bool</span> <span class="title">FooDelegate</span>(<span class="params">TSource foo</span>)</span>;     <span class="comment">//这里的TSource是某个类型</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">FooFunc</span>(<span class="params">TSource foo</span>)</span>&#123;      <span class="comment">//接收TSource，返回bool的函数</span></span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">FooDelegate predicate = <span class="keyword">new</span> FooDelegate(FooFunc);</span><br></pre></td></tr></table></figure>
+
+<h2 id="泛型委托"><a href="#泛型委托" class="headerlink" title="泛型委托"></a>泛型委托</h2><p>除了用<code>delegate</code>关键字声明传统委托之外，还有两种泛型委托：即上面提到过的<code>Func&lt;&gt;</code>和另一种<code>Action&lt;&gt;</code>泛型委托。</p>
+<p>使用泛型委托，可以避免传统委托在使用前必须定义委托类型才能用委托变量引用函数的麻烦。</p>
+<h3 id="Func-lt-gt-泛型委托"><a href="#Func-lt-gt-泛型委托" class="headerlink" title="Func&lt;&gt;泛型委托"></a>Func&lt;&gt;泛型委托</h3><p><code>Func&lt;&gt;</code>泛型委托适用于引用那些返回类型非<code>void</code>的函数。其泛型参数的个数可从1<del>17个不等，其中最后的泛型参数代表返回类型，前面的0</del>16个泛型参数代表委托的参数列表。</p>
+<p>以下示例用两个泛型委托分别输出List中大于5和小于10的数：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">PlayGround</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="comment">//定义两个函数</span></span><br><span class="line">            <span class="function"><span class="keyword">bool</span> <span class="title">Foo1</span>(<span class="params"><span class="keyword">int</span> num</span>)</span></span><br><span class="line"><span class="function"></span>            &#123;</span><br><span class="line">                <span class="keyword">return</span> num &gt; <span class="number">5</span> ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">bool</span> <span class="title">Foo2</span>(<span class="params"><span class="keyword">int</span> num</span>)</span></span><br><span class="line"><span class="function"></span>            &#123;</span><br><span class="line">                <span class="keyword">return</span> num &lt; <span class="number">10</span> ? <span class="literal">true</span> : <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//定义两个泛型委托</span></span><br><span class="line">            Func&lt;<span class="keyword">int</span>, <span class="keyword">bool</span>&gt; foo1 = Foo1;</span><br><span class="line">            Func&lt;<span class="keyword">int</span>, <span class="keyword">bool</span>&gt; foo2 = Foo2;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span>[] input = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">37</span>, <span class="number">256</span> &#125;;</span><br><span class="line">            List&lt;<span class="keyword">int</span>&gt; numsList = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;(input);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">int</span> num <span class="keyword">in</span> numsList.Where(foo1).ToList())  <span class="comment">//用委托调用函数Foo1</span></span><br><span class="line">                Write(<span class="string">$"<span class="subst">&#123;num&#125;</span> "</span>);   <span class="comment">//Print: 6 10 37 256</span></span><br><span class="line"></span><br><span class="line">            WriteLine();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">int</span> num <span class="keyword">in</span> numsList.Where(foo2).ToList())  <span class="comment">//用委托调用函数Foo2</span></span><br><span class="line">                Write(<span class="string">$"<span class="subst">&#123;num&#125;</span> "</span>);   <span class="comment">//Print: 1 2 4 5 6</span></span><br><span class="line"></span><br><span class="line">            ReadKey();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用泛型委托之后，声明委托类型、声明委托变量、引用函数的步骤被结合到了一步：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;<span class="keyword">int</span>, <span class="keyword">bool</span>&gt; foo1 = Foo1;</span><br></pre></td></tr></table></figure>
+
+<p>当然，上述这个例子用Lambda表达式作为委托还会简单得多：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (<span class="keyword">int</span> num <span class="keyword">in</span> numsList.Where(n =&gt; n &gt; <span class="number">5</span>).ToList())    <span class="comment">//用Lambda表达式表示大于5</span></span><br><span class="line">    Write(<span class="string">$"<span class="subst">&#123;num&#125;</span> "</span>);   <span class="comment">//Print: 6 10 37 256</span></span><br><span class="line"><span class="keyword">foreach</span> (<span class="keyword">int</span> num <span class="keyword">in</span> numsList.Where(n =&gt; n &lt; <span class="number">10</span>).ToList())   <span class="comment">//用Lambda表达式表示小于10</span></span><br><span class="line">    Write(<span class="string">$"<span class="subst">&#123;num&#125;</span> "</span>);   <span class="comment">//Print: 6 10 37 256</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Action-lt-gt-泛型委托"><a href="#Action-lt-gt-泛型委托" class="headerlink" title="Action&lt;&gt;泛型委托"></a>Action&lt;&gt;泛型委托</h3><p>和<code>Func&lt;&gt;</code>的区别在于，<code>Action&lt;&gt;</code>的返回类型是void。因此，泛型参数的个数从0~16个不等，全部代表委托的参数列表。这也非常“Action”：传统意义上的“函数”感觉就是得返回点什么（函数值），而什么也不返回的更像是一个“动作”。这个就不再举例了。</p>
+<h1 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h1><h2 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h2><p>事件是在委托的基础上实现的，同样也是解耦利器。</p>
+<p>在委托变量的声明前加<code>event</code>关键字就是声明了一个事件。<strong>需要注意，用于事件的委托其返回值一般是void</strong>：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个委托类型，接收string，返回void</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">delegate</span> <span class="keyword">void</span> <span class="title">BoilerLogHandler</span>(<span class="params"><span class="keyword">string</span> status</span>)</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//基于上面的委托类型定义BoilerLogHandler类型的事件BoilerEventLog</span></span><br><span class="line"><span class="comment">//这要求事件处理函数接受string返回void</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">event</span> BoilerLogHandler BoilerEventLog;</span><br></pre></td></tr></table></figure>
+
+<p>包含了事件声明定义的类被称为<strong>发布器（publisher）类</strong>；接收事件，并提供事件处理函数的类被称为<strong>订阅器（subscriber）类</strong>。所谓订阅事件的过程，就是将订阅器类的处理函数注册到发布器类那里，当发布器发现事件被引发时，就通知订阅器类去执行相应的处理函数。发布器类有可能同时也是订阅器类之一，而引发事件的类可能既不是发布器类也不是订阅器类。</p>
+<p>上面的那段就是发布器类的一部分，定义了事件<code>BoilerEventLog</code>。接下来展示一个相符的订阅器类内容：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//满足BoilerEventLog事件对参数和返回类型要求的函数</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DisplayMessage</span>(<span class="params"><span class="keyword">string</span> message</span>)</span> =&gt; Console.WriteLine(<span class="string">$"Message arrived: <span class="subst">&#123;message&#125;</span>"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>订阅事件和引发事件：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实例化发布器类和订阅器类</span></span><br><span class="line">Logger myLogger = <span class="keyword">new</span> Logger();</span><br><span class="line">Display myDisplay = <span class="keyword">new</span> Display();</span><br><span class="line"></span><br><span class="line"><span class="comment">//订阅事件</span></span><br><span class="line">myLogger.BoilerEventLog += <span class="keyword">new</span> BoilerLogHandler(myDisplay.DispalyMessage);</span><br><span class="line"></span><br><span class="line"><span class="comment">//或者和委托一样，简化写法：</span></span><br><span class="line">myLogger.BoilerEventLog += myDisplay.DisplayMessage;</span><br><span class="line"></span><br><span class="line"><span class="comment">//引发事件：</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//用?. 运算符可以轻松确保在事件没有订阅器时不引发事件</span></span><br><span class="line"><span class="comment">//当?. 左侧为null时返回null，非空才访问右侧。没有被订阅的事件就是空的。</span></span><br><span class="line">myLogger.BoilerEventLog?.Invoke(<span class="string">"This is a message."</span>);</span><br></pre></td></tr></table></figure>
+
+<p>接下来，<code>myLogger</code>对象对<code>BoilerEventLog</code>事件中是否有被注册的事件处理函数进行检查，发现有来自<code>myDisplay</code>的处理函数<code>DisplayMessage()</code>，于是传入的参数<code>&quot;This is a message.&quot;</code>被送给处理函数进行处理。</p>
+<h2 id="与多播委托的区别？"><a href="#与多播委托的区别？" class="headerlink" title="与多播委托的区别？"></a>与多播委托的区别？</h2><p>目前看来，区别就是没什么太大区别。</p>
+<p>如<a href="/2020/02/27/C-杂记之壹/委托/定义">委托/定义</a>所言，委托其实也是类，定义的每一种委托都继承自<code>Delegate</code>类。而<code>Delegate</code>类拥有一个静态的<code>Delegate.Combine()</code>方法，用于将同类型多个委托变量的调用列表进行连接合并。这个方法可以由C#编译器对运算符<code>+</code>转译而来（并不是运算符重载）。这和<code>String</code>类的字符串连接是一样的。</p>
+<p>多播委托的执行顺序是固定的，按照<code>GetInvocationList()</code>方法所得数组的逆序执行；事件则是不可预测顺序的（据称）。</p>
+<p>不过，接下来就有区别了，这个才是重点。</p>
+<h2 id="EventHandler"><a href="#EventHandler" class="headerlink" title="EventHandler"></a>EventHandler</h2><p>C#预定义了委托<code>EventHandler</code>和泛型委托<code>EventHandler&lt;TEventArgs&gt;</code>用来写发布器。事实上，考虑到事件引发时通常需要传入不少各种各样的参数，相比前面与多播委托基本没区别的语法，使用这种预定义的事件要更多。</p>
+<p>原型：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">delegate</span> <span class="keyword">void</span> <span class="title">EventHandler</span>(<span class="params"><span class="keyword">object</span> sender, EventArgs e</span>)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">delegate</span> <span class="keyword">void</span> EventHandler&lt;TEventArgs&gt;(<span class="keyword">object</span> sender, TEventArgs e);</span><br></pre></td></tr></table></figure>
+
+<p>这两个参数，第一个是事件源，在引发事件时填写<code>this</code>即可；第二个参数的类型派生自<code>System.EventArgs</code>，包含任意个事件参数。派生自<code>System.EventArgs</code>的类有很多很多，其中都是C#预先定义的事件形参。</p>
+<p>而泛型委托<code>EventHandler&lt;TEventArgs&gt;</code>的区别在于，第二项参数可以不派生自<code>System.EventArgs</code>，而是根据泛型参数<code>TEventArgs</code>决定。这意味着，如果希望在引发事件时传入10种参数，你需要根据<code>TEventArgs</code>写一个类，在里面定义10项属性。引发事件时，实例化这个类，把构造出的对象传到第二项参数里。</p>
+<p>这个过程相当于是引发事件的类填了一张表格寄出去。表格的格式是预先设计好的，无论是派生自<code>System.EventArgs</code>的类，还是泛型委托里根据泛型参数自己写的那个类，其属性是在填写表格之前就确定了的。寄出去的除了填写完整的表格<code>e</code>之外，信封上还有你的联系方式<code>sender</code>。这样，收件人（发布器类）才能知道信是谁寄来的，也能够确定信里表格的格式是符合要求的。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//一个定义的例子</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="keyword">event</span> EventHandler&lt;MessageArrivedEventArgs&gt; MessageArrived;</span><br><span class="line"></span><br><span class="line"><span class="comment">//事件参数类的定义</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MessageArrivedEventArgs</span> : <span class="title">EventArgs</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">string</span> message;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Message</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span>&#123;<span class="keyword">return</span> message;&#125;    <span class="comment">//让message通过Message只读</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//显式定义无参构造函数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MessageArrivedEventArgs</span>(<span class="params"></span>)</span>=&gt;</span><br><span class="line">        message = <span class="string">"No message sent."</span></span><br><span class="line">    <span class="comment">//有参构造函数</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MessageArrivedEventArgs</span>(<span class="params"><span class="keyword">string</span> newMessage</span>)</span>=&gt;</span><br><span class="line">        message = newMessage;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//引发事件，第一个参数是this，第二个实例化事件参数类</span></span><br><span class="line">MessageArrived(<span class="keyword">this</span>, <span class="keyword">new</span> MessageArrivedEventArgs(<span class="string">"Hello World!"</span>))；</span><br></pre></td></tr></table></figure>
+
+<p>最后要注意的是，如果事件根本不需要传入参数，依然可以用<code>EventHandler</code>委托来定义，只要向第二项参数里传入<code>EventArgs.Empty</code>就行了。</p>
+<blockquote>
+<p>暂且到此为止，明天应当学习协变、逆变，以及LINQ。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.png" alt="Macyrate wechat" style="width: 200px; max-width: 100%;">
+  <div>唯一指定微信</div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+              <a href="/tags/C-Sharp/" rel="tag"># C Sharp</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/02/23/200223/" rel="next" title="200223：890 Errors创立">
+                  <i class="fa fa-chevron-left"></i> 200223：890 Errors创立
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#委托"><span class="nav-number">1.</span> <span class="nav-text">委托</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义"><span class="nav-number">1.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#何时用委托？"><span class="nav-number">1.2.</span> <span class="nav-text">何时用委托？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛型委托"><span class="nav-number">1.3.</span> <span class="nav-text">泛型委托</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Func-lt-gt-泛型委托"><span class="nav-number">1.3.1.</span> <span class="nav-text">Func&lt;&gt;泛型委托</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Action-lt-gt-泛型委托"><span class="nav-number">1.3.2.</span> <span class="nav-text">Action&lt;&gt;泛型委托</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#事件"><span class="nav-number">2.</span> <span class="nav-text">事件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-1"><span class="nav-number">2.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与多播委托的区别？"><span class="nav-number">2.2.</span> <span class="nav-text">与多播委托的区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#EventHandler"><span class="nav-number">2.3.</span> <span class="nav-text">EventHandler</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Macyrate"
+    src="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+  <p class="site-author-name" itemprop="name">Macyrate</p>
+  <div class="site-description" itemprop="description">&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Macyrate" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;Macyrate" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:macyrate@foxmail.com" title="E-Mail &amp;rarr; mailto:macyrate@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/6010944415" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;6010944415" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.viseator.com/" title="https:&#x2F;&#x2F;www.viseator.com&#x2F;" rel="noopener" target="_blank">viseator</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.llgzone.com/" title="https:&#x2F;&#x2F;blog.llgzone.com&#x2F;" rel="noopener" target="_blank">Lean</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://jushen.xyz/" title="http:&#x2F;&#x2F;jushen.xyz&#x2F;" rel="noopener" target="_blank">JuShen巨神</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://touhoudog.net/" title="http:&#x2F;&#x2F;touhoudog.net&#x2F;" rel="noopener" target="_blank">充满魔力的土地下</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://kourindou.exblog.jp/" title="https:&#x2F;&#x2F;kourindou.exblog.jp&#x2F;" rel="noopener" target="_blank">博麗幻想書譜</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Macyrate & Hakurei Reimu</span>
+</div>
+  <div class="powered-by">由 <a href="https://thwiki.cc/%E5%8D%9A%E4%B8%BD%E7%81%B5%E6%A2%A6/%E4%B8%80%E8%AE%BE%E8%B5%84%E6%96%99" class="theme-link" rel="noopener" target="_blank">博麗大結界</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+<script src="/js/next-boot.js?v=7.4.1"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'Macyrate.github.io',
+      owner: 'macyrate',
+      admin: ['macyrate'],
+      id: '1f11e059a5cd2dbcad49e1fa78295c99',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="2465890057" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.55" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>

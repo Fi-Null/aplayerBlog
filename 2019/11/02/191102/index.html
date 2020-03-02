@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":300,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="这一周，我开始了在华科聚变与等离子体研究所的实习。  其实我完全不明白自己应该干什么。八月底退出考研大军之后，我捡起大一没能坚持看下去的廖雪峰Python教程读了个大概（在这期间，Python 3甚至已经普及了），半懂不懂地接触了些之前所学的语言里没有讲过的“迭代器、生成器、装饰器”一类玩意，就去投秋招简历了。 可想而知，一个数据结构、算法、操作系统、计算机网络统统没复习，没有刷LeetCode，">
+<meta name="keywords" content="随笔">
+<meta property="og:type" content="article">
+<meta property="og:title" content="191102">
+<meta property="og:url" content="https:&#x2F;&#x2F;hakurei.red&#x2F;2019&#x2F;11&#x2F;02&#x2F;191102&#x2F;index.html">
+<meta property="og:site_name" content="博丽吹笛分社 | Macyrate">
+<meta property="og:description" content="这一周，我开始了在华科聚变与等离子体研究所的实习。  其实我完全不明白自己应该干什么。八月底退出考研大军之后，我捡起大一没能坚持看下去的廖雪峰Python教程读了个大概（在这期间，Python 3甚至已经普及了），半懂不懂地接触了些之前所学的语言里没有讲过的“迭代器、生成器、装饰器”一类玩意，就去投秋招简历了。 可想而知，一个数据结构、算法、操作系统、计算机网络统统没复习，没有刷LeetCode，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;IGZg3wHjUOtp9TE.jpg">
+<meta property="og:updated_time" content="2020-03-02T14:54:43.637Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;IGZg3wHjUOtp9TE.jpg">
+  <link rel="canonical" href="https://hakurei.red/2019/11/02/191102/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>191102 | 博丽吹笛分社 | Macyrate</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta custom-logo">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span> 
+        <img src="/images/custom-logo-ei.png" > 
+        </span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    <!--
+      <a>
+        <img class="custom-logo-image" src="/images/custom-logo-ei.png" alt="博丽吹笛分社 | Macyrate">
+      </a>
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hakurei.red/2019/11/02/191102/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+      <meta itemprop="name" content="Macyrate">
+      <meta itemprop="description" content="&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博丽吹笛分社 | Macyrate">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          191102
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-02 09:49:17" itemprop="dateCreated datePublished" datetime="2019-11-02T09:49:17+08:00">2019-11-02</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这一周，我开始了在华科<a href="http://ifpr.hust.edu.cn/" target="_blank" rel="noopener">聚变与等离子体研究所</a>的实习。</p>
+<p><img src="https://i.loli.net/2020/01/12/IGZg3wHjUOtp9TE.jpg" alt="J-TEXT"></p>
+<p>其实我完全不明白自己应该干什么。八月底退出考研大军之后，我捡起大一没能坚持看下去的廖雪峰Python教程读了个大概（在这期间，Python 3甚至已经普及了），半懂不懂地接触了些之前所学的语言里没有讲过的“迭代器、生成器、装饰器”一类玩意，就去投秋招简历了。</p>
+<p>可想而知，一个数据结构、算法、操作系统、计算机网络统统没复习，没有刷LeetCode，工程实践基本靠课程设计（甚至还有不少是东拼西凑）的学生，哪家公司会收留就有鬼了。何况，我投的岗位还是数据研发，但在这之前我对数据研发的了解还真的是仅限<code>Hadoop</code>和<code>Spark</code>的拼写……</p>
+<p>因此，笔试直接挂是理所当然的了。可是投字节跳动实习的时候，我这个铁憨憨还是投了数据研发。好歹实习不用笔试，不过面试当然还是挂了——一个小时的面试里，全是灵魂拷问，“人，有实力，是不怕的”，但是没有实力的话就算冷静镇定也不会带来更好的结果。</p>
+<a id="more"></a>
+
+<p>那既然这样，就开始学吧。九月，在Python学习、实习扫尾和秋招投递的混乱中度过。月底，为了养生的规律作息，我搬出学校宿舍，和一群退休爹爹婆婆住在森林公园对面。静谧的午后，他们摇着轮椅去沐浴阳光。这确实是好的，我暂且告别了凌晨两点睡，上午十点醒的混沌生活，每天能在起床时看到楼下初中生们的早自习了。</p>
+<p>剧情又恰似高中的落魄时刻，不过却相隔四年半了。十月，我和那个少女每天高强度对线（并不是），好歹不至于成为一瞬就能为未来的孩子找到无数上学地点的标准A岛肥肥。这时候我才开始真正使用<code>Git</code>，并且试着使用<code>GitHub</code>上那些我曾经从未碰过的功能——Fork，Pull Request，Issue，Review等等。我暂时完成了Python的基础学习；试着理清了之前一直没整明白的几种排序算法；经过好几天的折腾，这个网站也总算重新开了起来。这时候，我一边思虑着应该再找份实习，一边觉得该开始学习真正的“数据研发”了。</p>
+<p>数据研发还没有学起来，我先去了<a href="https://github.com/RichardoML" target="_blank" rel="noopener">保研室友</a>的实验室参观。这就是在聚变与等离子体研究所了。虽然靠近托卡马克装置（<a href="https://thwiki.cc/地狱极乐熔毁" target="_blank" rel="noopener">「Hell’s Tokamak」！</a>），但是这个实验室做的主要是计算机控制系统。我半开玩笑问实验室导师能否接收我去实习，结果这二次元浓度拉满的导师也就同意了。</p>
+<p>行，我暂且不用思考去哪找份实习了。我把在实验室实习的时间限定在寒假之前，希望寒假还有机会去某个真正的企业混一混。</p>
+<p>他们使用C#语言开发了一个用于构建物联网的好用系统：<a href="https://github.com/jtext-103/CFET2Core" target="_blank" rel="noopener">CFET</a>。目前看来，我们的工作是将各种东西——硬件和软件，乃至抽象化的概念——编写成C#类，然后接入CFET系统，成为可以统一调遣的Resources。</p>
+<p>C#！作为<code>M$</code>的脑残粉，会写C#本应该是基本素养，但是我曾懒得学——其实，是微软那一套乱七八糟的名字整蒙了我，很长一段时间里我都不明白C#、.NET Framework、.NET Core、Mono、Xamarin之间的关系，就像我搞不清Java SE、EE、ME和JDK、JVM之间的关系一样。Python就没那么麻烦，但是即使是Python 2和Python 3的区别那时都能让我放下教程，这只能用懒来形容了。</p>
+<blockquote>
+<p>“说到痛处就气急败坏，其实还是一条懒狗。”</p>
+</blockquote>
+<p>好，我不作懒狗了。既然还要写两个月的C#，那就学C#好了，而数据开发就此“刚起跑，就跌倒”（笑）。</p>
+<p>不过C#最大的问题就是由于历史原因在国内太冷门了，专门面向它的工作机会少之又少，这可能并不太适合基础不牢，试图短短几个月突击一下拿到offer的我。唯一的路径就是再学学Unity，然后去做游戏开发了。在一分钟之前我还稍有不乐意，虽然自己终究是喜爱游戏的，但一方面当爱好变成职业，热情便可能渐渐衰减；另一方面游戏行业在国内目前依然是“臭老九”，而且单纯作为开发者参与一个项目基本上不会有什么决定权，不可避免地要亲自把翔端给玩家吃。难顶啊。除非能找到一群真正志同道合的人。但是在这一分钟里我想了想，拿游戏开发和数据开发相比，果然还是会选择游戏开发。</p>
+<p>就像那时字节跳动HR问我：“你为什么要投数据开发岗？”是啊，为什么呢。明明也不是那么有兴趣，非要说的话可能是因为看上去比较简单，让我有种可以稍稍逃避的错觉。错觉到底是错觉，从舒适区里爬出来时的阵痛不可避免。</p>
+<p>我觉得，我应当首先是个东方众（至少现在还是），然后才是个臭写代码的（其实根本不会写）。独立游戏乃至同人游戏，还是有它的魅力所在的。如果可以，我很希望自己未来能避开996和无偿加班的苦海，让自己在能靠自己挣的钱买下想读的书、想听的专辑、想玩的游戏的同时，也能有时间去欣赏它们。这是我对“自由”的诠释。</p>
+<p>但是，在中华民族伟大复兴的中国梦实现之前，这样的自由能够有吗？虽然说是什么985大学的计算机专业学生，那都是简历上的漂亮话，真实的自己直到几个月乃至几分钟前都是没有目的、没有热情，对自己也没有要求的咸鱼。正是那时候的自己竟然在怀抱着远大理想，在风里畅想着<code>Project REI</code>。</p>
+<p>愈是说，愈是有妄自菲薄的意思了。说什么呢，这里可是博丽的分社啊，博丽那快晴的巫女是不会如此阴郁的。换个思路，至少自退出考研以来的两个多月，我还是从真·什么都不会的铁five成为了会一点点东西的five，也许再过几个月甚至能摆脱five的头衔呢？</p>
+<p>那么，现在的战略就是，为了手头的实习也为了春招，我需要先系统性地学习C#。在这之外，我还必须学习Unity和游戏设计的基本思想，再用实验室955之外的时间争取做出一个像模像样的游戏Demo——当然，这应当是个东方Project二次创作同人游戏。虽然这里就和本社一样不会有人造访，也没有任何一座神明的护佑，只有一个无名之辈的呓语，但这里可是博丽的分社啊。</p>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.png" alt="Macyrate wechat" style="width: 200px; max-width: 100%;">
+  <div>唯一指定微信</div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag"># 随笔</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/10/24/191024/" rel="next" title="191024">
+                  <i class="fa fa-chevron-left"></i> 191024
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/17/Unity%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A3%B9/" rel="prev" title="Unity脚本开发学习笔记 壹">
+                  Unity脚本开发学习笔记 壹 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Macyrate"
+    src="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+  <p class="site-author-name" itemprop="name">Macyrate</p>
+  <div class="site-description" itemprop="description">&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Macyrate" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;Macyrate" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:macyrate@foxmail.com" title="E-Mail &amp;rarr; mailto:macyrate@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/6010944415" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;6010944415" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.viseator.com/" title="https:&#x2F;&#x2F;www.viseator.com&#x2F;" rel="noopener" target="_blank">viseator</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.llgzone.com/" title="https:&#x2F;&#x2F;blog.llgzone.com&#x2F;" rel="noopener" target="_blank">Lean</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://jushen.xyz/" title="http:&#x2F;&#x2F;jushen.xyz&#x2F;" rel="noopener" target="_blank">JuShen巨神</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://touhoudog.net/" title="http:&#x2F;&#x2F;touhoudog.net&#x2F;" rel="noopener" target="_blank">充满魔力的土地下</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://kourindou.exblog.jp/" title="https:&#x2F;&#x2F;kourindou.exblog.jp&#x2F;" rel="noopener" target="_blank">博麗幻想書譜</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Macyrate & Hakurei Reimu</span>
+</div>
+  <div class="powered-by">由 <a href="https://thwiki.cc/%E5%8D%9A%E4%B8%BD%E7%81%B5%E6%A2%A6/%E4%B8%80%E8%AE%BE%E8%B5%84%E6%96%99" class="theme-link" rel="noopener" target="_blank">博麗大結界</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+<script src="/js/next-boot.js?v=7.4.1"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'Macyrate.github.io',
+      owner: 'macyrate',
+      admin: ['macyrate'],
+      id: 'ad18347d4efd27cc9e05a5a10ca05455',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="2465890057" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.55" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>

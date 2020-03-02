@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":300,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="书接上文。 按键控制Input.GetKey和Input.GetButton两种方法用于获取按键情况。 区别在于，Key有确定的KeyCode。KeyCode是Unity内置的枚举类，内含各种键盘、手柄按键，如空格键就由KeyCode.Space表示。 而Button是可以自定义详细配置的。在Edit-ProjectSettings-Input中可以对输入进行详细配置，为一种操作提供一个字符串别名">
+<meta name="keywords" content="Unity,游戏,笔记,C Sharp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unity脚本开发学习笔记 贰">
+<meta property="og:url" content="https:&#x2F;&#x2F;hakurei.red&#x2F;2019&#x2F;11&#x2F;18&#x2F;Unity%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E8%B4%B0&#x2F;index.html">
+<meta property="og:site_name" content="博丽吹笛分社 | Macyrate">
+<meta property="og:description" content="书接上文。 按键控制Input.GetKey和Input.GetButton两种方法用于获取按键情况。 区别在于，Key有确定的KeyCode。KeyCode是Unity内置的枚举类，内含各种键盘、手柄按键，如空格键就由KeyCode.Space表示。 而Button是可以自定义详细配置的。在Edit-ProjectSettings-Input中可以对输入进行详细配置，为一种操作提供一个字符串别名">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;DIymHzGMqFd2kUu.png">
+<meta property="og:updated_time" content="2020-03-02T14:54:43.639Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;i.loli.net&#x2F;2020&#x2F;01&#x2F;12&#x2F;DIymHzGMqFd2kUu.png">
+  <link rel="canonical" href="https://hakurei.red/2019/11/18/Unity%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E8%B4%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Unity脚本开发学习笔记 贰 | 博丽吹笛分社 | Macyrate</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta custom-logo">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span> 
+        <img src="/images/custom-logo-ei.png" > 
+        </span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    <!--
+      <a>
+        <img class="custom-logo-image" src="/images/custom-logo-ei.png" alt="博丽吹笛分社 | Macyrate">
+      </a>
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hakurei.red/2019/11/18/Unity%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E8%B4%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+      <meta itemprop="name" content="Macyrate">
+      <meta itemprop="description" content="&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="博丽吹笛分社 | Macyrate">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Unity脚本开发学习笔记 贰
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-18 12:21:58" itemprop="dateCreated datePublished" datetime="2019-11-18T12:21:58+08:00">2019-11-18</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>书接上文。</p>
+<h2 id="按键控制"><a href="#按键控制" class="headerlink" title="按键控制"></a>按键控制</h2><p><code>Input.GetKey</code>和<code>Input.GetButton</code>两种方法用于获取按键情况。</p>
+<p>区别在于，Key有确定的KeyCode。KeyCode是Unity内置的枚举类，内含各种键盘、手柄按键，如空格键就由<code>KeyCode.Space</code>表示。</p>
+<p>而Button是可以自定义详细配置的。在<code>Edit-ProjectSettings-Input</code>中可以对输入进行详细配置，为一种操作提供一个字符串别名。只要使用<code>GetBotton(string str)</code>就可以监测对应的输入了。</p>
+<p>除了知道按键是否被按下之外，我们还需要确切地知道按键在哪一帧被按下，哪一帧被松开。 因此，这两个方法都有衍生的<code>GetxxxDown</code>和<code>GetxxxUp</code>。在对应按键被按下后的第一帧，<code>GetKeyDown</code>返回true，而到了第二帧，它就再次返回false了。同理，<code>GetKeyUp</code>也仅在松开按键后的第一帧返回true。</p>
+<p>当然，这些方法都应该被放在Update()函数里，这样才能在每一帧对按键进行监测。</p>
+<a id="more"></a>
+
+<h2 id="摇杆控制"><a href="#摇杆控制" class="headerlink" title="摇杆控制"></a>摇杆控制</h2><p>确切地讲，这里应该是“轴”而不是摇杆。不过比起按键，摇杆更能体现“轴”的涵义，虽然按键确实也可以作为轴。</p>
+<p>摇杆控制就比较麻烦了，因为按键只有按下与没按下两个状态，可以简单地用bool值表示，但摇杆有推移的距离，只能用浮点数表示。而且摇杆还有反向。</p>
+<p>对于这些特性，GetKey之类的方法显然无法处理，所以需要使用<code>Input.GetAxis</code>。</p>
+<p><code>Input.GetAxis</code>的参数是称为<code>axisName</code>的字符串，可以在<code>Edit-ProjectSettings-Input</code>中定义。其返回的是一个-1到1之间的浮点数，<code>Positive Botton</code>使其返回正值，而<code>Negative Botton</code>让其返回负值。</p>
+<p><code>Sensitivity</code>和<code>Gravity</code>决定了按键触发/松开时返回值多快地上升/归零。</p>
+<p>此外还有<code>Dead</code>值，这使得可以不对较小幅度的摇杆活动进行处理，一定程度上能够防止误触。<code>Snap</code>选项，其为true时如果同时触发了<code>Positive Botton</code>和<code>Negative Botton</code>，就返回0。</p>
+<p>以上说的，是比较“完备”的摇杆控制，但是在很多时候我们并不需要这个“轴”返回浮点值。举个例子，《刺客信条：起源》中并没有以往的“奔跑”键，而是用摇杆推移的幅度决定移动速度，这就非常<code>GetAxis</code>。如果用键盘操作，WASD控制方向，是没有推移幅度这一说的，我们就当按下按键就是摇杆直接推到底，这就是<code>Type</code>属性为<code>Key or Mouse Button</code>而不是<code>Joystick Axis</code>的轴。无论如何，巴耶克并不是弹射起步，而是有gravity和sensitivity的作用。</p>
+<p>但是，在东方的STG里就没有这些玩意，大家的运动都像加速度不存在一样。这种情况下，应当使用<code>Input.GetAxisRaw</code>方法，按键后返回的是1和-1这两个整数而非浮点数。</p>
+<p><img src="https://i.loli.net/2020/01/12/DIymHzGMqFd2kUu.png" alt="不可思议的幻想乡"></p>
+<h2 id="重写和成员隐藏"><a href="#重写和成员隐藏" class="headerlink" title="重写和成员隐藏"></a>重写和成员隐藏</h2><p>关于这一点，可以看看微软文档：<a href="https://docs.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/knowing-when-to-use-override-and-new-keywords" target="_blank" rel="noopener">了解何时使用 Override 和 New 关键字</a>。</p>
+<p>以前我以为“重写覆盖”是一个词，但今天发现似乎并非如此。</p>
+<p>重写（Overriding，有人称为覆盖）是在派生类中重新实现基类中已有的方法和属性等，为了安全，基类中被重写的方法/属性需要有<code>virtual</code>修饰符（或者abstract、override），派生类重写的方法/属性需要有<code>override</code>修饰符。由于是重新“实现”，重写的方法签名/属性类型和名称必须和之前保持一致，也不能改变访问性，重写方法相当于只是重新编写了方法的函数体。</p>
+<p>我的理解是，<strong>在派生类中重写之后，从基类继承下来的方法/属性就相当于不存在了</strong>。因此，不管我们把派生类的对象当成该类的对象还是其基类的对象，在直接调用方法时调用的都是重写之后的方法。</p>
+<p>而成员隐藏则完全不同（Member Hiding，虽然也有人称其为覆盖），它虽然看上去是在派生类中用<code>new</code>修饰符重新定义了基类中已有的成员，<strong>但！是！</strong> 从基类继承下来的成员并没有消失，而是被<strong>隐藏</strong>了。如果我们把派生类的对象作为其基类的对象（Upcasting，向上转型），那调用到的就是被隐藏的基类成员。</p>
+<p>总而言之，“覆盖”这个翻译是谁发明的？出来挨打！</p>
+<h2 id="委托和事件"><a href="#委托和事件" class="headerlink" title="委托和事件"></a>委托和事件</h2><p>委托（delegate）可以被当作函数指针。要定义委托，首先需要用<code>delegate</code>关键字声明一个模板，模板展示了这种委托应该存放怎样的函数——用其返回类型以及参数列表来限定。</p>
+<p>可以把委托名直接当成函数名来用。</p>
+<p>委托支持“多播”，这使得我们可以把同一类型的函数集中放到一个委托里，只要调用这个委托，就是依次调用委托中函数列表里的函数。用<code>+=</code>和<code>-=</code>运算符把函数加入委托或从委托中删除。</p>
+<p>最初看到多播委托这里，我还没有领会这个机制的用处，但很快我就看到了“事件”。</p>
+<p>事件就是一种特殊的委托，或者说它非常类似于公共的多播委托。我们在定义委托的基础上使用<code>event</code>关键字定义一个事件。</p>
+<p>对于同一个事件，不同的对象可能有不同的反应，也就有不同的处理函数。如果把唤起事件视作调用委托，那么一系列的事件处理函数就是委托的函数列表，要订阅或取消订阅事件的话，用<code>+=</code>和<code>-=</code>就好了。</p>
+<h2 id="协程和生成器"><a href="#协程和生成器" class="headerlink" title="协程和生成器"></a>协程和生成器</h2><p>看到C#协程（Coroutine）里熟悉的<code>yield</code>，我想到的是此前在Python中学到过的生成器（Generator）。简直是一个套路，运行到yield时，函数返回，但下次调用该函数时不会再从头执行，而是从上次退出的地方之后开始执行。</p>
+<p>实际上生成器就是协程的一种，称为半协程（Semi-coroutine），这是一种受限制的协程实现。</p>
+<p>在这里面学问很深，我才疏学浅暂且接触不到，这里就贴个知乎专栏链接吧：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/25513336" target="_blank" rel="noopener">Coroutine从入门到劝退 - 王迅的文章 - 知乎</a></p>
+<blockquote>
+<p>暂时就记到这里了。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/images/wechat-qcode.png" alt="Macyrate wechat" style="width: 200px; max-width: 100%;">
+  <div>唯一指定微信</div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Unity/" rel="tag"># Unity</a>
+              <a href="/tags/%E6%B8%B8%E6%88%8F/" rel="tag"># 游戏</a>
+              <a href="/tags/%E7%AC%94%E8%AE%B0/" rel="tag"># 笔记</a>
+              <a href="/tags/C-Sharp/" rel="tag"># C Sharp</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/17/Unity%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A3%B9/" rel="next" title="Unity脚本开发学习笔记 壹">
+                  <i class="fa fa-chevron-left"></i> Unity脚本开发学习笔记 壹
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/20/%E6%B8%B8%E6%88%8F%E5%88%86%E6%9E%90%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%A3%B9/" rel="prev" title="游戏分析框架学习笔记 壹">
+                  游戏分析框架学习笔记 壹 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#按键控制"><span class="nav-number">1.</span> <span class="nav-text">按键控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#摇杆控制"><span class="nav-number">2.</span> <span class="nav-text">摇杆控制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重写和成员隐藏"><span class="nav-number">3.</span> <span class="nav-text">重写和成员隐藏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#委托和事件"><span class="nav-number">4.</span> <span class="nav-text">委托和事件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#协程和生成器"><span class="nav-number">5.</span> <span class="nav-text">协程和生成器</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Macyrate"
+    src="https://i.loli.net/2020/02/23/5FnPOvDaUVpytfX.jpg">
+  <p class="site-author-name" itemprop="name">Macyrate</p>
+  <div class="site-description" itemprop="description">&nbsp;&nbsp;氣霽風梳新柳髮，<br>&nbsp;&nbsp;冰消浪洗舊苔須。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Macyrate" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;Macyrate" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:macyrate@foxmail.com" title="E-Mail &amp;rarr; mailto:macyrate@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/6010944415" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;6010944415" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.viseator.com/" title="https:&#x2F;&#x2F;www.viseator.com&#x2F;" rel="noopener" target="_blank">viseator</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.llgzone.com/" title="https:&#x2F;&#x2F;blog.llgzone.com&#x2F;" rel="noopener" target="_blank">Lean</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://jushen.xyz/" title="http:&#x2F;&#x2F;jushen.xyz&#x2F;" rel="noopener" target="_blank">JuShen巨神</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://touhoudog.net/" title="http:&#x2F;&#x2F;touhoudog.net&#x2F;" rel="noopener" target="_blank">充满魔力的土地下</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://kourindou.exblog.jp/" title="https:&#x2F;&#x2F;kourindou.exblog.jp&#x2F;" rel="noopener" target="_blank">博麗幻想書譜</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2016 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Macyrate & Hakurei Reimu</span>
+</div>
+  <div class="powered-by">由 <a href="https://thwiki.cc/%E5%8D%9A%E4%B8%BD%E7%81%B5%E6%A2%A6/%E4%B8%80%E8%AE%BE%E8%B5%84%E6%96%99" class="theme-link" rel="noopener" target="_blank">博麗大結界</a> 强力驱动
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.1"></script><script src="/js/motion.js?v=7.4.1"></script>
+<script src="/js/schemes/pisces.js?v=7.4.1"></script>
+<script src="/js/next-boot.js?v=7.4.1"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.1"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'Macyrate.github.io',
+      owner: 'macyrate',
+      admin: ['macyrate'],
+      id: '1e86c347d9e3ce725b7315626b6ceebd',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="2465890057" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.55" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>
