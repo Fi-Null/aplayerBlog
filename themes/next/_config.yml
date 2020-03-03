@@ -96,11 +96,11 @@ footer:
 # Available values of license: by | by-nc | by-nc-nd | by-nc-sa | by-nd | by-sa | zero
 # You can set a language value if you prefer a translated version of CC license, e.g. deed.zh
 # CC licenses are available in 39 languages, you can find the specific and correct abbreviation you need on https://creativecommons.org
-creative_commons:
-  license: by-sa
-  sidebar: true
-  post: false
-  language: deed.zh
+# creative_commons:
+#   license: by-sa
+#   sidebar: true
+#   post: false
+#   language: deed.zh
 
 
 # ---------------------------------------------------------------
@@ -128,7 +128,7 @@ menu:
   home: / || home
   # about: /about/ || user
   tags: /tags/ || tags
-  #categories: /categories/ || th
+  categories: /categories/ || th
   archives: /archives/ || archive
   #schedule: /schedule/ || calendar
   # sitemap: /sitemap.xml || sitemap
@@ -188,7 +188,7 @@ site_state: true
 # Value after `||` delimiter is the name of Font Awesome icon. If icon (with or without delimiter) is not specified, globe icon will be loaded.
 social:
   GitHub: https://github.com/fi-null || github
-  E-Mail: mailto:xk123401@foxmail.com || fi-null
+  E-Mail: mailto:xk123401@foxmail.com || envelope
   Weibo: https://weibo.com/xk123401 || weibo
   # QQ: http://wpa.qq.com/msgrd?v=3&uin=624629073&site=qq&menu=yes || qq
   Steam: https://steamcommunity.com/profiles/76561198313695590/ || steam

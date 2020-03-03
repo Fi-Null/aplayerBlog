@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Xk`s | Bolg
-subtitle: 
-description: "&nbsp;&nbsp;Do more, Learn more, Be more"
+title: Xk's | Blog
+subtitle: Stay Hungry, Stay Foolish
+description: "Do more, Learn more, Be more"
 keywords: 
 author: Ke Xiang
 language: zh-CN
@@ -13,7 +13,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://hakurei.red
+url: https://fi-null.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -62,7 +62,7 @@ index_generator:
   per_page: 4
   order_by: -date
 
-# Category & Tag
+# Category & Tag uncategorized
 default_category: uncategorized
 category_map:
 tag_map:

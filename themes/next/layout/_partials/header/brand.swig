@@ -11,9 +11,7 @@
     <div>
       <a href="{{ config.root }}" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span> 
-        <img src="{{ theme.custom_logo }}" > 
-        </span>
+        <span class="site-title">{{ config.title }}</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>

@@ -40,17 +40,6 @@
   {%- endif %}
 </div>
 
-{%- if theme.footer.powered.enable %}
-  <div class="powered-by">
-    {{- __('footer.powered', next_url('https://thwiki.cc/博丽灵梦/一设资料', '博麗大結界', {class: 'theme-link'})) }}
-    {%- if theme.footer.powered.version %} v{{ hexo_version }}{%- endif %}
-  </div>
-{%- endif %}
-
-{%- if theme.footer.powered.enable and theme.footer.theme.enable %}
-  <span class="post-meta-divider">|</span>
-{%- endif %}
-
 {%- if theme.footer.theme.enable %}
   <div class="theme-info">
     {%- set next_site = 'https://theme-next.org' %}

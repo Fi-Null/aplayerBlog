@@ -1,9 +1,10 @@
 ---
 title: 为Hexo配置Gitalk，并更改主题颜色
 date: 2019-10-20 21:01:35
+category:
+- 前端
 tags:
 - Hexo
-- 前端
 ---
 
 # 配置Gitalk
