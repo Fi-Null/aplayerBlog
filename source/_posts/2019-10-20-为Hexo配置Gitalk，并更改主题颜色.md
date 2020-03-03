@@ -10,6 +10,8 @@ tags:
 # 配置Gitalk
 在重新搭建这个站点的过程中，碰到一个“小”问题：以前我的网站使用的是WordPress，内建了评论系统，而现在在Hexo站点中该如何引入评论系统？
 
+<!-- more -->
+
 当然，这根本就不是问题，Hexo最著名的主题NexT已经在配置文件中给出了多种可供选择的评论系统。Google搜索到的大部分人使用的是Disqus，然而当我按照他们的流程一通操作后，执行`hexo g`却永远都是：
 
     next disqus TypeError: Cannot read property 'replace' of null
@@ -25,8 +27,6 @@ tags:
 于是我转而尝试其他的评论系统，好么，国内的一个赛一个麻烦，又是实名认证又是人脸信息的，还是别了。而国外的又时刻有被河蟹的风险。
 
 终于我看到了Gitalk，它基于GitHub的issue，只要有GitHub账号就可以评论，看来同性交友网站不倒，这玩意就能用下去。
-
-<!-- more -->
 
 配置起来不算太麻烦，在NexT的配置文件里**找到comments块，将gitalk给active上**（这一步很重要），再去下面一点的gitalk块里按照文档一顿填，基本就完事了。
 

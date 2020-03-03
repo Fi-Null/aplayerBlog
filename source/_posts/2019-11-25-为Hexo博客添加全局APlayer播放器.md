@@ -11,7 +11,7 @@ tags:
 如果你只是想要在自己站点的左下角加一个极其Stable的音乐播放器，而不想听我废话自己踩的坑，请直接跳转：  
 [“Show me the CODE!”](/2019/11/25/为Hexo博客添加全局APlayer播放器/#Show-me-the-CODE)
 {% endnote %}
-
+<!-- more -->
 # 早期尝试
 
 ## 网易云iframe
@@ -53,8 +53,6 @@ tags:
 ![site-nav中的iframe.jpg](https://i.loli.net/2020/01/12/Dmhzxi8XFIQK7np.jpg)
 
 这个效果属实🍔🍔。并且在桌面版视图下还会把sidebar压下去，不太理想。
-
-<!-- more -->
 
 ## 明月浩空音乐
 
