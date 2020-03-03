@@ -17,7 +17,13 @@ hexo.extend.helper.register('next_url', function(path, text, options) {
   var theme = hexo.theme.config;
   var exturl = '';
   var tag = 'a';
-  var attrs = { href: this.url_for(path) };
+
+  var attrs = {};
+  if (path === 'https://fi-null.github.io/resumeWeb') {
+    attrs = { href: this.url_for(path), target: "_blank"};
+  } else {
+    attrs = { href: this.url_for(path) };
+  }
 
   // If `exturl` enabled, set spanned links only on external links.
   if (theme.exturl && data.protocol && data.hostname !== siteHost) {

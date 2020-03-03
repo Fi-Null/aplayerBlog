@@ -126,10 +126,11 @@ scheme: Pisces
 # External url should start with http:// or https://
 menu:
   home: / || home
-  # about: /about/ || user
+  archives: /archives/ || archive
   tags: /tags/ || tags
   categories: /categories/ || th
-  archives: /archives/ || archive
+  about: /about/ || user
+  resume: https://fi-null.github.io/resumeWeb || handshake-o
   #schedule: /schedule/ || calendar
   # sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
