@@ -13,3 +13,10 @@ $ git clone https://github.com/theme-next/theme-next-pjax source/lib/pjax
 
 
 为便于同步源码而创建的hexo分支。
+
+hexo命令：
+hexo clean
+hexo new
+hexo new page
+hexo server
+hexo d -g
