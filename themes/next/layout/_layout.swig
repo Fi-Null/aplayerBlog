@@ -78,13 +78,13 @@
 </body>
 <div id="contentleft">
   <div class="aplayer" 
-  data-id="22195726" 
+  data-id="388713953" 
   data-server="netease" 
   data-type="playlist" 
   data-fixed="true" 
   data-autoplay="true" 
   data-order="random" 
-  data-volume="0.55" 
+  data-volume="0.5" 
   data-theme="#cc543a" 
   date-preload="auto" 
   ></div>
