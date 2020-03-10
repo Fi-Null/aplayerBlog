@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>不如写个small-springMvc</title>
+  <meta name="description" content="WEB开发基础知识">
+  <meta name="author" content="Wei Wang">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="不如写个small-springMvc">
+  <meta name="twitter:description" content="WEB开发基础知识">
+  
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="不如写个small-springMvc">
+  <meta property="og:description" content="WEB开发基础知识">
+  
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+  <link href="/assets/images/favicon.png" rel="shortcut icon" type="image/png">
+  
+  <link rel="stylesheet" href="/css/main.css">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="canonical" href="http://localhost:4000/2019/10/small-springMvc%E5%AE%9E%E7%8E%B0/">
+  <link rel="alternate" type="application/rss+xml" title="Ke Xiang" href="http://localhost:4000/feed.xml">
+  
+  <meta name="google-site-verification" content="1-1ZlHoRvM0T2FqPbW2S-qLgYXN6rsn52kErlMPd_gw" />
+  
+</head>
+
+
+  <body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+    
+    <header class="panel-cover panel-cover--collapsed" style="background-image: url('/assets/images/background-cover.jpg')">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/#blog" title="前往 Ke Xiang 的主页" class="blog-button"><img src="/assets/images/avatar.jpg" width="80" alt="Ke Xiang logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/#blog" title="link to homepage for Ke Xiang" class="blog-button">Ke Xiang</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">Code Create Life</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">Do more, Know more, Be more!</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+    
+        
+        <div class="navigation-wrapper">
+          <div>
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item"><a href="/" title="home" class="blog-button">Home</a></li>
+                <li class="navigation__item"><a href="/#blog" title="Visit blog" class="blog-button">Blog</a></li>
+                
+                  <li class="navigation__item"><a href="https://fi-null.github.io/resumeWeb/" target="_blank" title="resume">Resume</a></li>
+                
+                 <!-- <li class="navigation__item"><a href="/about" title="about" class="blog-button">About</a></li> -->
+              </ul>
+            </nav>
+          </div>
+          
+          <div><nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  
+  <!-- Weibo -->
+  <li class="navigation__item">
+    <a href="http://weibo.com/fi-null" title="@fi-null 的微博" target="_blank">
+      <i class='social fa fa-weibo'></i>
+      <span class="label">Weibo</span>
+    </a>
+  </li>
+  
+
+  
+  <!-- Github -->
+  <li class="navigation__item">
+    <a href="https://github.com/fi-null" title="@fi-null 的 Github" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+  
+  
+  
+  <!-- Twitter -->
+  <li class="navigation__item">
+    <a href="http://twitter.com/fi-null" title="@fi-null" target="_blank">
+      <i class='social fa fa-twitter'></i>
+      <span class="label">Twitter</span>
+    </a>
+  </li>
+  
+
+  
+  <!-- Google Plus -->
+  <li class="navigation__item">
+    <a href="https://plus.google.com/107108267983477358170" rel="author" title="Google+" target="_blank">
+      <i class='social fa fa-google-plus-square'></i>
+      <span class="label">Google Plus</span>
+    </a>
+  </li>
+  
+
+  <!-- RSS -->
+  <li class="navigation__item">
+    <a href="/feed.xml" rel="author" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+  
+  <!-- Email -->
+  <li class="navigation__item">
+    <a href="mailto:xiangke123401@gmail.com" title="Contact me">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+  
+
+  </ul>
+</nav>
+</div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <div class="panel-cover--overlay cover-clear"></div>
+    
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2019-10-23 00:00:00 +0800" itemprop="datePublished" class="post-meta__date date">2019-10-23</time> &#8226; <span class="post-meta__tags tags">spingMvc</span>
+    </div>
+    <h1 class="post-title">不如写个small-springMvc</h1>
+  </header>
+
+  <section class="post">
+    <h2 id="web开发基础知识">WEB开发基础知识</h2>
+
+<h3 id="基础知识">基础知识</h3>
+
+<p><img src="https://pic1.zhimg.com/80/v2-1cb5b57ffab54838ad59983a8adbcdc8_hd.jpg" alt="img" /></p>
+
+<p>一个<strong>Http</strong>请求到来，容器将其封装成servlet中的request对象，在request中可以获得所有的http信息，然后取出来操作。操作完成后再将其封装成servlet的response对象，应用容器将response对象解析后封装成一个<strong>http response</strong>。</p>
+
+<p><strong>容器和servlet</strong></p>
+
+<p><img src="https://pic2.zhimg.com/80/3fdb2abf692cb5edb833e139504ede39_hd.jpg" alt="img" /></p>
+
+<p><strong>Tomcat=web服务器+servlet/jsp容器</strong></p>
+
+<p><img src="https://pic4.zhimg.com/80/v2-c1761ba4e406196374fb7734966e8f97_hd.jpg" alt="img" /></p>
+
+<p><img src="https://pic2.zhimg.com/80/v2-d8b75829a65958c65d50781155ae80a1_hd.jpg" alt="img" /></p>
+
+<p><strong>三大组件（servlet，filter，listener）</strong></p>
+
+<h3 id="springmvc和servlet的关系">SpringMVC和servlet的关系</h3>
+
+<p><img src="https://pic2.zhimg.com/80/v2-40ed984999cab23bc4e9e17a39e84839_hd.jpg" alt="img" /></p>
+
+<p>Tomcat服务器启动时，创建1.ServletContext，此对象一直存活至关闭服务器。当http的request过来后，tomcat将其包装成2.HttpRequest类实例（也是域对象，单次请求共享），并创建空response实例，创建web.xml中对应的servlet实例，然后调用servlet中的service(request,response)，从servletContext中可以获取xml中存储的信息，所以不同的servlet间也可以贡献context域中内容。ServletContextListener监听context，HttpSessionListener监听3.HttpSession（同一会话有效，即多次请求有效）。最后返回response，这样一次完整的请求&lt;—&gt;响应流程就结束了。第4个域对象是Page，是jsp页面内共享数据。</p>
+
+<p><img src="https://pic4.zhimg.com/v2-2530b17c1ee7e94bbcce7ca472d6a667_r.jpg" alt="img" /></p>
+
+<p>在GenericServlet（即HttpServlet的直接父类）中，init方法将ServletConfig类对象由局部变量（Tomcat容器传给该servlet的init方法一个config）提升到成员变量，即所有继承自GenericServlet的子类servlet都自动具有config，而这个config持有对ServletContext的引用（servletContext有成员变量config，而config持有对servletCont引用）。所有域对象都持有对servletContext的引用。</p>
+
+<p><strong>Filter</strong></p>
+
+<p><img src="https://pic2.zhimg.com/80/v2-b8dfca0f5a4895bce75c2ce6b6f0c725_hd.jpg" alt="img" /></p>
+
+<p><strong>映射器：</strong>即<em>url-&gt;servlet</em>的映射关系,精准匹配，前缀匹配，扩展名匹配，如果都不匹配则交给DefaultServlet处理，这个类可以用来读取静态资源。</p>
+
+<p><img src="https://pic1.zhimg.com/80/v2-42c3d43b3b7dd56851d1018d2186d1f0_hd.jpg" alt="img" /></p>
+
+<p>DispatcherServlet，配置成.do，只拦截.do，但是起不到连接所有servlet的作用，而且有个.do很不优雅。配置成/，会导致静态资源也被拦截，且JSP也被拦截了。配置成/，此时拦截除jsp以外的所有，（因为JSPServlet会精确匹配.jsp结尾的，因此优先匹配），此时唯一要解决的就是静态资源。SpringMVC通过对静态资源目录下进行配置的方法&lt;mvc;resources mapping=”<strong>” location=”</strong>*“&gt;以判断某些资源是静态资源，不需要dispatchServlet处理，转而交给defaultServlet。</p>
+
+<p><img src="https://pic1.zhimg.com/80/v2-e132fe10fc71bd79ce2d1f79964860d4_hd.jpg" alt="img" /></p>
+
+<p><strong>所以SpringMVC就是一个DispatcherServlet么？不是，DispathcerServlet只是MVC的入口，他包含完整的组件。如下下章节所示：</strong></p>
+
+<h3 id="springmvc与spring的关系">SpringMVC与Spring的关系</h3>
+
+<blockquote>
+  <p><a href="https://blog.csdn.net/justloveyou_/article/details/74295728">https://blog.csdn.net/justloveyou_/article/details/74295728</a></p>
+</blockquote>
+
+<p>启动过程：Tomcat启动，生成ServletContext，因为在web.xml中配置了contextLoaderListener，因此当servletContext生成时，会被Spring监听到，然后spring初始化一个启动上下文，即ApplicationContext，其实现类是XmlWebApplication。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;listener&gt;</span>
+    <span class="nt">&lt;listener-class&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="nt">&lt;/listener-class&gt;</span>
+<span class="nt">&lt;/listener&gt;</span>
+<span class="nt">&lt;context-param&gt;</span>
+    <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
+    <span class="nt">&lt;param-value&gt;</span>
+        classpath:applicationContext.xml
+    <span class="nt">&lt;/param-value&gt;</span>
+<span class="nt">&lt;/context-param&gt;</span>
+</code></pre></div></div>
+
+<p>如上xml所配置的，ContextLoaderListener监听到servletContext后，从web.xml找到Spring的配置目录（通过context-param），即applicaitonContext.xml。这个xml将被封装成ApplicationContext，放到servletContext中，因此servletContext不仅包含web.xml内容，还包含applicationContext.xml内容的引用。</p>
+
+<p>下一步开始初始化web.xml中的serlvet，一般必然存在DispathcerServlet，毕竟这个是MVC的入口servlet。而DispatcherServlet在初始化的时候，会先通过servletContext获取spring的ApplicationContext，然后再初始化自己的上下文。所以servlet间共享spring中的bean，而springMVC中的各个servlet又拥有自己独立的bean空间比如dispatherServlet的bean，就不会被其他servlet访问到。</p>
+
+<p><strong>小结：tomcat启动–&gt;servletContext–被监听–&gt;Spring加载上下文–&gt;SpringMVC获取Spring上下文并为每个servlet创建上下文，尤其是dispathcerServlet（这个尤其是因为我的项目里只配置了dispatcherServlet）。</strong></p>
+
+<ul>
+  <li>Spring容器与SpringMVC容器的联系与区别
+    <ul>
+      <li>SpringMVC因为持有spring的context，因此getBean时先从自己的上下文中获取，如果没有，则向Spring获取。而Spring不持有MVC的，因此无法获取子容器的bean。一般项目中，service、dao包中实例交给Spring创建，而controller包的实例交给MVC创建。</li>
+      <li>子容器的创建后于父容器，当Spring上下文创建完毕后，才轮到mvc的创建。</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="springmvc运行流程">SpringMVC运行流程</h3>
+
+<ol>
+  <li>HandlerMapping接口实现将请求映射到应该处理它的类或者方法。</li>
+  <li>HandlerAdapter接口实现用特定的模式处理请求，如常规servlet，更复杂的MVC工作流或者POJO bean中的方法。</li>
+  <li>ViewResolver接口允许使用不同的模板引擎，即视图解析器。</li>
+  <li>使用Apache Commons文件上传或者变现自己的MultipartResolver解析multipart请求。</li>
+  <li>使用LocaleResolver解决语言环境问题。</li>
+</ol>
+
+<p><strong>流程小结：请求—&gt;DispatcherServlet—&gt;HandlerMapping–获得ExecutionChain（拦截器+handler）—-&gt;handlerAdapter—-&gt;返回modelAndView—&gt;ViewResolver–&gt;view—-&gt;渲染—–&gt;返回响应</strong></p>
+
+<h2 id="第一步初始化">第一步：初始化</h2>
+
+<h3 id="需求">需求</h3>
+
+<ul>
+  <li><strong>Spring的初始化：</strong>启动Tomcat时，Spring容器监听到ServletContext后，读取web.xml中context-param配置项，获取Spring的applicationContext.xml的地址，然后解析xml并完成xml中所有bean的创建。</li>
+  <li><strong>SpringMVc的初始化：</strong>调动dispatcherServlet时，SpringMVC读取web.xml中init-param配置项，定位到其xml配置文件，解析后完成所有bean的创建。</li>
+</ul>
+
+<h3 id="实现">实现</h3>
+
+<h4 id="spring的初始化">Spring的初始化</h4>
+
+<ol>
+  <li>
+    <p>创建类ContextLoaderListener impelements ServletContextListener可以监听tomcat的启动，注意这一步也要在web.xml中配置listener标签，这样tomcat才能感知到有这个listener。</p>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;listener&gt;</span>
+    <span class="nt">&lt;listener-class&gt;</span>com.sonihrmvc.framework.ContextListener.ContextLoaderListener<span class="nt">&lt;/listener-class&gt;</span>
+<span class="nt">&lt;/listener&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>此时通过listener已经能够感知tomcat何时启动，那我们就要准备初始化Spring容器了。首先在WEB-INF下建立lib包，lib包中导入我们之前的sonihr-Spring项目打包成的jar包（这一步不会的可以百度，maven项目的打包其实只要点一下就行，然后在新项目的pom里要导入原来sonihr-Spring项目的依赖），如果你的tomcat启动时提示NoClassDefFoundError异常，那大概率是你的jar包没有装好。。下图为项目当前的结构
+<img src="http://img.sonihr.com/bfaefb7f-71a2-4737-861b-d7caa385ae23.jpg" alt="img" /></p>
+  </li>
+  <li>
+    <p>装好jar包后，填充listener的逻辑部分,本质上就是调用classPathXmlApplicationContext（这是sonihr-spring中的，这个类用于从xml或注解中进行实例的创建），读取从web.xml的context-param中的contextConfigLocation值，即spring的配置文件的地址，然后创建实例。至此，Spring的初始化就完毕了。<strong>如果上文有不懂的，我分析一下：1.不知道web.xml是干嘛用的，不知道web.xml应该配置什么，listener标签，context-param标签不知道是啥。2.不会maven，不知道web项目要把jar包放在WEB-INF/lib下并设置为库文件。3.没看过sonihr-spring教程，不懂怎么从xml中生成实例。如果这几步不很清楚，那建议夯实基础。</strong></p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ContextLoaderListener</span> <span class="kd">implements</span> <span class="nc">ServletContextListener</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">contextInitialized</span><span class="o">(</span><span class="nc">ServletContextEvent</span> <span class="n">sce</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">ServletContext</span> <span class="n">servletContext</span> <span class="o">=</span> <span class="n">sce</span><span class="o">.</span><span class="na">getServletContext</span><span class="o">();</span>
+        <span class="nc">String</span> <span class="n">springXmlPath</span> <span class="o">=</span> <span class="n">servletContext</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">"contextConfigLocation"</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">springXmlPath</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">"classpath:"</span><span class="o">)){</span>
+            <span class="n">springXmlPath</span> <span class="o">=</span> <span class="n">springXmlPath</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="nc">ApplicationContext</span> <span class="n">applicationContext</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">applicationContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="n">springXmlPath</span><span class="o">);</span>
+            <span class="nc">Person</span> <span class="n">person</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Person</span><span class="o">)</span> <span class="n">applicationContext</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="s">"person"</span><span class="o">);</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">person</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>这边做了一个substring，是因为配置的是classpath:applicationContext.xml，实际上applicationContext.xml我就是放置在resources中，即根据target文件夹，就是WEB-INF/classes下，所以可以不用写。（代码极不健壮）</p>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;context-param&gt;</span>
+    <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
+    <span class="nt">&lt;param-value&gt;</span>classpath:applicationContext.xml<span class="nt">&lt;/param-value&gt;</span>
+<span class="nt">&lt;/context-param&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>做个简单测试，创建一个Person类，注解用@Service，然后private String name的参数用@Value(“”)注解，因为sonihr-spring已经实现了注解注入，因此tomcat启动时，创建ServletContext时，被ContextLoaderListener监听到，然后对Spring容器进行初始化。测试时，打印person属性，发现注入成功。</p>
+
+    <p><img src="http://img.sonihr.com/cccc68bf-cf6c-4d4f-8d5a-dae55b61194a.jpg" alt="img" /></p>
+  </li>
+</ol>
+
+<h4 id="springmvc的初始化">SpringMVC的初始化</h4>
+
+<ol>
+  <li>
+    <p>创建<em>dispatherSerlvet extends HttpServlet</em>，并且在xml中注册。在当前版本中，我们还只拦截.do结尾了，为了防止静态资源也被拦截。注意在配置中的<em>init-param</em>，在servlet的生命周期中，可以重写servlet的无参init方法，在init方法中对<em>SpringMVC</em>进行初始化。</p>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;servlet&gt;</span>
+    <span class="nt">&lt;servlet-name&gt;</span>dispatcherServlet<span class="nt">&lt;/servlet-name&gt;</span>
+    <span class="nt">&lt;servlet-class&gt;</span>com.sonihrmvc.framework.servlet.DispatcherServlet<span class="nt">&lt;/servlet-class&gt;</span>
+    <span class="nt">&lt;init-param&gt;</span>
+    <span class="nt">&lt;param-name&gt;</span>contextConfigLocation<span class="nt">&lt;/param-name&gt;</span>
+    <span class="nt">&lt;param-value&gt;</span>classpath:mvcContext.xml<span class="nt">&lt;/param-value&gt;</span>
+    <span class="nt">&lt;/init-param&gt;</span>
+    <span class="nt">&lt;load-on-startup&gt;</span>1<span class="nt">&lt;/load-on-startup&gt;</span>
+<span class="nt">&lt;/servlet&gt;</span>
+<span class="nt">&lt;servlet-mapping&gt;</span>
+    <span class="nt">&lt;servlet-name&gt;</span>dispatcherServlet<span class="nt">&lt;/servlet-name&gt;</span>
+    <span class="nt">&lt;url-pattern&gt;</span>*.do<span class="nt">&lt;/url-pattern&gt;</span>
+<span class="nt">&lt;/servlet-mapping&gt;</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>我们要实现以下需求：<strong>1.tomcat的ServletContext持有Spring的springContext，springMVC同时持有spring和自己的context。2.springMVC在getBean时，如果在自己的context获取不到，则去获取spring的context中的bean。</strong>第1个需求简单，只要在ServletContext中setAttribute即可。但是第2个呢？我们需要改动sonihr-spring项目了。因为在sonihr-spring项目中，applicationContext是不存在父子容器这种说法的，因此我们需要在AbstractApplicationContext模板类中加入ApplicationContext类变量parent，这个用于指向父容器。但是创建bean和获取bean都是在beanfactory中进行的，因此beanFactory中要设置ApplcationContext变量，用于保存当前调用beanFactory的ApplicationContext实例。在getbean时，优先检查当前context中是否有该beanName，如果没有则从低向高搜索父context中是否存在。<strong>sonihr-spring的改动在tag：v1.6-solve-parentContext。</strong></p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kd">public</span> <span class="nc">Object</span> <span class="nf">getBean</span><span class="o">(</span><span class="nc">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="nc">BeanDefinition</span> <span class="n">beanDefinition</span> <span class="o">=</span> <span class="n">beanDefinitionMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+        <span class="nc">ApplicationContext</span> <span class="n">context</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getContext</span><span class="o">();</span>
+        <span class="k">while</span> <span class="o">(</span><span class="n">beanDefinition</span><span class="o">==</span><span class="kc">null</span><span class="o">&amp;&amp;</span><span class="n">context</span><span class="o">.</span><span class="na">getParent</span><span class="o">()!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="nc">ApplicationContext</span> <span class="n">parent</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getParent</span><span class="o">();</span>
+            <span class="nc">Object</span> <span class="n">object</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">object</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+                <span class="k">return</span> <span class="n">object</span><span class="o">;</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="n">context</span> <span class="o">=</span> <span class="n">parent</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">beanDefinition</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalArgumentException</span><span class="o">(</span><span class="s">"No bean named "</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">" is defined"</span><span class="o">);</span>
+        <span class="nc">Object</span> <span class="n">bean</span> <span class="o">=</span> <span class="n">beanDefinition</span><span class="o">.</span><span class="na">getBean</span><span class="o">();</span>
+        <span class="c1">//如果bean==null说明还未存在，不是单例说明是否存在都要重新创建</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">bean</span><span class="o">==</span><span class="kc">null</span><span class="o">||!</span><span class="n">beanDefinition</span><span class="o">.</span><span class="na">isSingleton</span><span class="o">()){</span>
+            <span class="n">bean</span><span class="o">=</span><span class="n">doCreateBean</span><span class="o">(</span><span class="n">name</span><span class="o">,</span><span class="n">beanDefinition</span><span class="o">);</span><span class="c1">//根据生命周期来的，先创建后进行before，init,after</span>
+            <span class="n">bean</span> <span class="o">=</span> <span class="n">initializeBean</span><span class="o">(</span><span class="n">bean</span><span class="o">,</span><span class="n">name</span><span class="o">);</span><span class="c1">//</span>
+            <span class="n">beanDefinition</span><span class="o">.</span><span class="na">setBean</span><span class="o">(</span><span class="n">bean</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">bean</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>在DispatcherServlet的init方法中对SpringMVC进行初始化。这边要注意，我在ClassPathXmlApplicationContext构造方法中就指定了父类，因为如果你必须在读取xml创建bean前就已经设置好parent属性。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DispatcherServlet</span> <span class="kd">extends</span> <span class="nc">HttpServlet</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">ServletException</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
+        <span class="nc">String</span> <span class="n">mvcXmlPath</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getInitParameter</span><span class="o">(</span><span class="s">"contextConfigLocation"</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">mvcXmlPath</span><span class="o">==</span><span class="kc">null</span><span class="o">||</span><span class="n">mvcXmlPath</span><span class="o">.</span><span class="na">length</span><span class="o">()==</span><span class="mi">0</span><span class="o">)</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">mvcXmlPath</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">"classpath:"</span><span class="o">)){</span>
+            <span class="n">mvcXmlPath</span> <span class="o">=</span> <span class="n">mvcXmlPath</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">10</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="nc">ServletContext</span> <span class="n">servletContext</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getServletContext</span><span class="o">();</span>
+        <span class="nc">ApplicationContext</span> <span class="n">mvcContext</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="nc">ApplicationContext</span> <span class="n">springContext</span> <span class="o">=</span> <span class="o">(</span><span class="nc">ApplicationContext</span><span class="o">)</span><span class="n">servletContext</span><span class="o">.</span><span class="na">getAttribute</span><span class="o">(</span><span class="s">"springContext"</span><span class="o">);</span>
+            <span class="n">mvcContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ClassPathXmlApplicationContext</span><span class="o">(</span><span class="n">springContext</span><span class="o">,</span><span class="n">mvcXmlPath</span><span class="o">);</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">springContext</span><span class="o">);</span>
+            <span class="nc">PersonService</span> <span class="n">personService</span> <span class="o">=</span> <span class="o">(</span><span class="nc">PersonService</span><span class="o">)</span> <span class="n">mvcContext</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="s">"personService"</span><span class="o">);</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"personService="</span> <span class="o">+</span> <span class="n">personService</span><span class="o">);</span>
+            <span class="nc">PersonController</span> <span class="n">personController</span> <span class="o">=</span> <span class="o">(</span><span class="nc">PersonController</span><span class="o">)</span> <span class="n">mvcContext</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="s">"personController"</span><span class="o">);</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"personController="</span> <span class="o">+</span> <span class="n">personController</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+
+    <p>打印结果：</p>
+
+    <p><img src="http://img.sonihr.com/d66fe2bd-1b2d-4ac8-aecf-ff2febbb7e7e.jpg" alt="img" /></p>
+  </li>
+  <li>
+    <p>小结：<strong>目前为止，已经完成了Service包用@Service注解，并通过Spring的context创建实例，Controller包用@Controller注解，通过springmvc初始化创建实例。controller依赖service，通过@Autowired进行注入。tomcat启动后，spring和springMVC的实例全部创建完毕。</strong></p>
+  </li>
+</ol>
+
+<h2 id="第二步handlermapping">第二步：HandlerMapping</h2>
+
+<h3 id="需求-1">需求</h3>
+
+<p><img src="http://img.sonihr.com/5a20c50e-fff5-4eee-825d-676327c0ce75.jpg" alt="img" /></p>
+
+<ol>
+  <li>对于上图，当输入正确URL时，控制台可以正确打印I am eating。即，可以通过@RequestMapping的方式，解析URL，定位到eating方法并执行。</li>
+  <li>利用AOP实现拦截器链。</li>
+</ol>
+
+<h3 id="requestmapping的实现">@RequestMapping的实现</h3>
+
+<p><img src="http://img.sonihr.com/99c2b65f-8027-403d-a936-fa1cf1442bba.jpg" alt="img" /></p>
+
+<ol>
+  <li>
+    <p>目录结构如上图所示</p>
+
+    <p><em>RequestMapping</em>是注解，目前只有一个变量就是value。HandlerExecutionChain是HandlerMapping组件返回给dispatcherServlet的返回值，其中封装了1个RequestMappingHandler实例和1个拦截器列表（目前还未实现）。RequestMappingHandler中封装了要执行的方法method，执行方法的对象bean以及参数args。AnnotationHandlerMapping是最重要的，其中保存了一个HashMap&lt;String,RequestMappingHandler&gt; handlerRegistry，其中注册了controller包中所有被@RequestMapping解析后的url与对应方法的键值对。</p>
+  </li>
+  <li>
+    <p>首先在dispatcherServlet的init方法中进行初始化，service方法中进行doDispatcher。doDispatcher目前用于将请求的url传递给AnnotationHandlerMapping，然后返回相匹配的RequestMappingHandler和拦截器们。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kt">void</span> <span class="nf">doDispatch</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span><span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="c1">//Todo：</span>
+    <span class="nc">HandlerExecutionChain</span> <span class="n">handlerExecutionChain</span> <span class="o">=</span>  <span class="n">handlerMapping</span><span class="o">.</span><span class="na">getHandler</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+    <span class="nc">RequestMappingHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="n">handlerExecutionChain</span><span class="o">.</span><span class="na">getHandler</span><span class="o">();</span>
+   
+    <span class="c1">//至于如何传参，就是HandlerAdapter的事情了</span>
+    <span class="n">handler</span><span class="o">.</span><span class="na">getMethod</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="n">handler</span><span class="o">.</span><span class="na">getBean</span><span class="o">(),</span><span class="kc">null</span><span class="o">);</span><span class="c1">//和AOP不冲突，内部bean如果是代理类，会调用代理后方法,</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>AnnotationHandlerMapping通过遍历beanFactory中的beanDefinitionMap，获得了@RequestMapping注解内的值，从而解析出request请求url所对应的方法是谁。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span> <span class="o">{</span>
+    <span class="nc">AbstractBeanFactory</span> <span class="n">beanFactory</span> <span class="o">=</span> <span class="n">mvcContext</span><span class="o">.</span><span class="na">getBeanFactory</span><span class="o">();</span>
+    <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">BeanDefinition</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="n">beanFactory</span><span class="o">.</span><span class="na">getBeanDefinitionMap</span><span class="o">();</span>
+    <span class="k">for</span><span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">BeanDefinition</span><span class="o">&gt;</span> <span class="nl">entry:</span><span class="n">map</span><span class="o">.</span><span class="na">entrySet</span><span class="o">()){</span>
+        <span class="nc">String</span> <span class="n">prefix</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="nc">String</span> <span class="n">suffix</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="nc">Class</span> <span class="n">clazz</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">getBeanClass</span><span class="o">();</span><span class="c1">//通过类名获得前缀</span>
+        <span class="nc">Object</span> <span class="n">bean</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">().</span><span class="na">getBean</span><span class="o">();</span>
+        <span class="nc">Annotation</span> <span class="n">annotation</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="nc">RequestMapping</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">annotation</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="o">((</span><span class="nc">RequestMapping</span><span class="o">)</span><span class="n">annotation</span><span class="o">).</span><span class="na">value</span><span class="o">();</span>
+        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+            <span class="k">continue</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="nc">Method</span><span class="o">[]</span> <span class="n">methods</span> <span class="o">=</span> <span class="n">clazz</span><span class="o">.</span><span class="na">getMethods</span><span class="o">();</span><span class="c1">//通过方法获得后缀</span>
+        <span class="k">for</span><span class="o">(</span><span class="nc">Method</span> <span class="nl">method:</span><span class="n">methods</span><span class="o">){</span>
+            <span class="n">annotation</span> <span class="o">=</span><span class="n">method</span><span class="o">.</span><span class="na">getAnnotation</span><span class="o">(</span><span class="nc">RequestMapping</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">annotation</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+                <span class="n">suffix</span> <span class="o">=</span> <span class="o">((</span><span class="nc">RequestMapping</span><span class="o">)</span><span class="n">annotation</span><span class="o">).</span><span class="na">value</span><span class="o">();</span>
+                <span class="nc">String</span> <span class="n">url</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">suffix</span><span class="o">;</span>
+                <span class="n">handlerRegistry</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">url</span><span class="o">,</span><span class="k">new</span> <span class="nc">RequestMappingHandler</span><span class="o">(</span><span class="n">bean</span><span class="o">,</span><span class="n">method</span><span class="o">,</span><span class="kc">null</span><span class="o">));</span>
+                <span class="c1">//System.out.println("url = "+url);</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+   
+<span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">HandlerExecutionChain</span> <span class="nf">getHandler</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+   
+    <span class="nc">HandlerExecutionChain</span> <span class="n">handlerExecutionChain</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HandlerExecutionChain</span><span class="o">();</span>
+    <span class="c1">//System.out.println("uri = "+request.getRequestURI());</span>
+    <span class="nc">RequestMappingHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="n">handlerRegistry</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getRequestURI</span><span class="o">());</span>
+    <span class="c1">//System.out.println("handler = "+handler);</span>
+    <span class="n">handlerExecutionChain</span><span class="o">.</span><span class="na">setHandler</span><span class="o">(</span><span class="n">handler</span><span class="o">);</span>
+    <span class="k">return</span> <span class="n">handlerExecutionChain</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="拦截器链的实现">拦截器链的实现</h3>
+
+<ol>
+  <li>
+    <p>解决一个纠结了一下午+一晚上的问题。Spring中的拦截器是基于AOP的，但是SpringMVC中HandlerInteceptor却不是基于AOP，而是基于职责链。所以AOP也可以实现拦截器，NVC的HandlerInterceptor也可实现拦截器。</p>
+  </li>
+  <li>
+    <p>HandlerInterceptor接口的实现类均为MVC的拦截器类，这个接口规定了四个方法。实际的MVC中没有getpath方法，我放在这个就不需要xml配置了，直接在方法里规定要被拦截的地址即可。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">HandlerInterceptor</span><span class="o">{</span>
+    <span class="nc">String</span><span class="o">[]</span> <span class="nf">getPath</span><span class="o">();</span><span class="c1">//该方法规定被拦截的地址</span>
+    <span class="c1">//该方法在请求处理之前调用，返回true表示交给下一个拦截器，返回false表示到此为止</span>
+    <span class="kt">boolean</span> <span class="nf">preHandle</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">handler</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span><span class="o">;</span>
+    <span class="c1">//视图返回之后，渲染之前被调用</span>
+    <span class="kt">void</span> <span class="nf">postHandle</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">handler</span><span class="o">,</span> <span class="nc">ModelAndView</span> <span class="n">modelAndView</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span><span class="o">;</span>
+    <span class="kt">void</span> <span class="nf">afterCompletion</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">handler</span><span class="o">,</span> <span class="nc">Exception</span> <span class="n">ex</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>说一下MVC中拦截器的方法调用顺序。假设有A,B,C,D拦截器，请求过来后会调用A.pre-&gt;B.pre-&gt;C.pre-&gt;D.pre-&gt;交给适配器处理请求,返回modelAndView-&gt;D.post-&gt;C.post-&gt;B.post-&gt;A.post-&gt;渲染视图-&gt;D.after-&gt;C.after-&gt;B.after-&gt;A.after。即pre是顺序的，post和after都是逆序的。不仅如此，如果C的pre返回false，顺序是A.pre-&gt;B.pre-&gt;c.pre(false)-&gt;B.after-&gt;A.after，不会走post也不会处理请求。
+<img src="https://oscimg.oschina.net/oscnet/a255c6a82ec3e110205bf8cbbf546dcf32b.jpg" alt="img" /></p>
+  </li>
+  <li>
+    <p>我们需要在AnnotationHandlerMapping中获取所有HandlerInterceptor的实现类实例，放入list中，然后判断是否和当前请求的uri匹配，将所有匹配的拦截器加入list后，利用setter方法加入HandlerExecutionChain。</p>
+  </li>
+  <li>
+    <p>在DispathceServlet中获得的HandlerExecutionChain中拥有了针对当前uri的拦截器组和handler。在handler传递给HandlerAdapter组件之前，先调用拦截器组的pre方法，如果pre方法中有返回false，即反向调用after。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="kt">void</span> <span class="nf">doDispatch</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span><span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="nc">HandlerExecutionChain</span> <span class="n">handlerExecutionChain</span> <span class="o">=</span>  <span class="n">handlerMapping</span><span class="o">.</span><span class="na">getHandler</span><span class="o">(</span><span class="n">request</span><span class="o">);</span>
+    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">HandlerInterceptor</span><span class="o">&gt;</span> <span class="n">handlerInterceptors</span> <span class="o">=</span> <span class="n">handlerExecutionChain</span><span class="o">.</span><span class="na">getInterceptors</span><span class="o">();</span>
+    <span class="nc">RequestMappingHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="n">handlerExecutionChain</span><span class="o">.</span><span class="na">getHandler</span><span class="o">();</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">handlerInterceptors</span><span class="o">.</span><span class="na">size</span><span class="o">();</span><span class="n">i</span><span class="o">++){</span>
+        <span class="nc">HandlerInterceptor</span> <span class="n">interceptor</span> <span class="o">=</span> <span class="n">handlerInterceptors</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(!</span><span class="n">interceptor</span><span class="o">.</span><span class="na">preHandle</span><span class="o">(</span><span class="n">request</span><span class="o">,</span><span class="n">response</span><span class="o">,</span><span class="n">handler</span><span class="o">)){</span>
+            <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span><span class="n">j</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">;</span><span class="n">j</span><span class="o">--){</span>
+                <span class="n">handlerInterceptors</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">j</span><span class="o">).</span><span class="na">afterCompletion</span><span class="o">(</span><span class="n">request</span><span class="o">,</span><span class="n">response</span><span class="o">,</span><span class="n">handler</span><span class="o">,</span><span class="k">new</span> <span class="nc">Exception</span><span class="o">());</span>
+            <span class="o">}</span>
+            <span class="k">break</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="c1">//至于如何传参，就是HandlerAdapter的事情了</span>
+    <span class="n">handler</span><span class="o">.</span><span class="na">getMethod</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="n">handler</span><span class="o">.</span><span class="na">getBean</span><span class="o">(),</span><span class="kc">null</span><span class="o">);</span><span class="c1">//和AOP不冲突，内部bean如果是代理类，会调用代理后方法,</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+
+    <p><strong>小结：第二步后，请求已经可以正确的派发到Controller的方法上，但是方法参数之类的还未能传递，叫交给HandlerAdapter组件。</strong></p>
+  </li>
+</ol>
+
+<h2 id="第三步handleradapter">第三步：HandlerAdapter</h2>
+
+<h3 id="handlermapping和handleradapter的区别">HandlerMapping和HandlerAdapter的区别</h3>
+
+<ul>
+  <li>对于项目中只用到注解方式的我来说，一直心中有一个疑问：既然已经可以通过HandlerMapping映射到具体方法了，那直接反射调用方法不就完了么？为什么还要多一个HandlerAdapter组件呢？因为Spring框架是慢慢发展过来的，要保证对之前的兼容性，同时还要保证扩展性，因此HandlerMapping着重于对类的匹配（早期的handler即为类，而不是具体方法，在Spring4以后handler也可以是具体方法），HandlerAdapter着重于对具体方法的调用。</li>
+  <li>由上图看出，HandlerMapping的实现类有两个分支，一个是HandlerMethodMapping，一个是UrlHandlerMapping，前者的实现类是RequestMappingHandlerMapping，其实就是我们常用的@RequestMapping注解，使用这个注解实现requestMapping接口功能时，可以直接匹配到相关的方法。其他的，比如实现Controller接口的ControllerClassNameHandlerMapping或者xml文件中配置的sampleUrlHandlerMapping或者利用bean名称的BeanNameUrlHandlerMapping都是匹配到相关的实现类。举例来说，Controller的实现类中必须实现handleRequest方法，因此在只需要匹配到这个实现类，然后在Adapter中反射调用handleRequest方法即可。</li>
+  <li><strong>小结：HandlerMapping将URL映射为方法或者类，然后交给HandlerAdapter进一步处理，这个处理主要是调用对应的方法，填充参数，最后返回ModelAndView给DispatcherServlet。</strong></li>
+</ul>
+
+<h3 id="对第二步的优化">对第二步的优化</h3>
+
+<p><img src="http://img.sonihr.com/3161d625-f017-462b-82be-60a9549f9376.jpg" alt="img" /></p>
+
+<ul>
+  <li>第二步中，我们只考虑了@RequestMapping注释这一种方式，即我们的AnnotationHandlerMapping类。我们抽象出一个AbstractHandlerMapping implements HandlerMapping。这个抽象类为模板类，子类可以去重写他的registryURLAndHandler方法。因为在AnnotationHandlerMapping中，这个方法就是解析注解，新建的ControllerHandlerMapping中就是获得Controller接口实现类的bean名称和实现类实例，新建的BeanNameHandlerMapping中根据bean的名称和bean的实例注册，新建的SimpleUrlHandlerMapping中就是解析xml，从而进一步注册。</li>
+  <li>在DisptcherServlet中重构代码，在doInit方法中初始化所有HandlerMapping，这样就可以获得所有的url和handler的对应关系。要注意，AbstractHandlerMapping中的map和拦截器组list需要设计为static，以防止每次子类实例init的时候，都加入同一个map和拦截器组list中。</li>
+</ul>
+
+<h3 id="需求-2">需求</h3>
+
+<ol>
+  <li>实现适配器设计模式，HandlerAdapter接口。</li>
+  <li>支持多种适配方式，比如继承Controller接口的handler，普通servlet作为handler。但是本项目着重在于@RequestMapping注解下，类型为RequestMappingHandler的handler。</li>
+  <li>实现参数传递，任意类型，包括对象。</li>
+</ol>
+
+<h3 id="适配器设计模式的实现">适配器设计模式的实现</h3>
+
+<ol>
+  <li>
+    <p>设计HandlerAdapter接口，具有supports和handle两个方法。前者作用为实现职责链设计模式，在DispatcherServlet中，遍历所有的HandlerAdapter方法，如果supports返回ture，即采用当前adapter，否则交给下一个。后者作用是包装处理方法，所有adapter的处理方法都被handle包装，这样用户不需要知道内部的实现细节，dispatcherServlet只要先遍历找到supports返回true的adapter，然后执行adapter的handle方法即可。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">HandlerAdapter</span> <span class="o">{</span>
+    <span class="kt">boolean</span> <span class="nf">supports</span><span class="o">(</span><span class="nc">Object</span> <span class="n">handler</span><span class="o">);</span>
+    <span class="nc">ModelAndView</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span><span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span><span class="nc">Object</span> <span class="n">handler</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="参数匹配">参数匹配</h3>
+
+<ol>
+  <li>
+    <p>先处理AnnotationHandlerAdapter类的handle方法：</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">handler</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="nc">RequestMappingHandler</span> <span class="n">rmHandler</span> <span class="o">=</span> <span class="o">(</span><span class="nc">RequestMappingHandler</span><span class="o">)</span><span class="n">handler</span><span class="o">;</span>
+    <span class="nc">Object</span><span class="o">[]</span> <span class="n">args</span> <span class="o">=</span> <span class="nc">ArgumentResolverUtil</span><span class="o">.</span><span class="na">resloveRequsetParam</span><span class="o">(</span><span class="n">request</span><span class="o">,</span><span class="n">rmHandler</span><span class="o">.</span><span class="na">getMethod</span><span class="o">());</span>
+    <span class="nc">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">rmHandler</span><span class="o">.</span><span class="na">getMethod</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="n">rmHandler</span><span class="o">.</span><span class="na">getBean</span><span class="o">(),</span><span class="n">args</span><span class="o">);</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">ModelAndView</span><span class="o">(</span><span class="n">obj</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+
+    <p>重点全在ArgumentResolverUtil这个工具类。为什么要拆出一个工具类呢？因为众多的handle中必然都需要解析request传过来的参数，因此单独做一个工具类可以避免耦合。</p>
+  </li>
+  <li>
+    <p>因此在逻辑判断中，首先判断是否在argMap中存在相同的名字：比如方法是void speak(int age)，如果request自带一个参数为age，那么就刚好匹配。如果不同，不如方法是void baby(String name,Baby baby,int age),但是request传来的传输是name=xxx,babyName=yyy,babyAge=1,weight=10,age=33，此时发现中间那一段是baby的属性，因此babyName，babyAge，weight这三个虽然出现在了argMap中，但是却不是baby这个方法的形参名字，要通过BeanUtils将这三个参数组合成Baby的实例，然后通过cast动态转型转换成parameter需要的类型。</p>
+  </li>
+  <li>
+    <p>因此在逻辑判断中，首先判断是否在argMap中存在相同的名字：比如方法是void speak(int age)，如果request自带一个参数为age，那么就刚好匹配。如果不同，不如方法是void baby(String name,Baby baby,int age),但是request传来的传输是name=xxx,babyName=yyy,babyAge=1,weight=10,age=33，此时发现中间那一段是baby的属性，因此babyName，babyAge，weight这三个虽然出现在了argMap中，但是却不是baby这个方法的形参名字，要通过BeanUtils将这三个参数组合成Baby的实例，然后通过cast动态转型转换成parameter需要的类型。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="nc">Object</span><span class="o">[]</span> <span class="nf">resloveRequsetParam</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">Method</span> <span class="n">method</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">[]&gt;</span> <span class="n">paramMap</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="na">getParameterMap</span><span class="o">();</span>
+    <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">argMap</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LinkedHashMap</span><span class="o">&lt;&gt;();</span>
+    <span class="k">for</span><span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span><span class="nc">String</span><span class="o">[]&gt;</span> <span class="nl">entry:</span><span class="n">paramMap</span><span class="o">.</span><span class="na">entrySet</span><span class="o">()){</span>
+        <span class="nc">String</span> <span class="n">paramName</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">();</span>
+        <span class="nc">String</span> <span class="n">paramValue</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+        <span class="nc">String</span><span class="o">[]</span> <span class="n">paramValueArr</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">paramValueArr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">i</span><span class="o">==</span><span class="n">paramValueArr</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span>
+                <span class="n">paramValue</span> <span class="o">+=</span> <span class="n">paramValueArr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="k">else</span>
+                <span class="n">paramValue</span> <span class="o">+=</span> <span class="n">paramValueArr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="s">","</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="n">argMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">paramName</span><span class="o">,</span><span class="n">paramValue</span><span class="o">);</span><span class="c1">//处理后的request键值对</span>
+    <span class="o">}</span>
+   
+    <span class="nc">Parameter</span><span class="o">[]</span> <span class="n">parameters</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="na">getParameters</span><span class="o">();</span>
+    <span class="nc">Object</span><span class="o">[]</span> <span class="n">args</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Object</span><span class="o">[</span><span class="n">parameters</span><span class="o">.</span><span class="na">length</span><span class="o">];</span>
+    <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">parameters</span><span class="o">.</span><span class="na">length</span><span class="o">;</span><span class="n">i</span><span class="o">++){</span>
+        <span class="nc">Parameter</span> <span class="n">parameter</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">argMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">parameter</span><span class="o">.</span><span class="na">getName</span><span class="o">())){</span>
+            <span class="nc">String</span> <span class="n">value</span> <span class="o">=</span> <span class="n">argMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">parameter</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+            <span class="nc">Type</span> <span class="n">type</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="na">getType</span><span class="o">();</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">type</span> <span class="o">==</span> <span class="nc">String</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+                <span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+            <span class="k">else</span>
+                <span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="nc">ConverterFactory</span><span class="o">.</span><span class="na">getConverterMap</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="n">parameter</span><span class="o">.</span><span class="na">getType</span><span class="o">()).</span><span class="na">parse</span><span class="o">(</span><span class="n">value</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+            <span class="nc">Type</span> <span class="n">type</span> <span class="o">=</span> <span class="n">parameter</span><span class="o">.</span><span class="na">getType</span><span class="o">();</span>
+            <span class="nc">Object</span> <span class="n">bean</span> <span class="o">=</span> <span class="o">((</span><span class="nc">Class</span><span class="o">)</span> <span class="n">type</span><span class="o">).</span><span class="na">newInstance</span><span class="o">();</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="nc">BeanUtils</span><span class="o">.</span><span class="na">populate</span><span class="o">(</span><span class="n">bean</span><span class="o">,</span><span class="n">argMap</span><span class="o">);</span>
+                <span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">((</span><span class="nc">Class</span><span class="o">)</span> <span class="n">type</span><span class="o">).</span><span class="na">cast</span><span class="o">(</span><span class="n">bean</span><span class="o">)</span> <span class="o">;</span>
+            <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="nc">Exception</span> <span class="n">e</span><span class="o">){</span>
+                <span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">args</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>还有一个疑问。我凭什么能获取到方法参数的形参名称？即步骤三中的name，baby，age。这是java1.8的新特性，但是默认是不可以的，因为会增加class文件的大小。怎么开启呢？以IDEA为例，注意红圈处</p>
+
+    <p><img src="http://img.sonihr.com/da23c74d-37b3-4714-987f-2308afd09358.jpg" alt="img" /></p>
+
+    <p><strong>小结：本步骤实现了适配器设计模式，并且能将request请求携带的参数正确传递给相应的方法并调用。值得注意的是，返回值是ModelAndView，也是下一步我们要处理的。</strong></p>
+  </li>
+</ol>
+
+<h2 id="第四步viewresolver和view">第四步：ViewResolver和View</h2>
+
+<h3 id="viewresolver和view的关系">ViewResolver和View的关系</h3>
+
+<ol>
+  <li>对于控制器的目标方法，无论其返回值是String，View，ModelMap或是ModelAndView，SringMVC都会在内部将其封装为一个叫做ModelAndView的对象返回。这个ModelAndView会经过视图解析器（ViewResolver）解析成为最终的视图对象。</li>
+  <li>即，你控制器目标方法返回同一个字符串，会根据视图解析器的不同，生成不同的视图对象View。</li>
+  <li>视图对象View会调用render方法对视图进行渲染，得到response结果。</li>
+</ol>
+
+<h3 id="需求-3">需求</h3>
+
+<ol>
+  <li>通过Model实现对视图的传参</li>
+  <li>实现JSP，HTML的视图展示，支持转发和重定向。</li>
+  <li>实现@ResponseBody注解功能。</li>
+</ol>
+
+<h3 id="model的实现">Model的实现</h3>
+
+<ol>
+  <li>
+    <p>为什么要有Model？为什么不干脆放到Request域中或者session域中呢？因为JSP技术汇总用到了Request等域对象，但是如果前端不是JSP技术呢？通过Model来传参，实现了不依赖于任何前端技术，如果前端是jsp，那我把model的参数交给域对象即可，如果前端是别的，那我就交给那个前端可以识别的数据。实现了解耦，这真是MVC中的一步好棋。</p>
+  </li>
+  <li>
+    <p>本项目根据需求，只用实现JSP的传参即可，因此Model最后要交给Request域。Model是LinkedHashMap&lt;String,Object&gt;类型的。用法是，对于下列控制器的目标方法：</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nc">String</span> <span class="nf">list</span><span class="o">(</span><span class="nc">Model</span> <span class="n">model</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//获取列表页</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">Seckill</span><span class="o">&gt;</span> <span class="n">list</span> <span class="o">=</span> <span class="n">seckillService</span><span class="o">.</span><span class="na">getSeckillList</span><span class="o">();</span>
+        <span class="n">model</span><span class="o">.</span><span class="na">addAttribute</span><span class="o">(</span><span class="s">"list"</span><span class="o">,</span> <span class="n">list</span><span class="o">);</span>
+        <span class="c1">//list.jsp + model = ModelAndView</span>
+        <span class="k">return</span> <span class="s">"list"</span><span class="o">;</span><span class="c1">// /WEB-INF/jsp/"list".jsp</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+
+    <p>只要参数列表中有Model形参，那么默认返回值ModelAndView中的model就是这个。</p>
+  </li>
+  <li>
+    <p>因此要修改ArgumentResolverUtil工具类，增加对Model类型形参的识别。下面这段代码中值得注意的是，在Util的方法中传入的model，这是因为如果控制器目标方法参数中有Model类型的形参，那么要提前创建这个Model对象出来，这样在反射调用方法后，model中就有了值，简单来说就是通过提前new Model()作为参数，在调用方法后，model的改变可以被感知到。因为java是址传递，因此传入反射方法中的参数是拷贝了一份引用传递进去，但是拷贝的引用和原来的引用指向堆中同一块内存区域，在方法中利用引用修改被引用内存区域中的值时，方法外的引用也能感知到。因此，在反射调用控制器目标方法后，model会感知到方法内对model参数进行的改变。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">handler</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="nc">RequestMappingHandler</span> <span class="n">rmHandler</span> <span class="o">=</span> <span class="o">(</span><span class="nc">RequestMappingHandler</span><span class="o">)</span><span class="n">handler</span><span class="o">;</span>
+    <span class="nc">Model</span> <span class="n">model</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Model</span><span class="o">();</span>
+    <span class="nc">Object</span><span class="o">[]</span> <span class="n">args</span> <span class="o">=</span> <span class="nc">ArgumentResolverUtil</span><span class="o">.</span><span class="na">resloveRequsetParam</span><span class="o">(</span><span class="n">request</span><span class="o">,</span><span class="n">rmHandler</span><span class="o">.</span><span class="na">getMethod</span><span class="o">(),</span><span class="n">model</span><span class="o">);</span>
+    <span class="nc">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">rmHandler</span><span class="o">.</span><span class="na">getMethod</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="n">rmHandler</span><span class="o">.</span><span class="na">getBean</span><span class="o">(),</span><span class="n">args</span><span class="o">);</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="nc">ModelAndView</span><span class="o">)</span>
+        <span class="k">return</span> <span class="o">(</span><span class="nc">ModelAndView</span><span class="o">)</span><span class="n">obj</span><span class="o">;</span>
+    <span class="nc">ModelAndView</span> <span class="n">mv</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModelAndView</span><span class="o">();</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="nc">String</span><span class="o">){</span>
+        <span class="n">mv</span><span class="o">.</span><span class="na">setModel</span><span class="o">(</span><span class="n">model</span><span class="o">);</span>
+        <span class="n">mv</span><span class="o">.</span><span class="na">setView</span><span class="o">(</span><span class="n">obj</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">mv</span><span class="o">;</span>
+<span class="o">}</span>
+   
+<span class="n">ArgumentResolverUtil</span><span class="err">类中：</span>
+<span class="o">...</span>
+<span class="nc">Parameter</span> <span class="n">parameter</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+<span class="c1">//如果形参中有Model类，则创建一个参数</span>
+<span class="k">if</span><span class="o">(</span><span class="n">parameter</span><span class="o">.</span><span class="na">getType</span><span class="o">()</span> <span class="o">==</span> <span class="nc">Model</span><span class="o">.</span><span class="na">class</span><span class="o">){</span>
+    <span class="n">args</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">;</span>
+    <span class="k">continue</span><span class="o">;</span>
+<span class="o">}</span>
+<span class="k">if</span><span class="o">(</span><span class="n">argMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">parameter</span><span class="o">.</span><span class="na">getName</span><span class="o">())){</span>
+<span class="o">...</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>这一步做完后，对于任意的控制器目标方法<strong>返回值 方法名(Model model,其他参数)</strong>，只要你在方法内部用model.put(String,Object)，即可传递数据保存至model。</p>
+  </li>
+</ol>
+
+<h3 id="viewreslover和view的实现">ViewReslover和View的实现</h3>
+
+<ol>
+  <li>
+    <p>View接口，内部一个render方法，用于将view对象返回给浏览器。ViewResolver接口，内部一个resolveViewName方法，用于将viewName解析成View实例。分别建立实现类为InternalResouceView和InternalResourceViewResolver。</p>
+  </li>
+  <li>
+    <p>当DispatcherServlet获得ModelAndView后，通过ViewResolve将viewName转化成View实例，然后将view实例调用render方法将结果返回给浏览器。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//视图解析器解析mv</span>
+<span class="nc">View</span> <span class="n">view</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="na">resolveViewName</span><span class="o">(</span><span class="n">mv</span><span class="o">.</span><span class="na">getView</span><span class="o">());</span>
+<span class="c1">//页面渲染</span>
+<span class="n">view</span><span class="o">.</span><span class="na">render</span><span class="o">(</span><span class="n">mv</span><span class="o">.</span><span class="na">getModel</span><span class="o">(),</span><span class="n">request</span><span class="o">,</span><span class="n">response</span><span class="o">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>一个页面解析器可以解析不止一种类型的页面。正如在mvcContext.xml中配置的那样，不仅要配置视图解析器，还要配置视图解析器内视图的类型。我们这里解析的是JSP，分重定向或者转发两种情况即可。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">View</span> <span class="nf">resolveViewName</span><span class="o">(</span><span class="nc">String</span> <span class="n">viewName</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="k">if</span><span class="o">(</span><span class="n">viewClass</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">"com.sonihrmvc.framework.view.InternalResourceView"</span><span class="o">)){</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">viewName</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">"redirect:"</span><span class="o">))</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">InternalResourceView</span><span class="o">(</span><span class="n">viewName</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">9</span><span class="o">),</span><span class="kc">true</span><span class="o">);</span>
+        <span class="k">else</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">InternalResourceView</span><span class="o">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">viewName</span> <span class="o">+</span> <span class="n">suffix</span><span class="o">,</span><span class="kc">false</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+
+    <p>这里其实运用的是静态工厂设计模式，会出现大量的if…else…。但是因为ResolveView中已经有了view的className，其实可以用反射实现动态工厂。通过反射创建实例，然后为path动态赋值。</p>
+  </li>
+  <li>
+    <p>重定向和转发的时候要注意路径。重定向是浏览器做的，因此配置路径时，/表示主机名：即localhost:8080/，转发是服务器做的，因此配置路径时，/表示应用名：即localhost:8080/mvc/。也很好理解，因为浏览器不知道主机有多少应用，因此默认在主机根目录，服务器知道当前在运行哪一个应用，因此默认在当前应用根目录。相对路径指的是当前路径父路径+新增路径。</p>
+  </li>
+  <li>
+    <p>在render方法中就是将model中舒服传递给request域对象，然后重定向或转发到特定的jsp。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">render</span><span class="o">(</span><span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="o">?&gt;</span> <span class="n">model</span><span class="o">,</span> <span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">ServletException</span><span class="o">,</span> <span class="nc">IOException</span> <span class="o">{</span>
+    <span class="k">for</span><span class="o">(</span><span class="nc">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,?&gt;</span> <span class="nl">entry:</span><span class="n">model</span><span class="o">.</span><span class="na">entrySet</span><span class="o">()){</span>
+        <span class="n">request</span><span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">(),</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+    <span class="o">}</span>
+    <span class="k">if</span><span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">IsRedirect</span><span class="o">)</span>
+        <span class="n">request</span><span class="o">.</span><span class="na">getRequestDispatcher</span><span class="o">(</span><span class="n">path</span><span class="o">).</span><span class="na">forward</span><span class="o">(</span><span class="n">request</span><span class="o">,</span><span class="n">response</span><span class="o">);</span>
+    <span class="k">else</span>
+        <span class="n">response</span><span class="o">.</span><span class="na">sendRedirect</span><span class="o">(</span><span class="n">path</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="responsebody的实现">@ResponseBody的实现</h3>
+
+<ol>
+  <li>
+    <p>设计一个@ResponseBody注解，不需要有任何值，只是标注即可。</p>
+  </li>
+  <li>
+    <p>在AnnotationHandlerAdapter的handle方法中，判断目标方法是否具有ResponseBody注解，如果有则直接response对象向浏览器写json。</p>
+  </li>
+  <li>
+    <p>Object转JSON字符的方式，可以通过jar包，我用的是alibaba的fastJacson包。</p>
+
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">ModelAndView</span> <span class="nf">handle</span><span class="o">(</span><span class="nc">HttpServletRequest</span> <span class="n">request</span><span class="o">,</span> <span class="nc">HttpServletResponse</span> <span class="n">response</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">handler</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="nc">RequestMappingHandler</span> <span class="n">rmHandler</span> <span class="o">=</span> <span class="o">(</span><span class="nc">RequestMappingHandler</span><span class="o">)</span><span class="n">handler</span><span class="o">;</span>
+        <span class="nc">Model</span> <span class="n">model</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Model</span><span class="o">();</span>
+        <span class="nc">Object</span><span class="o">[]</span> <span class="n">args</span> <span class="o">=</span> <span class="nc">ArgumentResolverUtil</span><span class="o">.</span><span class="na">resloveRequsetParam</span><span class="o">(</span><span class="n">request</span><span class="o">,</span><span class="n">rmHandler</span><span class="o">.</span><span class="na">getMethod</span><span class="o">(),</span><span class="n">model</span><span class="o">);</span>
+        <span class="nc">Object</span> <span class="n">obj</span> <span class="o">=</span> <span class="n">rmHandler</span><span class="o">.</span><span class="na">getMethod</span><span class="o">().</span><span class="na">invoke</span><span class="o">(</span><span class="n">rmHandler</span><span class="o">.</span><span class="na">getBean</span><span class="o">(),</span><span class="n">args</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">obj</span><span class="o">==</span><span class="kc">null</span><span class="o">)</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="c1">//@ResponseBody</span>
+        <span class="nc">Annotation</span> <span class="n">annotation</span> <span class="o">=</span> <span class="n">rmHandler</span><span class="o">.</span><span class="na">getMethod</span><span class="o">().</span><span class="na">getAnnotation</span><span class="o">(</span><span class="nc">ResponseBody</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">annotation</span><span class="o">!=</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">response</span><span class="o">.</span><span class="na">getWriter</span><span class="o">().</span><span class="na">write</span><span class="o">(</span><span class="nc">JSONObject</span><span class="o">.</span><span class="na">toJSONString</span><span class="o">(</span><span class="n">obj</span><span class="o">));</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="nc">ModelAndView</span><span class="o">)</span>
+            <span class="k">return</span> <span class="o">(</span><span class="nc">ModelAndView</span><span class="o">)</span><span class="n">obj</span><span class="o">;</span>
+        <span class="nc">ModelAndView</span> <span class="n">mv</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ModelAndView</span><span class="o">();</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="nc">String</span><span class="o">){</span>
+            <span class="n">mv</span><span class="o">.</span><span class="na">setModel</span><span class="o">(</span><span class="n">model</span><span class="o">);</span>
+            <span class="n">mv</span><span class="o">.</span><span class="na">setView</span><span class="o">((</span><span class="nc">String</span><span class="o">)</span> <span class="n">obj</span><span class="o">);</span>
+        <span class="o">}</span>
+   
+        <span class="k">return</span> <span class="n">mv</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div>    </div>
+
+    <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>com.alibaba<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>fastjson<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>1.2.58<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>    </div>
+
+    <h2 id="小结">小结</h2>
+
+    <ul>
+      <li>git tag
+        <ul>
+          <li>step-1.1-solve-SpringInit Spring初始化</li>
+          <li>step-1.2-solve-SpringMVCInit MVC初始化</li>
+          <li>step-2.1-solve-requestMapping RequestMapping组件的实现</li>
+          <li>step-2.2-solve-interceptor 拦截器的实现</li>
+          <li>step-3.0-solve-step2Problems 解决第二步的少许问题</li>
+          <li>step-3.1-solveHandlerAdapter HandlerAdapter组件的实现</li>
+          <li>step-4.1-solveViewResolverAndView 视图及视图解析器组件的时间</li>
+          <li>step-4.2-solveResponseBody ResponseBody注解的实现</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+  </section>
+</article>
+
+<section class="read-more">
+   
+   
+   
+   
+   <div class="read-more-item">
+       <span class="read-more-item-dim">更早的文章</span>
+       <h2 class="post-list__post-title post-title"><a href="/2019/10/small-mybatis%E5%AE%9E%E7%8E%B0/" title="link to 不如写个small-Mybatis">不如写个small-Mybatis</a></h2>
+       <p class="excerpt">MyBatis框架概论JDBC如何演化到MyBatis  JDBC查询分析          加载JDBC驱动      建立并获取数据库连接      创建JDBC statement对象      sql语句传入参数      执行sql语句并获得查询结果      对查询结果进行转换处理并将结果返回      释放资源，关闭resultset，statement，connection。        存在哪些问题？问题与解决思路  连接的获取和释放          由上可见，JDB...&hellip;</p>
+       <div class="post-list__meta"><time datetime="2019-10-21 00:00:00 +0800" class="post-list__meta--date date">2019-10-21</time> &#8226; <span class="post-list__meta--tags tags">Mybatis</span><a class="btn-border-small" href=/2019/10/small-mybatis%E5%AE%9E%E7%8E%B0/>继续阅读</a></div>
+   </div>
+   
+</section>
+
+<!-- <section class="post-comments">
+  
+    <div id="disqus_thread"></div>
+    <script>
+    
+    var disqus_config = function () {
+        this.page.url = "http://localhost:4000/2019/10/small-springMvc%E5%AE%9E%E7%8E%B0/";
+        this.page.identifier = "/2019/10/small-springMvc%E5%AE%9E%E7%8E%B0/";
+    };
+
+    var disqus_shortname = 'vno-jekyll';
+    
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>要查看<a href="http://disqus.com/?ref_noscript"> Disqus </a>评论，请启用 JavaScript</noscript>
+    
+  
+  
+  
+  
+</section>
+
+ -->
+           <!--  <section class="footer">
+    <footer>
+    	<span class="footer__copyright">本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享 署名-非商业性使用-相同方式共享 4.0 国际 许可协议</a></span>
+        <span class="footer__copyright">由 <a href="https://jekyllrb.com">Jekyll</a> 于 2019-10-28 生成，感谢 <a href="https://www.digitalocean.com/?refcode=30ed2d146762">Digital Ocean</a> 为本站提供稳定的 VPS 服务</span>
+        <span class="footer__copyright">本站采用 <a href="https://github.com/onevcat/vno-jekyll">Vno - Jekyll</a> 作为主题，您可以在 GitHub 找到<a href="https://github.com/onevcat/OneV-s-Den">本站源码</a> - &copy; 2019</span>
+    </footer>
+</section>
+ -->
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript" src="/js/main.js"></script>
+
+
+
+    
+  </body>
+
+</html>
