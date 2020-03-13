@@ -562,3 +562,4 @@ class Singleton{
 　　《Java 中的双重检查（Double-Check）》<http://blog.csdn.net/dl88250/article/details/5439024>
 
 　　和<http://www.iteye.com/topic/652440>
+
