@@ -1,5 +1,5 @@
 ---
-title: MysqlInnodb中的事务隔离级别和锁的关系
+title: Mysql-Innodb中的事务隔离级别和锁的关系
 date: 2020-03-13 10:58:32
 category:
 - Mysql
