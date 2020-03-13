@@ -170,7 +170,7 @@ RC（不可重读）模式下的展现
 
 我们不管从数据库方面的教课书中学到，还是从网络上看到，大都是上文中事务的四种隔离级别这一模块列出的意思，RR级别是可重复读的，但无法解决幻读，而只有在Serializable级别才能解决幻读。于是我就加了一个事务C来展示效果。在事务C中添加了一条teacher_id=1的数据commit，RR级别中应该会有幻读现象，事务A在查询teacher_id=1的数据时会读到事务C新加的数据。但是测试后发现，在MySQL中是不存在这种情况的，在事务C提交后，事务A还是不会读到这条数据。可见在MySQL的RR级别中，是解决了幻读的读问题的。参见下图
 
-![](https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/java/mysql/innodb_lock.png)
+![](https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/mysql/innodb_lock.png)
 
 读问题解决了，根据MVCC的定义，并发提交数据时会出现冲突，那么冲突时如何解决呢？我们再来看看InnoDB中RR级别对于写数据的处理。
 
@@ -234,7 +234,7 @@ MySQL是这么实现的：
 
 在class_teacher这张表中，teacher_id是个索引，那么它就会维护一套B+树的数据关系，为了简化，我们用链表结构来表达（实际上是个树形结构，但原理相同）
 
-![](https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/java/mysql/gap_lock.png)
+![](https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/mysql/gap_lock.png)
 
 如图所示，InnoDB使用的是聚集索引，teacher_id身为二级索引，就要维护一个索引字段和主键id的树状结构（这里用链表形式表现），并保持顺序排列。
 
