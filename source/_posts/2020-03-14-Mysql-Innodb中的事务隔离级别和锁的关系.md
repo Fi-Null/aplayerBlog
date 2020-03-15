@@ -1,9 +1,9 @@
 ---
 title: Mysql-Innodb中的事务隔离级别和锁的关系
-date: 2020-03-13 10:58:32
+date: 2020-03-14 13:28:36
 category:
 - Mysql
-- Innodb锁
+- innodb锁
 ---
 
 ## 一次封锁or两段锁？
@@ -109,25 +109,11 @@ SET SESSION binlog_format = 'ROW';（或者是MIXED）
 
 RC（不可重读）模式下的展现
 
-| 事务A                                                        | 事务B                                                      |
-| :----------------------------------------------------------- | :--------------------------------------------------------- |
-| begin;                                                       | begin;                                                     |
-| select id,class_name,teacher_id from class_teacher where teacher_id=1;idclass_nameteacher_id1初三二班12初三一班1 |                                                            |
-|                                                              | update class_teacher set class_name='初三三班' where id=1; |
-|                                                              | commit;                                                    |
-| select id,class_name,teacher_id from class_teacher where teacher_id=1;idclass_nameteacher_id1初三三班12初三一班1 读到了事务B修改的数据，和第一次查询的结果不一样，是不可重读的。 |                                                            |
-| commit;                                                      |                                                            |
+![](https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/mysql/innodb_lock1.png)
 
 事务B修改id=1的数据提交之后，事务A同样的查询，后一次和前一次的结果不一样，这就是不可重读（重新读取产生的结果不一样）。这就很可能带来一些问题，那么我们来看看在RR级别中MySQL的表现：
 
-| 事务A                                                        | 事务B                                                        | 事务C                                                        |
-| :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
-| begin;                                                       | begin;                                                       | begin;                                                       |
-| select id,class_name,teacher_id from class_teacher where teacher_id=1;idclass_nameteacher_id1初三二班12初三一班1 |                                                              |                                                              |
-|                                                              | update class_teacher set class_name='初三三班' where id=1;commit; |                                                              |
-|                                                              |                                                              | insert into class_teacher values (null,'初三三班',1);commit; |
-| select id,class_name,teacher_id from class_teacher where teacher_id=1;idclass_nameteacher_id1初三二班12初三一班1 没有读到事务B修改的数据，和第一次sql读取的一样，是可重复读的。没有读到事务C新添加的数据。 |                                                              |                                                              |
-| commit;                                                      |                                                              |                                                              |
+![](https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/mysql/innodb_lock2.png)
 
 我们注意到，当teacher_id=1时，事务A先做了一次读取，事务B中间修改了id=1的数据，并commit之后，事务A第二次读到的数据和第一次完全相同。所以说它是可重读的。那么MySQL是怎么做到的呢？这里姑且卖个关子，我们往下看。
 
@@ -207,24 +193,11 @@ Next-Key锁是行锁和GAP（间隙锁）的合并，行锁上文已经介绍了
 
 RC级别：
 
-| 事务A                                                        | 事务B                                                        |
-| :----------------------------------------------------------- | :----------------------------------------------------------- |
-| begin;                                                       | begin;                                                       |
-| select id,class_name,teacher_id from class_teacher where teacher_id=30;idclass_nameteacher_id2初三二班30 |                                                              |
-| update class_teacher set class_name='初三四班' where teacher_id=30; |                                                              |
-|                                                              | insert into class_teacher values (null,'初三二班',30);commit; |
-| select id,class_name,teacher_id from class_teacher where teacher_id=30;idclass_nameteacher_id2初三四班3010初三二班30 |                                                              |
+![](https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/mysql/innodb_lock3.png)
 
 RR级别：
 
-| 事务A                                                        | 事务B                                                        |
-| :----------------------------------------------------------- | :----------------------------------------------------------- |
-| begin;                                                       | begin;                                                       |
-| select id,class_name,teacher_id from class_teacher where teacher_id=30;idclass_nameteacher_id2初三二班30 |                                                              |
-| update class_teacher set class_name='初三四班' where teacher_id=30; |                                                              |
-|                                                              | insert into class_teacher values (null,'初三二班',30);waiting.... |
-| select id,class_name,teacher_id from class_teacher where teacher_id=30;idclass_nameteacher_id2初三四班30 |                                                              |
-| commit;                                                      | 事务Acommit后，事务B的insert执行。                           |
+![](https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/mysql/innodb_lock4.png)
 
 通过对比我们可以发现，在RC级别中，事务A修改了所有teacher_id=30的数据，但是当事务Binsert进新数据后，事务A发现莫名其妙多了一行teacher_id=30的数据，而且没有被之前的update语句所修改，这就是“当前读”的幻读。
 
@@ -248,14 +221,7 @@ update class_teacher set class_name=‘初三四班’ where teacher_id=30;不�
 
 受限于这种实现方式，Innodb很多时候会锁住不需要锁的区间。如下所示：
 
-| 事务A                                                        | 事务B                                                        | 事务C                                                  |
-| :----------------------------------------------------------- | :----------------------------------------------------------- | :----------------------------------------------------- |
-| begin;                                                       | begin;                                                       | begin;                                                 |
-| select id,class_name,teacher_id from class_teacher;idclass_nameteacher_id1初三一班52初三二班30 |                                                              |                                                        |
-| update class_teacher set class_name='初一一班' where teacher_id=20; |                                                              |                                                        |
-|                                                              | insert into class_teacher values (null,'初三五班',10);waiting ..... | insert into class_teacher values (null,'初三五班',40); |
-| commit;                                                      | 事务A commit之后，这条语句才插入成功                         | commit;                                                |
-|                                                              | commit;                                                      |                                                        |
+![](https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/mysql/innodb_lock5.png)
 
 update的teacher_id=20是在(5，30]区间，即使没有修改任何数据，Innodb也会在这个区间加gap锁，而其它区间不会影响，事务C正常插入。
 
@@ -268,4 +234,3 @@ update的teacher_id=20是在(5，30]区间，即使没有修改任何数据，In
 这个级别很简单，读加共享锁，写加排他锁，读写互斥。使用的悲观锁的理论，实现简单，数据更加安全，但是并发能力非常差。如果你的业务并发的特别少或者没有并发，同时又要求数据及时可靠的话，可以使用这种模式。
 
 不要看到select就说不会加锁了，在Serializable这个级别，还是会加锁的！
-
