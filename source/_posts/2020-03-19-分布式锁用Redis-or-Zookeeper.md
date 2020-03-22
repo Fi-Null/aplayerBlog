@@ -1,7 +1,8 @@
 ---
 title: 分布式锁用Redis or Zookeeper?
 date: 2020-03-19 09:16:30
-tags:
+category:
+- 分布式
 ---
 
 ## 为什么用分布式锁？
