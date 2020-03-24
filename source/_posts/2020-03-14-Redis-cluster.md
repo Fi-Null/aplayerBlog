@@ -1,5 +1,5 @@
 ---
-title: Redis集群
+title: Redis-cluster
 date: 2020-03-14 23:00:46
 category:
 - redis
