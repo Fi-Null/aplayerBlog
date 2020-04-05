@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":240,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="哈希哈希函数   百科：散列函数（英语：Hash function）又称散列算法、哈希函数，是一种从任何一种数据中创建小的数字“指纹”的方法。散列函数把消息或数据压缩成摘要，使得数据量变小，将数据的格式固定下来。该函数将输入域中的数据打乱混合，重新创建一个叫做散列值（hash values，hash codes，hash sums，或hashes）的指纹。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="左神算法班笔记-哈希">
+<meta property="og:url" content="https://fi-null.github.io/2020/03/10/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%8F%AD%E7%AC%94%E8%AE%B0-%E5%93%88%E5%B8%8C/index.html">
+<meta property="og:site_name" content="Xk&#39;s | Blog">
+<meta property="og:description" content="哈希哈希函数   百科：散列函数（英语：Hash function）又称散列算法、哈希函数，是一种从任何一种数据中创建小的数字“指纹”的方法。散列函数把消息或数据压缩成摘要，使得数据量变小，将数据的格式固定下来。该函数将输入域中的数据打乱混合，重新创建一个叫做散列值（hash values，hash codes，hash sums，或hashes）的指纹。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/hash.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/hash1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/bloom.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/url_search.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash5.png">
+<meta property="article:published_time" content="2020-03-10T14:44:58.000Z">
+<meta property="article:modified_time" content="2020-04-01T13:13:04.916Z">
+<meta property="article:author" content="Ke Xiang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/hash.png">
+  <link rel="canonical" href="https://fi-null.github.io/2020/03/10/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%8F%AD%E7%AC%94%E8%AE%B0-%E5%93%88%E5%B8%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>左神算法班笔记-哈希 | Xk's | Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xk's | Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">Stay Hungry, Stay Foolish</h1>
+      
+    <!--
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-resume">
+
+    <a href="https://fi-null.github.io/resumeWeb" target="_blank" rel="section"><i class="fa fa-fw fa-handshake-o"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fi-null.github.io/2020/03/10/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%8F%AD%E7%AC%94%E8%AE%B0-%E5%93%88%E5%B8%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ke Xiang">
+      <meta itemprop="description" content="Do more, Know more, Be more">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xk's | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          左神算法班笔记-哈希
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-10 22:44:58" itemprop="dateCreated datePublished" datetime="2020-03-10T22:44:58+08:00">2020-03-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">左神算法</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95/%E5%93%88%E5%B8%8C/" itemprop="url" rel="index">
+                    <span itemprop="name">哈希</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h1><h2 id="哈希函数"><a href="#哈希函数" class="headerlink" title="哈希函数"></a>哈希函数</h2><p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/hash.png" alt> </p><blockquote>
+<p> 百科：<strong>散列函数</strong>（英语：Hash function）又称<strong>散列算法</strong>、<strong>哈希函数</strong>，是一种从任何一种数据中创建小的<strong>数字</strong>“指纹”的方法。散列函数把消息或数据压缩成摘要，使得数据量变小，将数据的格式固定下来。该函数将输入域中的数据打乱混合，重新创建一个叫做<strong>散列值</strong>（hash values，hash codes，hash sums，或hashes）的指纹。</p>
+</blockquote><a id="more"></a>
+
+<h3 id="哈希函数的性质"><a href="#哈希函数的性质" class="headerlink" title="哈希函数的性质"></a>哈希函数的性质</h3><p>哈希函数的输入域可以是非常大的范围，比如，任意一个字符串，但是输出域是固定的范围（一定位数的bit），假设为S，并具有如下性质：</p>
+<ol>
+<li>典型的哈希函数都有无限的输入值域。</li>
+<li>当给哈希函数传入相同的输入值时，返回值一样。</li>
+<li>当给哈希函数传入不同的输入值时，返回值可能一样，也可能不一样，这时当然的，因为输出域统一是S，所以会有不同的输入值对应在S中的一个元素上（这种情况称为 <strong>哈希冲突</strong>）。</li>
+<li>最重要的性质是很多不同的输入值所得到的返回值会均匀分布在S上。</li>
+</ol>
+<p>前3点性质是哈希函数的基础，第4点是评价一个哈希函数优劣的关键，不同输入值所得到的所有返回值越均匀地分布在S上，哈希函数越优秀，并且这种均匀分布与输入值出现的规律无关。比如，“aaa1”、“aaa2”、“aaa3”三个输入值比较类似，但经过优秀的哈希函数计算后得到的结果应该相差非常大。</p>
+<h3 id="哈希函数的经典实现"><a href="#哈希函数的经典实现" class="headerlink" title="哈希函数的经典实现"></a>哈希函数的经典实现</h3><blockquote>
+<p>参考文献：<a href="http://www.alloyteam.com/2017/05/hash-functions-introduction/" target="_blank" rel="noopener">哈希函数的介绍</a></p>
+</blockquote>
+<p>比如使用MD5对“test”和“test1”两个字符串哈希的结果如下（哈希结果为128个bit，数据范围为<code>0~(2^128)-1</code>，通常转换为32个16进制数显示）：</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">test	</span>098f6bcd4621d373cade4e832627b4f6</span><br><span class="line">test1 5a105e8b9d40e1329780d62ea2265d8a</span><br></pre></td></tr></table></figure>
+
+<h2 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h2><blockquote>
+<p>百科：<strong>散列表</strong>（<strong>Hash table</strong>，也叫<strong>哈希表</strong>），是根据<a href="https://zh.wikipedia.org/wiki/鍵" target="_blank" rel="noopener">键</a>（Key）而直接访问在内存存储位置的<a href="https://zh.wikipedia.org/wiki/数据结构" target="_blank" rel="noopener">数据结构</a>。也就是说，它通过计算一个关于键值的函数，将所需查询的数据<a href="https://zh.wikipedia.org/wiki/映射" target="_blank" rel="noopener">映射</a>到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做<a href="https://zh.wikipedia.org/wiki/散列函数" target="_blank" rel="noopener">散列函数</a>，存放记录的数组称做<strong>散列表</strong>。</p>
+</blockquote>
+<h3 id="哈希表的经典实现"><a href="#哈希表的经典实现" class="headerlink" title="哈希表的经典实现"></a>哈希表的经典实现</h3><p>哈希表初始会有一个大小，比如16，表中每个元素都可以通过数组下标（0<del>15）访问。每个元素可以看做一个桶，当要往表里放数据时，将要存放的数据的键值通过哈希函数计算出的哈希值模上16，结果正好对应0</del>15，将这条数据放入对应下标的桶中。</p>
+<p>那么当数据量超过16时，势必会存在哈希冲突（两条数据经哈希计算后放入同一个桶中），这时的解决方案就是将后一条入桶的数据作为后继结点链入到桶中已有的数据之后，如此，每个桶中存放的就是一个链表。那么这就是哈希表的经典结构：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/hash1.png" alt> </p>
+<p>当数据量较少时，哈希表的增删改查操作的时间复杂度都是<code>O(N)</code>的。因为根据一个键值就能定位一个桶，即使存在哈希冲突（桶里不只一条数据），但只要哈希函数优秀，数据量几乎均分在每个桶上（这样很少有哈希冲突，即使有，一个桶里也只会有很少的几条数据），那就在遍历一下桶里的链表比较键值进一步定位数据即可（反正链表很短）。</p>
+<h3 id="哈希表扩容"><a href="#哈希表扩容" class="headerlink" title="哈希表扩容"></a>哈希表扩容</h3><p>如果哈希表大小为16，对于样本规模N（要存储的数据数量）来说，如果N较小，那么根据哈希函数的散列特性，每个桶会均分这N条数据，这样落到每个桶的数据量也较小，不会影响哈希表的存取效率（这是由桶的链表长度决定的，因为存数据要往链表尾追加首先就要遍历得到尾结点，取数据要遍历链表比较键值）；但如果N较大，那么每个桶里都有<code>N/16</code>条数据，存取效率就变成<code>O(N)</code>了。因此哈希表哈需要一个扩容机制，当表中某个桶的数据量超过一个阀值时（<code>O(1)</code>到<code>O(N)</code>的转变，这需要一个算法来权衡），需要将哈希表扩容（一般是成倍的）。</p>
+<p>扩容步骤是，创建一个新的较大的哈希表（假如大小为m），将原哈希表中的数据取出，将键值的哈希值模上m，放入新表对应的桶中，这个过程也叫<code>rehash</code>。</p>
+<p>如此的话，那么原来的<code>O(N)</code>就变成了<code>O(log(m/16,N))</code>，比如扩容成5倍那就是<code>O(log(5,N))</code>（以5为底，N的对数）。当这个底数较大的时候就会将N的对数压得非常低而和<code>O(1)</code>非常接近了，并且实际工程中基本是当成<code>O(1)</code>来用的。</p>
+<p>你也许会说<code>rehash</code>很费时，会导致哈希表性能降低，这一点是可以侧面避免的。比如扩容时将倍数提高一些，那么<code>rehash</code>的次数就会很少，平衡到整个哈希表的使用来看，影响就甚微了。或者可以进行<strong>离线扩容</strong>，当需要扩容时，原哈希表还是供用户使用，在另外的内存中执行<code>rehash</code>，完成之后再将新表替换原表，这样的话对于用户来说，他是感觉不到<code>rehash</code>带来的麻烦的。</p>
+<h3 id="哈希表的JVM实现"><a href="#哈希表的JVM实现" class="headerlink" title="哈希表的JVM实现"></a>哈希表的JVM实现</h3><p>在<code>Java</code>中，哈希表的实现是每个桶中放的是一棵<strong>红黑树</strong>而非链表，因为红黑树的查找效率很高，也是对哈希冲突带来的性能问题的一个优化。</p>
+<h2 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h2><p>不安全网页的黑名单包含100亿个黑名单网页，每个网页的URL最多占用64B。现在想要实现一种网页过滤系统，可以根据网页的URL判断该网页是否在黑名单上，请设计该系统。</p>
+<p>要求如下：</p>
+<ol>
+<li>该系统允许有万分之一以下的判断失误率。</li>
+<li>使用的额外空间不要超过30GB。</li>
+</ol>
+<p>如果将这100亿个URL通过数据库或哈希表保存起来，就可以对每条URL进行查询，但是每个URL有64B，数量是100亿个，所以至少需要640GB的空间，不满足要求2。</p>
+<blockquote>
+<p>如果面试者遇到网页黑名单系统、垃圾邮件过滤系统，爬虫的网页判重系统等题目，又看到系统容忍一定程度的失误率，但是对空间要求比较严格，那么很可能是面试官希望面试者具备布隆过滤器的知识。一个布隆过滤器精确地代表一个集合，并可以精确判断一个元素是否在集合中。注意，只是精确代表和精确判断，到底有多精确呢？则完全在于你具体的设计，但想做到完全正确是不可能的。布隆过滤器的优势就在于使用很少的空间就可以将准确率做到很高的程度。该结构由<code>Burton Howard Bloom</code>于1970年提出。</p>
+</blockquote>
+<p>那么什么是布隆过滤器呢？</p>
+<p>假设有一个长度为<code>m</code>的bit类型的数组，即数组的每个位置只占一个bit，如果我们所知，每一个bit只有0和1两种状态，如图所示：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/bloom.png" alt> </p>
+<p>再假设一共有<code>k</code>个哈希函数，这些函数的输出域S都大于或等于m，并且这些哈希函数都足够优秀且彼此之间相互独立（将一个哈希函数的计算结果乘以6除以7得出的新哈希函数和原函数就是相互独立的）。那么对同一个输入对象（假设是一个字符串，记为URL），经过k个哈希函数算出来的结果也是独立的。可能相同，也可能不同，但彼此独立。对算出来的每一个结果都对m取余（%m），然后在bit array 上把相应位置设置为1（我们形象的称为涂黑）。如图所示</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/url_search.png" alt> </p>
+<p>我们把bit类型的数组记为<code>bitMap</code>。至此，一个输入对象对<code>bitMap</code>的影响过程就结束了，也就是<code>bitMap</code>的一些位置会被涂黑。接下来按照该方法，处理所有的输入对象（黑名单中的100亿个URL）。每个对象都可能把<code>bitMap</code>中的一些白位置涂黑，也可能遇到已经涂黑的位置，遇到已经涂黑的位置让其继续为黑即可。处理完所有的输入对象后，可能<code>bitMap</code>中已经有相当多的位置被涂黑。至此，一个布隆过滤器生成完毕，这个布隆过滤器代表之前所有输入对象组成的集合。</p>
+<p>那么在检查阶段时，如何检查一个对象是否是之前的某一个输入对象呢（判断一个URL是否是黑名单中的URL）？假设一个对象为a，想检查它是否是之前的输入对象，就把a通过k个哈希函数算出k个值，然后把k个值都取余（%m），就得到在[0,m-1]范围伤的k个值。接下来在<code>bitMap</code>上看这些位置是不是都为黑。如果有一个不为黑，说明a一定不再这个集合里。如果都为黑，说明a在这个集合里，但可能误判。</p>
+<p>再解释具体一点，如果a的确是输入对象 ，那么在生成布隆过滤器时，<code>bitMap</code>中相应的k个位置一定已经涂黑了，所以在检查阶段，a一定不会被漏过，这个不会产生误判。会产生误判的是，a明明不是输入对象，但如果在生成布隆过滤器的阶段因为输入对象过多，而<code>bitMap</code>过小，则会导致<code>bitMap</code>绝大多数的位置都已经变黑。那么在检查a时，可能a对应的k个位置都是黑的，从而错误地认为a是输入对象（即是黑名单中的URL）。通俗地说，布隆过滤器的失误类型是“宁可错杀三千，绝不放过一个”。</p>
+<p>布隆过滤器到底该怎么生成呢？只需记住下列三个公式即可：</p>
+<ul>
+<li>对于输入的数据量n（这里是100亿）和失误率p（这里是万分之一），布隆过滤器的大小m：<code>m = - (n*lnp)/(ln2*ln2)</code>，计算结果向上取整（这道题m=19.19n，向上取整为20n，即需要2000亿个bit，也就是25GB）</li>
+<li>需要的哈希函数的个数k：<code>k = ln2 * m/n = 0.7 * m/n</code>（这道题<code>k = 0.7 * 20n/n = 14</code>）</li>
+<li>由于前两步都进行了向上取整，那么由前两步确定的布隆过滤器的真正失误率p：<code>p = (1 - e^(-nk/m))^k</code></li>
+</ul>
+<h2 id="一致性哈希算法的基本原理"><a href="#一致性哈希算法的基本原理" class="headerlink" title="一致性哈希算法的基本原理"></a>一致性哈希算法的基本原理</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>工程师常使用服务器集群来设计和实现数据缓存，以下是常见的策略：</p>
+<ol>
+<li>无论是添加、查询还是珊瑚数据，都先将数据的id通过哈希函数换成一个哈希值，记为key</li>
+<li>如果目前机器有N台，则计算<code>key%N</code>的值，这个值就是该数据所属的机器编号，无论是添加、删除还是查询操作，都只在这台机器上进行。</li>
+</ol>
+<p>请分析这种缓存策略可能带来的问题，并提出改进的方案。</p>
+<h3 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h3><p>题目中描述的缓存从策略的潜在问题是，如果增加或删除机器时（N变化）代价会很高，所有的数据都不得不根据id重新计算一遍哈希值，并将哈希值对新的机器数进行取模啊哦做。然后进行大规模的数据迁移。</p>
+<p>为了解决这些问题，下面介绍一下一致性哈希算法，这时一种很好的数据缓存设计方案。我们假设数据的id通过哈希函数转换成的哈希值范围是2^32，也就是0~(2^32)-1的数字空间中。现在我们可以将这些数字头尾相连，想象成一个闭合的环形，那么一个数据id在计算出哈希值之后认为对应到环中的一个位置上，如图所示</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash.png" alt> </p>
+<p>接下来想象有三台机器也处在这样一个环中，这三台机器在环中的位置根据机器id（主机名或者主机IP，是主机唯一的就行）设计算出的哈希值对2^32取模对应到环上。那么一条数据如何确定归属哪台机器呢？我们可以在该数据对应环上的位置顺时针寻找离该位置最近的机器，将数据归属于该机器上：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash1.png" alt> </p>
+<p>这样的话，如果删除<code>machine2</code>节点，则只需将<code>machine2</code>上的数据迁移到<code>machine3</code>上即可，而不必大动干戈迁移所有数据。当添加节点的时候，也只需将新增节点到逆时针方向新增节点前一个节点这之间的数据迁移给新增节点即可。</p>
+<p>但这时还是存在如下两个问题：</p>
+<ul>
+<li>机器较少时，通过机器id哈希将机器对应到环上之后，几个机器可能没有均分环</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash2.png" alt> </p>
+<p>那么这样会导致负载不均。</p>
+<ul>
+<li>增加机器时，可能会打破现有的平衡：</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash3.png" alt> </p>
+<p>为了解决这种数据倾斜问题，一致性哈希算法引入了虚拟节点机制，即对每一台机器通过不同的哈希函数计算出多个哈希值，对多个位置都放置一个服务节点，称为虚拟节点。具体做法：比如对于<code>machine1</code>的IP<code>192.168.25.132</code>（或机器名），计算出<code>192.168.25.132-1</code>、<code>192.168.25.132-2</code>、<code>192.168.25.132-3</code>、<code>192.168.25.132-4</code>的哈希值，然后对应到环上，其他的机器也是如此，这样的话节点数就变多了，根据哈希函数的性质，平衡性自然会变好：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/consistent_hash5.png" alt> </p>
+<p>此时数据定位算法不变，只是多了一步虚拟节点到实际节点的映射，比如上图的查找表。当某一条数据计算出归属于<code>m2-1</code>时再根据查找表的跳转，数据将最终归属于实际的m1节点。</p>
+<blockquote>
+<p>基于一致性哈希的原理有很多种具体的实现，包括Chord算法、KAD算法等，有兴趣的话可以进一步学习。</p>
+</blockquote>
+<h2 id="RandomPool"><a href="#RandomPool" class="headerlink" title="RandomPool"></a>RandomPool</h2><p>设计一种结构，在该结构中有如下三个功能：</p>
+<ul>
+<li>inserrt(key)：将某个key加入到该结构中，做到不重复加入。</li>
+<li>delete(key)：将原本在结构中的某个key移除。</li>
+<li>getRandom()：等概率随机返回结构中的任何一个key。</li>
+</ul>
+<p>要求：insert、delete和getRandom方法的时间复杂度都是<code>O(1)</code></p>
+<blockquote>
+<p>思路：使用两个哈希表和一个变量<code>size</code>，一个表存放某<code>key</code>的标号，另一个表根据根据标号取某个<code>key</code>。<code>size</code>用来记录结构中的数据量。加入<code>key</code>时，将<code>size</code>作为该<code>key</code>的标号加入到两表中；删除<code>key</code>时，将标号最大的<code>key</code>替换它并将<code>size--</code>；随机取<code>key</code>时，将<code>size</code>范围内的随机数作为标号取<code>key</code>。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RandomPool</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> size;</span><br><span class="line">    <span class="keyword">public</span> HashMap&lt;Object, Integer&gt; keySignMap;</span><br><span class="line">    <span class="keyword">public</span> HashMap&lt;Integer, Object&gt; signKeyMap;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RandomPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.size = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">this</span>.keySignMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">        <span class="keyword">this</span>.signKeyMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//不重复添加</span></span><br><span class="line">        <span class="keyword">if</span> (keySignMap.containsKey(key)) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        keySignMap.put(key, size);</span><br><span class="line">        signKeyMap.put(size, key);</span><br><span class="line">        size++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (keySignMap.containsKey(key)) &#123;</span><br><span class="line">            Object lastKey = signKeyMap.get(--size);</span><br><span class="line">            <span class="keyword">int</span> deleteSign = keySignMap.get(key);</span><br><span class="line">            keySignMap.put(lastKey, deleteSign);</span><br><span class="line">            signKeyMap.put(deleteSign, lastKey);</span><br><span class="line">            keySignMap.remove(key);</span><br><span class="line">            signKeyMap.remove(lastKey);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getRandom</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> signKeyMap.get((<span class="keyword">int</span>) (Math.random() * size));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a>小技巧</h1><h2 id="对数器"><a href="#对数器" class="headerlink" title="对数器"></a>对数器</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>有时我们对编写的算法进行测试时，会采用自己编造几个简单数据进行测试。然而别人测试时可能会将大数量级的数据输入进而测试算法的准确性和健壮性，如果这时出错，面对庞大的数据量我们将无从查起（是在操作哪一个数据时出了错，算法没有如期起作用）。当然我们不可能对这样一个大数据进行断点调试，去一步一步的分析错误点在哪。这时 <strong>对数器</strong> 就粉墨登场了，<strong>对数器</strong> 就是通过随机制造出几乎所有可能的简短样本作为算法的输入样本对算法进行测试，这样大量不同的样本从大概率上保证了算法的准确性，当有样本测试未通过时又能打印该简短样本对错误原因进行分析。</p>
+<h3 id="对数器的使用"><a href="#对数器的使用" class="headerlink" title="对数器的使用"></a>对数器的使用</h3><ol>
+<li>对于你想测试的算法</li>
+<li>实现功能与该算法相同但绝对正确、复杂度不好的算法</li>
+<li>准备大量随机的简短样本的</li>
+<li>实现比对的方法：对于每一个样本，比对该算法和第二步中算法的执行结果以判断该算法的正确性</li>
+<li>如果有一个样本比对出错则打印该样本</li>
+<li>当样本数量很多时比对测试依然正确，可以确定算法a已经正确</li>
+</ol>
+<p>对数器使用案例——对自写的插入排序进行测试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> *a, <span class="keyword">int</span> *b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp = *a;</span><br><span class="line">    *a = *b;</span><br><span class="line">    *b = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//1.有一个自写的算法，但不知其健壮性（是否会有特殊情况使程序异常中断甚至崩溃）和正确性</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertionSort</span><span class="params">(<span class="keyword">int</span> arr[], <span class="keyword">int</span> length)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(arr==NULL || length&lt;=<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; length; ++i) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i - <span class="number">1</span>; j &gt;= <span class="number">0</span> || arr[j] &lt;= arr[j + <span class="number">1</span>]; j--) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                swap(&amp;arr[j], &amp;arr[j + <span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//2、实现一个功能相同、绝对正确但复杂度不好的算法（这里摘取大家熟知的冒泡排序）</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span> arr[], <span class="keyword">int</span> length)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = length-<span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; ++j) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                swap(&amp;arr[j], &amp;arr[j + <span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//3、实现一个能够产生随机简短样本的方法</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">generateSample</span><span class="params">(<span class="keyword">int</span> arr[], <span class="keyword">int</span> length)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length; ++i) &#123;</span><br><span class="line">        arr[i] = rand() % <span class="number">100</span>-rand()%<span class="number">100</span>;<span class="comment">//控制元素在-100~100之间，考虑到零正负三种情况</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//4、实现一个比对测试算法和正确算法运算结果的方法</span></span><br><span class="line"><span class="function">bool <span class="title">isEqual</span><span class="params">(<span class="keyword">int</span> arr1[],<span class="keyword">int</span> arr2[],<span class="keyword">int</span> length)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (arr1 != NULL &amp;&amp; arr2 != NULL) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length; ++i) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arr1[i] != arr2[i]) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">travels</span><span class="params">(<span class="keyword">int</span> arr[], <span class="keyword">int</span> length)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length; ++i) &#123;</span><br><span class="line">        printf(<span class="string">"%d "</span>, arr[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    printf(<span class="string">"\n"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">copy</span><span class="params">(<span class="keyword">int</span> source[], <span class="keyword">int</span> target[],<span class="keyword">int</span> length)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; length; ++i) &#123;</span><br><span class="line">        target[i] = source[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    srand(time(NULL));</span><br><span class="line">    <span class="keyword">int</span> testTimes=<span class="number">10000</span>;       </span><br><span class="line">    <span class="comment">//循环产生100000个样本进行测试</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; testTimes; ++i) &#123;</span><br><span class="line">        <span class="keyword">int</span> length = rand() % <span class="number">10</span>;   <span class="comment">//控制每个样本的长度在10以内，便于出错时分析样本（因为简短）</span></span><br><span class="line">        <span class="keyword">int</span> arr[length];</span><br><span class="line">        generateSample(arr, length);</span><br><span class="line"></span><br><span class="line">      	<span class="comment">//不要改变原始样本，在复制样本上改动</span></span><br><span class="line">        <span class="keyword">int</span> arr1[length], arr2[length];</span><br><span class="line">        copy(arr, arr1, length);</span><br><span class="line">        copy(arr, arr2, length);</span><br><span class="line">        bubbleSort(arr1,length);</span><br><span class="line">        insertionSort(arr2, length);</span><br><span class="line"></span><br><span class="line"><span class="comment">//        travels(arr, length);</span></span><br><span class="line"><span class="comment">//        travels(arr1, length);</span></span><br><span class="line"></span><br><span class="line">      	<span class="comment">//5、比对两个算法，只要有一个样本没通过就终止，并打印原始样本</span></span><br><span class="line">        <span class="keyword">if</span> (!isEqual(arr1, arr2, length)) &#123;</span><br><span class="line">            printf(<span class="string">"test fail!the sample is: "</span>);</span><br><span class="line">            travels(arr, length);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">  	<span class="comment">//6、测试全部通过，该算法大概率上正确</span></span><br><span class="line">    printf(<span class="string">"nice!"</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="打印二叉树"><a href="#打印二叉树" class="headerlink" title="打印二叉树"></a>打印二叉树</h2><p>有时我们不确定二叉树中是否有指针连空了或者连错了，这时需要将二叉树具有层次感地打印出来，下面就提供了这样一个工具。你可以将你的头逆时针旋转90度看打印结果。<code>v</code>表示该结点的头结点是左下方距离该结点最近的一个结点，<code>^</code>表示该结点的头结点是左上方距离该结点最近的一个结点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> top.zhenganwen.algorithmdemo.recursive;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PrintBinaryTree</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">int</span> value;</span><br><span class="line">		<span class="keyword">public</span> Node left;</span><br><span class="line">		<span class="keyword">public</span> Node right;</span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> data)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.value = data;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printTree</span><span class="params">(Node head)</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"Binary Tree:"</span>);</span><br><span class="line">		printInOrder(head, <span class="number">0</span>, <span class="string">"H"</span>, <span class="number">17</span>);</span><br><span class="line">		System.out.println();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printInOrder</span><span class="params">(Node head, <span class="keyword">int</span> height, String to, <span class="keyword">int</span> len)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (head == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		printInOrder(head.right, height + <span class="number">1</span>, <span class="string">"v"</span>, len);</span><br><span class="line">		String val = to + head.value + to;</span><br><span class="line">		<span class="keyword">int</span> lenM = val.length();</span><br><span class="line">		<span class="keyword">int</span> lenL = (len - lenM) / <span class="number">2</span>;</span><br><span class="line">		<span class="keyword">int</span> lenR = len - lenM - lenL;</span><br><span class="line">		val = getSpace(lenL) + val + getSpace(lenR);</span><br><span class="line">		System.out.println(getSpace(height * len) + val);</span><br><span class="line">		printInOrder(head.left, height + <span class="number">1</span>, <span class="string">"^"</span>, len);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getSpace</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">		String space = <span class="string">" "</span>;</span><br><span class="line">		StringBuffer buf = <span class="keyword">new</span> StringBuffer(<span class="string">""</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; num; i++) &#123;</span><br><span class="line">			buf.append(space);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> buf.toString();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Node head = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">		head.left = <span class="keyword">new</span> Node(-<span class="number">222222222</span>);</span><br><span class="line">		head.right = <span class="keyword">new</span> Node(<span class="number">3</span>);</span><br><span class="line">		head.left.left = <span class="keyword">new</span> Node(Integer.MIN_VALUE);</span><br><span class="line">		head.right.left = <span class="keyword">new</span> Node(<span class="number">55555555</span>);</span><br><span class="line">		head.right.right = <span class="keyword">new</span> Node(<span class="number">66</span>);</span><br><span class="line">		head.left.left.right = <span class="keyword">new</span> Node(<span class="number">777</span>);</span><br><span class="line">		printTree(head);</span><br><span class="line"></span><br><span class="line">		head = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">		head.left = <span class="keyword">new</span> Node(<span class="number">2</span>);</span><br><span class="line">		head.right = <span class="keyword">new</span> Node(<span class="number">3</span>);</span><br><span class="line">		head.left.left = <span class="keyword">new</span> Node(<span class="number">4</span>);</span><br><span class="line">		head.right.left = <span class="keyword">new</span> Node(<span class="number">5</span>);</span><br><span class="line">		head.right.right = <span class="keyword">new</span> Node(<span class="number">6</span>);</span><br><span class="line">		head.left.left.right = <span class="keyword">new</span> Node(<span class="number">7</span>);</span><br><span class="line">		printTree(head);</span><br><span class="line"></span><br><span class="line">		head = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">		head.left = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">		head.right = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">		head.left.left = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">		head.right.left = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">		head.right.right = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">		head.left.left.right = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">		printTree(head);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/03/10/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%8F%AD%E7%AC%94%E8%AE%B0-%E9%80%92%E5%BD%92%E5%92%8C%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="next" title="左神算法班笔记-递归和动态规划">
+                  <i class="fa fa-chevron-left"></i> 左神算法班笔记-递归和动态规划
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/03/11/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E8%BF%9B%E9%98%B6-%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/" rel="prev" title="左神算法笔记进阶-经典算法">
+                  左神算法笔记进阶-经典算法 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#哈希"><span class="nav-number">1.</span> <span class="nav-text">哈希</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#哈希函数"><span class="nav-number">1.1.</span> <span class="nav-text">哈希函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希函数的性质"><span class="nav-number">1.1.1.</span> <span class="nav-text">哈希函数的性质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希函数的经典实现"><span class="nav-number">1.1.2.</span> <span class="nav-text">哈希函数的经典实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#哈希表"><span class="nav-number">1.2.</span> <span class="nav-text">哈希表</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希表的经典实现"><span class="nav-number">1.2.1.</span> <span class="nav-text">哈希表的经典实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希表扩容"><span class="nav-number">1.2.2.</span> <span class="nav-text">哈希表扩容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#哈希表的JVM实现"><span class="nav-number">1.2.3.</span> <span class="nav-text">哈希表的JVM实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布隆过滤器"><span class="nav-number">1.3.</span> <span class="nav-text">布隆过滤器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一致性哈希算法的基本原理"><span class="nav-number">1.4.</span> <span class="nav-text">一致性哈希算法的基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目"><span class="nav-number">1.4.1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析"><span class="nav-number">1.4.2.</span> <span class="nav-text">解析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RandomPool"><span class="nav-number">1.5.</span> <span class="nav-text">RandomPool</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小技巧"><span class="nav-number">2.</span> <span class="nav-text">小技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#对数器"><span class="nav-number">2.1.</span> <span class="nav-text">对数器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">2.1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对数器的使用"><span class="nav-number">2.1.2.</span> <span class="nav-text">对数器的使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打印二叉树"><span class="nav-number">2.2.</span> <span class="nav-text">打印二叉树</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Ke Xiang"
+    src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ke Xiang</p>
+  <div class="site-description" itemprop="description">Do more, Know more, Be more</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fi-null" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;fi-null" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xk123401@foxmail.com" title="E-Mail &amp;rarr; mailto:xk123401@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xk123401" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;xk123401" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ke & Xiang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'fi-null.github.io',
+      owner: 'fi-null',
+      admin: ['fi-null'],
+      id: '43498de972a60c432f9b2aa7e86b95a6',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="388713953" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.5" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>

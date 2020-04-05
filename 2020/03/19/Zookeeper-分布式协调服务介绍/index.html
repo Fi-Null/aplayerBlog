@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":240,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="分布式系统分布式系统的简单定义：分布式系统是一个硬件或软件组件分布在不同的网络计算机上，彼此之间仅仅通过消息传递进行通信和协调的系统。分布式系统的特征： 分布性：系统中的计算机在空间上随意分布和随时变动 对等性：系统中的计算机是对等的，没有主从之分 并发性：并发性操作是非常常见的行为 缺乏全局时钟：系统中的计算机具有明显的分布性，且缺乏一个全局的时钟序列控制，所以很难比较两个事件的先后 故障总是会">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zookeeper 分布式协调服务介绍">
+<meta property="og:url" content="https://fi-null.github.io/2020/03/19/Zookeeper-%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="Xk&#39;s | Blog">
+<meta property="og:description" content="分布式系统分布式系统的简单定义：分布式系统是一个硬件或软件组件分布在不同的网络计算机上，彼此之间仅仅通过消息传递进行通信和协调的系统。分布式系统的特征： 分布性：系统中的计算机在空间上随意分布和随时变动 对等性：系统中的计算机是对等的，没有主从之分 并发性：并发性操作是非常常见的行为 缺乏全局时钟：系统中的计算机具有明显的分布性，且缺乏一个全局的时钟序列控制，所以很难比较两个事件的先后 故障总是会">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/zkservice.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/znode.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/zk_watch.png">
+<meta property="article:published_time" content="2020-03-19T03:18:21.000Z">
+<meta property="article:modified_time" content="2020-04-01T13:13:04.924Z">
+<meta property="article:author" content="Ke Xiang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/zkservice.png">
+  <link rel="canonical" href="https://fi-null.github.io/2020/03/19/Zookeeper-%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Zookeeper 分布式协调服务介绍 | Xk's | Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xk's | Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">Stay Hungry, Stay Foolish</h1>
+      
+    <!--
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-resume">
+
+    <a href="https://fi-null.github.io/resumeWeb" target="_blank" rel="section"><i class="fa fa-fw fa-handshake-o"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fi-null.github.io/2020/03/19/Zookeeper-%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E6%9C%8D%E5%8A%A1%E4%BB%8B%E7%BB%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ke Xiang">
+      <meta itemprop="description" content="Do more, Know more, Be more">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xk's | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          Zookeeper 分布式协调服务介绍
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-19 11:18:21" itemprop="dateCreated datePublished" datetime="2020-03-19T11:18:21+08:00">2020-03-19</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="分布式系统"><a href="#分布式系统" class="headerlink" title="分布式系统"></a>分布式系统</h2><p>分布式系统的简单定义：分布式系统是一个硬件或软件组件分布在不同的网络计算机上，彼此之间仅仅通过消息传递进行通信和协调的系统。</p><p>分布式系统的特征：</p><ul>
+<li>分布性：系统中的计算机在空间上随意分布和随时变动</li>
+<li>对等性：系统中的计算机是对等的，没有主从之分</li>
+<li>并发性：并发性操作是非常常见的行为</li>
+<li>缺乏全局时钟：系统中的计算机具有明显的分布性，且缺乏一个全局的时钟序列控制，所以很难比较两个事件的先后</li>
+<li>故障总是会发生：任何在设计阶段考虑到的异常情况，一定会在系统实际运行中发生，并且还会遇到很多在设计时未考虑到的异常故障</li>
+</ul><a id="more"></a>
+
+
+<p>随着分布式架构的出现，越来越多的分布式应用会面临数据一致性问题。</p>
+<h2 id="选择Zookeeper"><a href="#选择Zookeeper" class="headerlink" title="选择Zookeeper"></a>选择Zookeeper</h2><p>Zookeeper是一个典型的分布式数据一致性解决方案，分布式应用程序可以基于它实现诸如数据发布/订阅、负载均衡、命名服务、分布式协调/通知、集群管理、master选举、分布式锁和分布式队列等功能。</p>
+<p>Zookeeper致力于提供一个高性能、高可用，具有严格的顺序访问控制能力的分布式协调服务；其主要的设计目标是简单的数据模型、可以构建集群、顺序访问、高性能。Zookeeper已经成为很多大型分布式项目譬如Hadoop、HBase、Storm、Solr等中的核心组件，用于分布式协调。</p>
+<p>Zookeeper可以保证如下<strong>分布式一致性特性</strong>：</p>
+<ul>
+<li>顺序一致性：从同一个客户端发起的事务请求，最终将会严格地按照其发起顺序被应用到Zookeeper中去</li>
+<li>原子性：所有事务请求的处理结果在整个集群中所有的机器上的应用情况是一致的</li>
+<li>单一视图：无论客户端连接的是哪个Zookeeper服务器，其看到的服务器数据模型都是一致的</li>
+<li>可靠性：一旦服务端成功地应用了一个事务，并完成对客户端的响应，那么该事务所引起的服务端状态变更将会被一直保留下来，除非有另一个事务又对其进行了变更</li>
+<li>实时性：在一定的时间内，客户端最终一定能够从服务端上读取到最新的数据状态</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/zkservice.png" alt></p>
+<h2 id="Zookeeper-基本概念"><a href="#Zookeeper-基本概念" class="headerlink" title="Zookeeper 基本概念"></a>Zookeeper 基本概念</h2><ul>
+<li>集群角色<ul>
+<li>Leader：客户端提供读和写服务</li>
+<li>Follower：提供读服务，所有写服务都需要转交给Leader角色，参与选举</li>
+<li>Observer：提供读服务，不参与选举过程，一般是为了增强Zookeeper集群的读请求并发能力</li>
+</ul>
+</li>
+<li>会话 (session)<ul>
+<li>Zk的客户端与zk的服务端之间的连接</li>
+<li>通过心跳检测保持客户端连接的存活</li>
+<li>接收来自服务端的watch事件通知</li>
+<li>可以设置超时时间</li>
+</ul>
+</li>
+</ul>
+<h4 id="ZNode-节点"><a href="#ZNode-节点" class="headerlink" title="ZNode 节点"></a>ZNode 节点</h4><p>ZNode 是Zookeeper中数据的最小单元，每个ZNode上可以保存数据(byte[]类型)，同时可以挂在子节点，因此构成了一个层次化的命名空间，我们称之为树</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/znode.png" alt></p>
+<ul>
+<li>节点是有生命周期的，生命周期由<strong>节点类型</strong>决定：<ul>
+<li>持久节点(PERSISTENT)：节点创建后就一直存在于Zookeeper服务器上，直到有删除操作主动将其删除</li>
+<li>持久顺序节点(PERSISTENT_SEQUENTIAL)：基本特性与持久节点一致，额外的特性在于Zookeeper会记录其子节点创建的先后顺序</li>
+<li>临时节点(EPHEMERAL)：声明周期与客户端的会话绑定，客户端会话失效时节点将被自动清除</li>
+<li>临时顺序节点(EPHEMERAL_SEQUENTIAL)：基本特性与临时节点一致，但添加了顺序的特性</li>
+</ul>
+</li>
+<li>每个节点都有<strong>状态信息</strong>，抽象为 Stat 对象，状态属性如下：<ul>
+<li>czxid：节点被创建时的事务ID</li>
+<li>mzxid：节点最后一个被更新时的事务ID</li>
+<li>ctime：节点创建时间</li>
+<li>mtime：节点最后一个被更新时间</li>
+<li>version：节点版本号</li>
+<li>cversion：子节点版本号</li>
+<li>aversion：节点的ACL版本号</li>
+<li>ephemeralOwner：创建该临时节点的会话的sessionID，若为持久节点则为0</li>
+<li>dataLength：数据内容长度</li>
+<li>numChildren：子节点数量</li>
+</ul>
+</li>
+<li>权限控制ACL (Access Control Lists)<ul>
+<li>CREATE：创建子节点的权限</li>
+<li>READ：获取节点数据和子节点列表的权限</li>
+<li>WRITE：更新节点数据的权限</li>
+<li>DELETE：删除子节点的权限</li>
+<li>ADMIN：设置节点ACL的权限</li>
+</ul>
+</li>
+</ul>
+<h4 id="watcher机制"><a href="#watcher机制" class="headerlink" title="watcher机制"></a>watcher机制</h4><p>Zookeeper 引入watcher机制来实现发布/订阅功能，能够让多个订阅者同时监听某一个节点对象，当这个节点对象状态发生变化时，会通知所有订阅者。</p>
+<p>Zookeeper的watcher机制主要包括客户端线程、客户端WatchManager、Zookeeper服务器三个部分。其工作流程简单来说：客户端在向Zookeeper服务器注册Watcher的同时，会将Watcher对象存储在客户端的WatchManager中；当Zookeeper服务器端触发Watcher事件后，会向客户端发送通知，客户端线程从WatchManager中取出对应的Watcher对象来执行回调逻辑</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/zk_watch.png" alt></p>
+<p>可以设置的两种 Watcher</p>
+<ul>
+<li>NodeCache<ul>
+<li>监听数据节点的内容变更</li>
+<li>监听节点的创建，即如果指定的节点不存在，则节点创建后，会触发这个监听</li>
+</ul>
+</li>
+<li>PathChildrenCache<ul>
+<li>监听指定节点的子节点变化情况</li>
+<li>包括新增子节点、子节点数据变更和子节点删除</li>
+</ul>
+</li>
+</ul>
+<p><strong>Zookeeper机制的特点：</strong></p>
+<ol>
+<li>一次性触发数据发生改变时，一个watcher event会被发送到client，但是client<strong><em>只会收到一次这样的信息\</em></strong>。</li>
+<li>watcher event异步发送watcher的通知事件从server发送到client是<strong><em>异步\</em></strong>的，这就存在一个问题，不同的客户端和服务器之间通过socket进行通信，由于<strong><em>网络延迟或其他因素导致客户端在不通的时刻监听到事件\</em></strong>，由于Zookeeper本身提供了<strong><em>ordering guarantee，即客户端监听事件后，才会感知它所监视znode发生了变化\</em></strong>。所以我们使用Zookeeper不能期望能够监控到节点每次的变化。Zookeeper<strong><em>只能保证最终的一致性，而无法保证强一致性\</em></strong>。</li>
+<li>数据监视Zookeeper有数据监视和子数据监视getdata() and exists()设置数据监视，getchildren()设置了子节点监视。</li>
+<li>注册watcher <strong><em>getData、exists、getChildren\</em></strong></li>
+<li>触发watcher <strong><em>create、delete、setData\</em></strong></li>
+<li><strong><em>setData()\</em></strong>会触发znode上设置的data watch（如果set成功的话）。一个成功的<strong><em>create()\</em></strong> 操作会触发被创建的znode上的数据watch，以及其父节点上的child watch。而一个成功的<strong><em>delete()\</em></strong>操作将会同时触发一个znode的data watch和child watch（因为这样就没有子节点了），同时也会触发其父节点的child watch。</li>
+<li>当一个客户端<strong><em>连接到一个新的服务器上\</em></strong>时，watch将会被以任意会话事件触发。当<strong><em>与一个服务器失去连接\</em></strong>的时候，是无法接收到watch的。而当client<strong><em>重新连接\</em></strong>时，如果需要的话，所有先前注册过的watch，都会被重新注册。通常这是完全透明的。只有在一个特殊情况下，<strong><em>watch可能会丢失\</em></strong>：对于一个未创建的znode的exist watch，如果在客户端断开连接期间被创建了，并且随后在客户端连接上之前又删除了，这种情况下，这个watch事件可能会被丢失。</li>
+<li>Watch是轻量级的，其实就是本地JVM的<strong><em>Callback\</em></strong>，服务器端只是存了是否有设置了Watcher的布尔类型</li>
+</ol>
+<h2 id="Zookeeper-的典型应用场景"><a href="#Zookeeper-的典型应用场景" class="headerlink" title="Zookeeper 的典型应用场景"></a>Zookeeper 的典型应用场景</h2><p>Zookeeper 是一个典型的发布/订阅模式的分布式数据管理与协调框架，开发人员可以使用它来进行分布式数据的发布和订阅。</p>
+<p>通过对 Zookeeper 中丰富的数据节点进行交叉使用，配合 Watcher 事件通知机制，可以非常方便的构建一系列分布式应用中年都会涉及的核心功能，如：</p>
+<ol>
+<li>数据发布/订阅</li>
+<li>负载均衡</li>
+<li>命名服务</li>
+<li>分布式协调/通知</li>
+<li>集群管理</li>
+<li>Master 选举</li>
+<li>分布式锁</li>
+<li>分布式队列</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/03/19/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%94%A8Redis-or-Zookeeper/" rel="next" title="分布式锁用Redis or Zookeeper?">
+                  <i class="fa fa-chevron-left"></i> 分布式锁用Redis or Zookeeper?
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/03/24/Netty-Reactor%E6%A8%A1%E5%BC%8F/" rel="prev" title="Netty-Reactor模式">
+                  Netty-Reactor模式 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式系统"><span class="nav-number">1.</span> <span class="nav-text">分布式系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择Zookeeper"><span class="nav-number">2.</span> <span class="nav-text">选择Zookeeper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-基本概念"><span class="nav-number">3.</span> <span class="nav-text">Zookeeper 基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ZNode-节点"><span class="nav-number">3.0.1.</span> <span class="nav-text">ZNode 节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#watcher机制"><span class="nav-number">3.0.2.</span> <span class="nav-text">watcher机制</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-的典型应用场景"><span class="nav-number">4.</span> <span class="nav-text">Zookeeper 的典型应用场景</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Ke Xiang"
+    src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ke Xiang</p>
+  <div class="site-description" itemprop="description">Do more, Know more, Be more</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fi-null" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;fi-null" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xk123401@foxmail.com" title="E-Mail &amp;rarr; mailto:xk123401@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xk123401" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;xk123401" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ke & Xiang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'fi-null.github.io',
+      owner: 'fi-null',
+      admin: ['fi-null'],
+      id: 'cacdf92aff210168c7f20edd3d25c82a',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="388713953" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.5" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>

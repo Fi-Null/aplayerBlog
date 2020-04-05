@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":240,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="如果你只是想要在自己站点的左下角加一个极其Stable的音乐播放器，而不想听我废话自己踩的坑，请直接跳转：“Show me the CODE!”">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为Hexo博客添加全局APlayer播放器">
+<meta property="og:url" content="https://fi-null.github.io/2019/11/25/%E4%B8%BAHexo%E5%8D%9A%E5%AE%A2%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80APlayer%E6%92%AD%E6%94%BE%E5%99%A8/index.html">
+<meta property="og:site_name" content="Xk&#39;s | Blog">
+<meta property="og:description" content="如果你只是想要在自己站点的左下角加一个极其Stable的音乐播放器，而不想听我废话自己踩的坑，请直接跳转：“Show me the CODE!”">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/01/12/Dmhzxi8XFIQK7np.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/01/12/Sb8tgk2FZLrnu3i.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/01/12/Rm4tpK1sBMrdcyT.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/01/12/CBPWNdEnRqrUoHs.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/01/12/tmUfeSh5KFILic7.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/01/12/gsN2MBVqIzCW9Uf.jpg">
+<meta property="article:published_time" content="2019-11-25T13:57:48.000Z">
+<meta property="article:modified_time" content="2020-04-01T13:13:04.914Z">
+<meta property="article:author" content="Ke Xiang">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="音乐">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/01/12/Dmhzxi8XFIQK7np.jpg">
+  <link rel="canonical" href="https://fi-null.github.io/2019/11/25/%E4%B8%BAHexo%E5%8D%9A%E5%AE%A2%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80APlayer%E6%92%AD%E6%94%BE%E5%99%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>为Hexo博客添加全局APlayer播放器 | Xk's | Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xk's | Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">Stay Hungry, Stay Foolish</h1>
+      
+    <!--
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-resume">
+
+    <a href="https://fi-null.github.io/resumeWeb" target="_blank" rel="section"><i class="fa fa-fw fa-handshake-o"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fi-null.github.io/2019/11/25/%E4%B8%BAHexo%E5%8D%9A%E5%AE%A2%E6%B7%BB%E5%8A%A0%E5%85%A8%E5%B1%80APlayer%E6%92%AD%E6%94%BE%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ke Xiang">
+      <meta itemprop="description" content="Do more, Know more, Be more">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xk's | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          为Hexo博客添加全局APlayer播放器
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-25 21:57:48" itemprop="dateCreated datePublished" datetime="2019-11-25T21:57:48+08:00">2019-11-25</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div class="note info">
+            <p>如果你只是想要在自己站点的左下角加一个极其Stable的音乐播放器，而不想听我废话自己踩的坑，请直接跳转：<br><a href="/2019/11/25/为Hexo博客添加全局APlayer播放器/#Show-me-the-CODE">“Show me the CODE!”</a></p>
+          </div>
+<a id="more"></a>
+
+<h1 id="早期尝试"><a href="#早期尝试" class="headerlink" title="早期尝试"></a>早期尝试</h1><h2 id="网易云iframe"><a href="#网易云iframe" class="headerlink" title="网易云iframe"></a>网易云iframe</h2><p>今天，我试图解决一个历史遗留问题。</p>
+<p>之前我博客上的音乐播放器一直都是网易云的外链iframe，就这个样式的：</p>
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1384318412&auto=0&height=66"></iframe>
+
+<p>我一直把这个玩意放在sidebar里。但是问题是，移动版视图下sidebar是不展示的，只有header能够显示出来，而且还需要用toggle展开。我使用的主题是<code>NexT</code>，试验了一下，需要修改的地方是：</p>
+<p><code>\themes\next\layout\_partials\header\index.swig</code></p>
+<p>由于toggle展开的是<code>site-nav</code>，将源码修改如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; partial('_partials/header/brand.swig', &#123;&#125;, &#123;cache: theme.cache.enable&#125;) &#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">nav</span> <span class="attr">class</span>=<span class="string">"site-nav"</span>&gt;</span></span><br><span class="line">  &#123;&#123; partial('_partials/header/menu.swig', &#123;&#125;, &#123;cache: theme.cache.enable&#125;) &#125;&#125;</span><br><span class="line">  <span class="comment">&lt;!--网易云iframe--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">iframe</span> <span class="attr">frameborder</span>=<span class="string">"no"</span> <span class="attr">border</span>=<span class="string">"0"</span> <span class="attr">marginwidth</span>=<span class="string">"0"</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">marginheight</span>=<span class="string">"0"</span> <span class="attr">width</span>=<span class="string">330</span> <span class="attr">height</span>=<span class="string">86</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">src</span>=<span class="string">"//music.163.com/outchain/player?type=2&amp;id=1384318412&amp;auto=0&amp;height=66"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--网易云iframe end--&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span><br><span class="line"></span><br><span class="line">&#123;%- if theme.algolia_search.enable or theme.local_search.enable %&#125;</span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"site-search"</span>&gt;</span></span><br><span class="line">    &#123;&#123; partial('_partials/search/index.swig', &#123;&#125;, &#123;cache: theme.cache.enable&#125;) &#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">&#123;%- endif %&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#123;- next_inject('header') &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/01/12/Dmhzxi8XFIQK7np.jpg" alt="site-nav中的iframe.jpg"></p>
+<p>这个效果属实🍔🍔。并且在桌面版视图下还会把sidebar压下去，不太理想。</p>
+<h2 id="明月浩空音乐"><a href="#明月浩空音乐" class="headerlink" title="明月浩空音乐"></a>明月浩空音乐</h2><p>有没有悬浮式的播放器呢？有的。随便查一查就看到了这篇文章：<a href="https://leafjame.github.io/posts/2636059693.html" target="_blank" rel="noopener">一款炫丽的网页播放器插件</a>，这里介绍了<code>绚丽彩虹播放器</code>，确实是够绚丽的，点进去一看还是个东方二次元，连域名都叫<code>badapple.top</code>，爱了。</p>
+<p>一阵操作之后，预览的效果确实挺理想的，可是到我网站上就只能播放第一首曲子了，和上面那篇文章的评论区里一位老哥说的一模一样：</p>
+<p><img src="https://i.loli.net/2020/01/12/Sb8tgk2FZLrnu3i.jpg" alt="出现了绚丽的问题"></p>
+<p>在我试图解决这个问题的时候，<code>badapple.top</code>突然就503了，回想起上面最后的更新日期是2018年，我就感到一阵不妙。不一会儿我就发现了和这绚丽播放器几乎<code>完 全 一 致</code>的替代品<a href="https://music.ain19.com/" target="_blank" rel="noopener">AIP播放器</a>，并且找出了前面问题的解决方案。可是，这两个东西相似度怎么能够这么高？？</p>
+<p>原来它们都是从<a href="https://player.lmih.cn/" target="_blank" rel="noopener">明月浩空音乐</a>改来的，而这个原版是需要收费的。这明月浩空又是何许人也？传闻其名乃“李明浩”，这里有他不知真假的黑历史：<a href="https://www.chinasuc.cn/?thread-151.htm" target="_blank" rel="noopener">关于Colorful2.6(明月浩空模板)后门剖析</a>。</p>
+<p>本来如果我不太在意这个插件的安全性，折腾播放器的经历到这里就应该结束了。可是AIP播放器它不能自由修改主题色，而默认的颜色偏偏还是绿的，强迫症让我不能忍。看了看它的加载方式，是用<code>\theme\next\layout\_layout.swig</code>中插入的JS脚本加载远端服务器上的CSS，JS、CSS、播放列表都在远端，这可没法随便改了。</p>
+<p>当然，也许我可以自己写一个CSS（在NexT里用的是Stylus）来覆盖它的设定——可惜我不会。</p>
+<p>那咋办嘛，只能再看看有没有其他选择了。如此“简单”的需求难道会没有对应的开源软件吗？</p>
+<h1 id="APlayer"><a href="#APlayer" class="headerlink" title="APlayer"></a>APlayer</h1><p>在寻找替代品的过程中，我曾看到过这篇文章：<a href="https://diygod.me/best-players-in-hexo/" target="_blank" rel="noopener">可能是目前最好用的两个 Hexo 播放器插件</a>，讲的是开源的<a href="https://github.com/MoePlayer/hexo-tag-aplayer" target="_blank" rel="noopener">hexo-tag-aplayer</a>，这是一个给hexo使用的<a href="https://github.com/MoePlayer/APlayer" target="_blank" rel="noopener">APlayer</a>。</p>
+<p>然而在看了它的文档之后，我没有第一时间get到它的点，特别是不知道要咋用。README.md里关于用法仅有一句：</p>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% aplayer title author url [picture_url, narrow, autoplay, width:xxx, lrc:xxx] %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是个啥？当时我虽然知道Hexo的<code>Tag Plugins</code>，准确地说是NexT带来的<a href="https://theme-next.org/docs/tag-plugins/note" target="_blank" rel="noopener">Bootstrap Callout</a>——不得不说，<code>Tag Plugins</code>这个名字起得真是沙雕，它太容易和<code>tags</code>混淆了——但是我因为没什么机会用到，并没有细看过它的格式，所以也并不明白这<code>{&#37; &#37;}</code>是个什么操作。</p>
+<p>现在必须得找其他方法的话，那就只好研究一下了。看了些Issues才搞明白原来是写在md文件里的，这与我的想法背道而驰——我希望能放在所有页面的固定位置，如果能做到网易云音乐网页版那样跳转页面而播放进度不变就再好不过了。</p>
+<p>经过一段时间的测试之后，我发现如果使用<code>hexo-tag-aplayer</code>最好的解决方案就是如这个<a href="https://github.com/MoePlayer/hexo-tag-aplayer/issues/58" target="_blank" rel="noopener">issue</a>所言，在md里插入播放器后，再把生成的html文件里对应部分复制到header的<code>index.swig</code>里。可是这不就是个威力加强版的网易云iframe了吗？！</p>
+<p>其实如果不是因为另一个问题，也还勉强能用。它的<code>fixed</code>模式（文档里翻译为“固定模式”）总让人感觉不太对劲，播放列表竟然是向上展开，如果放在header里，本来位置就很靠上，向上展开之后有一部分会伸出页面之外。虽然有一个默认值为<code>340px</code>的参数<code>listmaxheight</code>表示播放列表展开的高度，但我将其调为负值时，不但没有变成向下展开，而且还把播放列表倒过来了……</p>
+<blockquote><p>当你感到迷惑，就应该去查Issues，大概率会有人和你遇到同样的迷惑问题。</p>
+<footer><strong>沃兹·吉硕德</strong></footer></blockquote>
+
+<p>所以我又查到一个<a href="https://github.com/MoePlayer/hexo-tag-aplayer/issues/79" target="_blank" rel="noopener">issue</a>，什么？<code>吸底</code>？这正是我想要的——这说的不就是<strong>原版</strong>APlayer吗？！</p>
+<p><img src="https://i.loli.net/2020/01/12/Rm4tpK1sBMrdcyT.jpg" alt="APlayer吸底模式"></p>
+<p>在APlayer的文档里，对<code>fixed</code>模式的描述是<code>吸底</code>，这才是我所期望的功能，前面被“固定模式”这个沙雕翻译给整蒙了。那么，原版APlayer又是怎么用的呢？</p>
+<p><img src="https://i.loli.net/2020/01/12/CBPWNdEnRqrUoHs.jpg" alt="APlayer入门"></p>
+<p>看到这里，我的迷惑更上一层楼，有一定前端知识的人应该很快就能看懂这里在说什么，但是我显然不是……</p>
+<p>好在这时看到这篇文章：<a href="https://cloud.tencent.com/developer/article/1157669" target="_blank" rel="noopener">添加全站 APlayer 播放器</a>，看起来把这段代码加到<code>_layout.swig</code>的body里就OK了：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.css"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"aplayer"</span> <span class="attr">data-id</span>=<span class="string">"534542404"</span> <span class="attr">data-server</span>=<span class="string">"netease"</span> <span class="attr">data-type</span>=<span class="string">"song"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/aplayer@1.7.0/dist/APlayer.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>但是依然不行：</p>
+<blockquote>
+<p>这里的外部调用链接没有包含版本号，默认加载最新 release 版本；正常来说不会出什么问题，但是如果需要 100% 稳定运行，建议自行加上版本号。</p>
+</blockquote>
+<p>事后发现这里加载的最新版本MetingJS是<code>2.0.0</code>，但实际上这个版本和APlayer根本不兼容，而MetingJS的文档却给人一种稳得一批的感觉：</p>
+<p><img src="https://i.loli.net/2020/01/12/tmUfeSh5KFILic7.jpg" alt="虚假的MetingJS文档"></p>
+<p>（都不Supported你贴个啥APLAYER啊！！）</p>
+<p>好，那就自己加上版本号。这里从<code>jsDelivr</code>引用了三个文件，APlayer的CSS和JS，Meting的JS。最新的（截至2019年11月25日）稳定版本使用如下，你也可以去<code>jsDelivr</code>自行查找。</p>
+<h1 id="Show-me-the-CODE"><a href="#Show-me-the-CODE" class="headerlink" title="Show me the CODE!"></a>Show me the CODE!</h1><p>如果你和我一样使用<code>NexT</code>主题，请复制以下代码，定位到<code>\theme\next\layout\_layout.swig</code>，将其粘贴到body体内即可。如果是其他情况，<strong>大同小异！大同小异！</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 引用依赖 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">href</span>=<span class="string">"https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- 我使用的APlayer本体 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"aplayer"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">data-id</span>=<span class="string">"2465890057"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">data-server</span>=<span class="string">"netease"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">data-type</span>=<span class="string">"playlist"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">data-fixed</span>=<span class="string">"true"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">data-autoplay</span>=<span class="string">"true"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">data-order</span>=<span class="string">"random"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">data-volume</span>=<span class="string">"0.55"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">data-theme</span>=<span class="string">"#cc543a"</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">date-preload</span>=<span class="string">"auto"</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--如果将本体放在body里面导致页面加载出现问题，请尝试放到body体后面--&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>  APlayer的属性设置，请查阅<a href="https://aplayer.js.org/#/zh-Hans/?id=%E5%8F%82%E6%95%B0" target="_blank" rel="noopener">APlayer中文文档-参数</a>以及能让你使用音乐平台的<a href="https://github.com/metowolf/MetingJS" target="_blank" rel="noopener">MetingJS</a>。</p>
+<blockquote>
+<p><strong>注意：</strong> 如果你使用上述代码，请以<code>data-xxx</code>格式书写参数名！</p>
+</blockquote>
+<h1 id="Bonus：使用pjax，页面跳转不重新播放"><a href="#Bonus：使用pjax，页面跳转不重新播放" class="headerlink" title="Bonus：使用pjax，页面跳转不重新播放"></a>Bonus：使用pjax，页面跳转不重新播放</h1><p><strong>最后一步！</strong></p>
+<p><a href="https://music.163.com/" target="_blank" rel="noopener">网易云音乐网页版</a>底部的播放器，无论在网易云里如何跳转页面，只要还在当前标签页都是不重新加载的，这样就可以使正在播放中的音乐不随页面跳转中断。怎样实现这个功能呢？</p>
+<p><a href="https://www.zhihu.com/question/23720144" target="_blank" rel="noopener">知乎-网易云音乐网页版底部的播放器是如何实现在切换网页时不停止播放音乐的？</a></p>
+<p>这篇文章讲述了pjax的使用：<a href="https://cloud.tencent.com/developer/article/1096366" target="_blank" rel="noopener">迷你音乐播放器及实现全站pjax无刷新加载</a></p>
+<p>虽然不是专讲APlayer，但是大同小异，大同小异！我作为对前端没什么了解的人，就跟着这个路子踩坑吧。</p>
+<p>需要添加pjax和<code>1.7.0</code>以上版本的jquery，我这里依然从<code>jsDelivr</code>引用，最好放在body体结束前：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- require JQuery --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- require pjax --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/pjax@0.2.8/index.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后按照以下方法使用pjax:</p>
+<p><img src="https://i.loli.net/2020/01/12/gsN2MBVqIzCW9Uf.jpg" alt="使用pjax"></p>
+<p><strong>然而，全部木大！</strong> 该跳还是跳了，也许是我姿势不对。</p>
+<p>我转念一想，<code>NexT</code>这种历史悠久的主题，<code>pjax</code>这么好用的技术，岂有不内置的道理？鬼使神差之下，我打开主题的<code>_config.yml</code>一搜，还真的有：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Easily enable fast Ajax navigation on your website.</span></span><br><span class="line"><span class="comment"># Dependencies: https://github.com/theme-next/theme-next-pjax</span></span><br><span class="line"><span class="comment"># For moreinformation: https://github.com/MoOx/pjax</span></span><br><span class="line"><span class="attr">pjax:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>仅仅直接在这里把选项置为<code>true</code>是不行的，因为虽然配置文件里已经写了选项，但其实并没有安装对应的插件。关于如何使用，<a href="https://github.com/theme-next/theme-next-pjax" target="_blank" rel="noopener">Dependencies</a>的文档里说得极为清楚，在此就不赘述了。</p>
+<p>开启之后，全站都实现了无刷新加载，接下来你就随便戳吧，音乐始终会在左下角播放的。</p>
+<p>至此，一整天的折腾之旅才算是终于告一段落了。</p>
+<p>1、商家中心Web，京东融合订单不允许修改</p>
+<p>2、权限系统。（1）禁用了一批运营账号。（2）梳理了之前自动同步账号的逻辑。worker无予发布环境【测试需要预发】，导入新入职的人员需要在字典里配置部门和角色去掉（产品谈论），离职或者新增用户超过20个，报警机制。产品手动取创建（3）开放绑定第三方运单的事</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/%E9%9F%B3%E4%B9%90/" rel="tag"># 音乐</a>
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/10/20/%E4%B8%BAHexo%E9%85%8D%E7%BD%AEGitalk%EF%BC%8C%E5%B9%B6%E6%9B%B4%E6%94%B9%E4%B8%BB%E9%A2%98%E9%A2%9C%E8%89%B2/" rel="next" title="为Hexo配置Gitalk，并更改主题颜色">
+                  <i class="fa fa-chevron-left"></i> 为Hexo配置Gitalk，并更改主题颜色
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/03/10/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%EF%BC%9Avolatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/" rel="prev" title="Java并发编程：volatile关键字解析">
+                  Java并发编程：volatile关键字解析 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#早期尝试"><span class="nav-number">1.</span> <span class="nav-text">早期尝试</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#网易云iframe"><span class="nav-number">1.1.</span> <span class="nav-text">网易云iframe</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#明月浩空音乐"><span class="nav-number">1.2.</span> <span class="nav-text">明月浩空音乐</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#APlayer"><span class="nav-number">2.</span> <span class="nav-text">APlayer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Show-me-the-CODE"><span class="nav-number">3.</span> <span class="nav-text">Show me the CODE!</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Bonus：使用pjax，页面跳转不重新播放"><span class="nav-number">4.</span> <span class="nav-text">Bonus：使用pjax，页面跳转不重新播放</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Ke Xiang"
+    src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ke Xiang</p>
+  <div class="site-description" itemprop="description">Do more, Know more, Be more</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fi-null" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;fi-null" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xk123401@foxmail.com" title="E-Mail &amp;rarr; mailto:xk123401@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xk123401" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;xk123401" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ke & Xiang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'fi-null.github.io',
+      owner: 'fi-null',
+      admin: ['fi-null'],
+      id: 'dd5659f01529a5cc53c8cd10dc2b5f43',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="388713953" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.5" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>

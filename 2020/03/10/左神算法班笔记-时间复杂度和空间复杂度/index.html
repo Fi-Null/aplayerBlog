@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":240,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="时间复杂度时间复杂度是衡量算法好坏的重要指标之一。时间复杂度反映的是不确定性样本量的增长对于算法操作所需时间的影响程度，与算法操作是否涉及到样本量以及涉及了几次直接相关，如遍历数组时时间复杂度为数组长度n（对应时间复杂度为O(n)），而对数据的元操作（如加减乘除与或非等）、逻辑操作（如if判断）等都属于常数时间内的操作（对应时间复杂度O(1)）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="左神算法班笔记-时间复杂度和空间复杂度">
+<meta property="og:url" content="https://fi-null.github.io/2020/03/10/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%8F%AD%E7%AC%94%E8%AE%B0-%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%92%8C%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/index.html">
+<meta property="og:site_name" content="Xk&#39;s | Blog">
+<meta property="og:description" content="时间复杂度时间复杂度是衡量算法好坏的重要指标之一。时间复杂度反映的是不确定性样本量的增长对于算法操作所需时间的影响程度，与算法操作是否涉及到样本量以及涉及了几次直接相关，如遍历数组时时间复杂度为数组长度n（对应时间复杂度为O(n)），而对数据的元操作（如加减乘除与或非等）、逻辑操作（如if判断）等都属于常数时间内的操作（对应时间复杂度O(1)）。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/binarySearch.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/sorting.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/circlePrint.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/circlePrint1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/rotatePrint.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/rotatePrint1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/zigzagPrint.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/findNumInSortedMatrix.png">
+<meta property="article:published_time" content="2020-03-10T13:31:29.000Z">
+<meta property="article:modified_time" content="2020-04-01T13:13:04.916Z">
+<meta property="article:author" content="Ke Xiang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/binarySearch.png">
+  <link rel="canonical" href="https://fi-null.github.io/2020/03/10/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%8F%AD%E7%AC%94%E8%AE%B0-%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%92%8C%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>左神算法班笔记-时间复杂度和空间复杂度 | Xk's | Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xk's | Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">Stay Hungry, Stay Foolish</h1>
+      
+    <!--
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-resume">
+
+    <a href="https://fi-null.github.io/resumeWeb" target="_blank" rel="section"><i class="fa fa-fw fa-handshake-o"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fi-null.github.io/2020/03/10/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%8F%AD%E7%AC%94%E8%AE%B0-%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%92%8C%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ke Xiang">
+      <meta itemprop="description" content="Do more, Know more, Be more">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xk's | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          左神算法班笔记-时间复杂度和空间复杂度
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-10 21:31:29" itemprop="dateCreated datePublished" datetime="2020-03-10T21:31:29+08:00">2020-03-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">左神算法</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95/%E6%97%B6%E9%97%B4%E5%92%8C%E7%A9%BA%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" itemprop="url" rel="index">
+                    <span itemprop="name">时间和空间复杂度</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><p>时间复杂度是衡量算法好坏的重要指标之一。时间复杂度反映的是不确定性样本量的增长对于算法操作所需时间的影响程度，与算法操作是否涉及到样本量以及涉及了几次直接相关，如遍历数组时时间复杂度为数组长度n（对应时间复杂度为<code>O(n)</code>），而对数据的元操作（如加减乘除与或非等）、逻辑操作（如if判断）等都属于<strong>常数</strong>时间内的操作（对应时间复杂度<code>O(1)</code>）。</p><a id="more"></a>
+<p>在化简某算法时间复杂度表达式时需遵循以下规则：</p>
+<ul>
+<li>对于同一样本量，可省去低阶次数项，仅保留高阶次数项，如<code>O(n^2)+O(n)</code>可化简为<code>O(n^2)</code>，<code>O(n)+O(1)</code>可化简为<code>O(n)</code></li>
+<li>可省去样本量前的常量系数，如<code>O(2n)</code>可化简为<code>O(n)</code>，<code>O(8)</code>可化简为<code>O(1)</code></li>
+<li>对于不同的不确定性样本量，不能按照上述两个规则进行化简，要根据实际样本量的大小分析表达式增量。如<code>O(logm)+O(n^2)</code>不能化简为<code>O(n^2)</code>或<code>O(logm)</code>。而要视m、n两者之间的差距来化简，比如m&gt;&gt;n时可以化简为<code>O(logm)</code>，因为表达式增量是由样本量决定的。</li>
+</ul>
+<h1 id="额外空间复杂度"><a href="#额外空间复杂度" class="headerlink" title="额外空间复杂度"></a>额外空间复杂度</h1><p>算法额外空间复杂度指的是对于输入样本，经过算法操作需要的额外空间。比如使用冒泡排序对一个数组排序，期间只需要一个临时变量<code>temp</code>，那么该算法的额外空间复杂度为<code>O(1)</code>。又如归并排序，在排序过程中需要创建一个与样本数组相同大小的辅助数组，尽管在排序过后该数组被销毁，但该算法的额外空间复杂度为<code>O(n)</code>。</p>
+<h1 id="经典例题——举一反三"><a href="#经典例题——举一反三" class="headerlink" title="经典例题——举一反三"></a>经典例题——举一反三</h1><h2 id="找出B中不属于A的数"><a href="#找出B中不属于A的数" class="headerlink" title="找出B中不属于A的数"></a>找出B中不属于A的数</h2><blockquote>
+<p>找出数组B中不属于A的数，数组A有序而数组B无序。假设数组A有n个数，数组B有m个数，写出算法并分析时间复杂度。</p>
+</blockquote>
+<h3 id="方法一：遍历"><a href="#方法一：遍历" class="headerlink" title="方法一：遍历"></a>方法一：遍历</h3><p>首先遍历B，将B中的每个数拿到到A中找，若找到则打印。对应算法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> A[] = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> B[] = &#123;<span class="number">1</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">6</span>, <span class="number">5</span>, <span class="number">7</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>; ++i) &#123;</span><br><span class="line">  <span class="keyword">int</span> temp = B[i];</span><br><span class="line">  bool flag = <span class="keyword">false</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">5</span>; ++j) &#123;</span><br><span class="line">    <span class="keyword">if</span> (A[j] == temp) &#123;</span><br><span class="line">      flag = <span class="keyword">true</span>;    <span class="comment">//找到了</span></span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (!flag) &#123;    <span class="comment">//没找到</span></span><br><span class="line">    printf(<span class="string">"%d"</span>, temp);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不难看出上述算法的时间复杂度为<code>O(m*n)</code>，因为将两个数组都遍历了一遍</p>
+<h3 id="方法二：二分查找"><a href="#方法二：二分查找" class="headerlink" title="方法二：二分查找"></a>方法二：二分查找</h3><p>由于数组A是有序的，<strong>在一个有序序列中查找一个元素可以使用二分法（也称折半法）</strong>。原理就是将查找的元素与序列的中位数进行比较，如果小于则去掉中位数及其之后的序列，如果大于则去掉中位数及其之前的序列，如果等于则找到了。如果不等于那么再将其与剩下的序列继续比较直到找到或剩下的序列为空为止。</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/binarySearch.png" alt></p>
+<p>利用二分法对应题解的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>; ++i) &#123;		<span class="comment">//B的长度为6</span></span><br><span class="line">  <span class="keyword">int</span> temp = B[i];</span><br><span class="line">  <span class="comment">//二分法查找</span></span><br><span class="line">  <span class="keyword">int</span> left = <span class="number">0</span>,right = <span class="number">5</span>-<span class="number">1</span>;			<span class="comment">//A的长度为5</span></span><br><span class="line">  <span class="keyword">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">while</span> (left &lt; right &amp;&amp; A[mid] != temp) &#123;</span><br><span class="line">    <span class="keyword">if</span> (A[mid] &gt; temp) &#123;</span><br><span class="line">      right = mid - <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      left = mid + <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (A[mid] != temp) &#123;</span><br><span class="line">    printf(<span class="string">"%d"</span>, temp);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>for<code>循环</code>m<code>次，</code>while<code>循环</code>logn<code>次（如果没有特别说明，log均以2为底），此算法的时间复杂度为</code>O(mlogn)</p>
+<h3 id="方法三：排序-外排"><a href="#方法三：排序-外排" class="headerlink" title="方法三：排序+外排"></a>方法三：排序+外排</h3><p>第三种方法就是将数组B也排序，然后使用<strong>逐次比对</strong>的方式来查找A数组中是否含有B数组中的某元素。引入a、b两个指针分别指向数组A、B的首元素，比较指针指向的元素值，当<code>a时，向后移动a指针查找该元素；当</code>a=b<code>时，说明A中存在该元素，跳过该元素查找，向后移动b；当</code>a&gt;b`时说明A中不存在该元素，打印该元素并跳过该元素的查找，向后移动b。直到a或b有一个到达数组末尾为止（若a先到达末尾，那么b和b之后的数都不属于A）</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/sorting.png" alt></p>
+<p>对应题解的代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun3</span><span class="params">(<span class="keyword">int</span> A[],<span class="keyword">int</span> a_length,<span class="keyword">int</span> B[],<span class="keyword">int</span> b_length)</span></span>&#123;</span><br><span class="line">    quickSort(B, <span class="number">0</span>, b_length - <span class="number">1</span>);	<span class="comment">//使用快速排序法对数组B排序-&gt;O(mlogm)</span></span><br><span class="line">    <span class="keyword">int</span>* a = A,*b=B;</span><br><span class="line">    <span class="keyword">while</span> (a &lt;= A + a_length - <span class="number">1</span> || b &lt;= B + b_length - <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (*a == *b) &#123;</span><br><span class="line">            b++;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (*a &gt; *b) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%d"</span>, *b);</span><br><span class="line">            b++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            a++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (a == A + a_length) &#123;	<span class="comment">//a先到头</span></span><br><span class="line">        <span class="keyword">while</span> (b &lt; B + b_length) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%d"</span>, *b);</span><br><span class="line">            b++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>快速排序的代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;time.h&gt;</span></span></span><br><span class="line"><span class="comment">//交换两个int变量的值</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp = a;</span><br><span class="line">    a = b;</span><br><span class="line">    b = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//产生一个low~high之间的随机数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">randomInRange</span><span class="params">(<span class="keyword">int</span> low, <span class="keyword">int</span> high)</span></span>&#123;</span><br><span class="line">    srand((<span class="keyword">int</span>) time(<span class="number">0</span>));</span><br><span class="line">    <span class="keyword">return</span> (rand() % (high - low))+low;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//快速排序的核心算法，随机选择一个数，将比该数小的移至数组左边，比该数大的移至</span></span><br><span class="line"><span class="comment">//数组右边，最后返回该数的下标（移动完之后该数的下标可能与移动之前不一样）</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span> arr[],<span class="keyword">int</span> start,<span class="keyword">int</span> end)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (arr == <span class="literal">NULL</span> || start &lt; <span class="number">0</span> || end &lt;= <span class="number">0</span> || start &gt; end) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> index = randomInRange(start, end);<span class="comment">//随机选择一个数</span></span><br><span class="line">    swap(arr[index], arr[end]);<span class="comment">//将该数暂时放至末尾</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> small = start - <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//遍历前n-1个数与该数比较并以该数为界限将前n-1个数</span></span><br><span class="line">    <span class="comment">//分为两组，small指向小于该数的那一组的最后一个元素</span></span><br><span class="line">    <span class="keyword">for</span> (index = start; index &lt; end; index++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[index] &lt; arr[end]) &#123;</span><br><span class="line">            small++;</span><br><span class="line">            <span class="keyword">if</span> (small != index) &#123;</span><br><span class="line">                swap(arr[small], arr[index]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//最后将该数放至数值较小的那一个组的中间</span></span><br><span class="line">    ++small;</span><br><span class="line">    swap(arr[small], arr[end]);</span><br><span class="line">    <span class="keyword">return</span> small;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span> arr[],<span class="keyword">int</span> start,<span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (start == end) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> index = partition(arr, start, end);</span><br><span class="line">    <span class="keyword">if</span> (index &gt; start) &#123;</span><br><span class="line">        quickSort(arr,start, index - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; end) &#123;</span><br><span class="line">        quickSort(arr, index + <span class="number">1</span>, end);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此种方法的时间复杂度为：<code>O(mlogm)</code>（先对B排序）+<code>O(m+n)</code>（最坏的情况是指针a和b都到头）。</p>
+<h3 id="三种方法的比较"><a href="#三种方法的比较" class="headerlink" title="三种方法的比较"></a>三种方法的比较</h3><ol>
+<li><code>O(m*n)</code></li>
+<li><code>O(mlogn)</code>（以2为底）</li>
+<li><code>O(mlogm)+O(m+n)</code>（以2为底）</li>
+</ol>
+<p>易知算法2比1更优，因为增长率<code>logn &lt; n</code>。而2和3的比较取决于样本量m和n之间的差距，若<code>m&gt;&gt;n</code>那么2更优，不难理解：数组B元素较多，那么对B的排序肯定要花费较长时间，而这一步并不是题解所必需的，不如采用二分法；相反地，若<code>m&lt;&lt;n</code>，那么3更优。</p>
+<h2 id="荷兰国旗问题"><a href="#荷兰国旗问题" class="headerlink" title="荷兰国旗问题"></a>荷兰国旗问题</h2><p>给定一个数组arr，和一个数num，请把小于num的数放在数组的左边，等于num的数放在数组的中间，大于num的数放在数组的右边。</p>
+<blockquote>
+<p>要求额外空间复杂度O(1)，时间复杂度O(N)</p>
+</blockquote>
+<p>思路：利用两个指针<code>L</code>、<code>R</code>，将<code>L</code>指向首元素之前，将<code>R</code>指向尾元素之后。从头遍历序列，将当前遍历元素与<code>num</code>比较，若<code>num</code>，则将其与<code>L</code>的右一个元素交换位置并遍历下一个元素、右移<code>L</code>；若<code>=num</code>则直接遍历下一个元素；若<code>&gt;num</code>则将其和<code>R</code>的左一个元素交换位置，并重新判断当前位置元素与<code>num</code>的关系。直到遍历的元素下标到为<code>R-1</code>为止。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> &amp;a, <span class="keyword">int</span> &amp;b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp = a;</span><br><span class="line">    a = b;</span><br><span class="line">    b = temp;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span> arr[],<span class="keyword">int</span> startIndex,<span class="keyword">int</span> endIndex,<span class="keyword">int</span> num)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> L = startIndex - <span class="number">1</span>, R = endIndex + <span class="number">1</span>, i = startIndex;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= R - <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (arr[i] &lt; num) &#123;</span><br><span class="line">            swap(arr[i++], arr[++L]);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (arr[i] &gt; num) &#123;</span><br><span class="line">            swap(arr[i], arr[--R]);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> arr[] = &#123;<span class="number">1</span>,<span class="number">2</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">9</span>,<span class="number">1</span>&#125;;</span><br><span class="line">    travles(arr, <span class="number">8</span>);</span><br><span class="line">    partition(arr, <span class="number">0</span>, <span class="number">7</span>, <span class="number">2</span>);</span><br><span class="line">    travles(arr, <span class="number">8</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>L</code>代表小于<code>num</code>的数的右界，<code>R</code>代表大于<code>num</code>的左界，<code>partition</code>的过程就是遍历元素、不断壮大<code>L、R</code>范围的过程。这里比较难理解的地方可能是为什么<code>arr[i]时要右移</code>L<code>而</code>arr[i]&gt;num<code>时却不左移</code>R<code>，这是因为对于当前元素</code>arr[i]<code>，如果</code>arr[i]进行<code>swap(arr[i],arr[L+1])</code>之后对于当前下标的数据状况是知晓的（一定有<code>arr[i]=arr[L+1]</code>），因为是从头遍历到<code>i</code>的，而<code>L+1&lt;=i</code>。但是如果<code>arr[i]&gt;num</code>进行<code>swap(arr[i],arr[R-1])</code>之后对于当前元素的数据状况是不清楚的，因为<code>R-1&gt;=i</code>，<code>arr[R-1]</code>还没遍历到。</p>
+<h2 id="矩阵打印问题"><a href="#矩阵打印问题" class="headerlink" title="矩阵打印问题"></a>矩阵打印问题</h2><h3 id="转圈打印方块矩阵"><a href="#转圈打印方块矩阵" class="headerlink" title="转圈打印方块矩阵"></a>转圈打印方块矩阵</h3><p>给定一个4阶矩阵如下：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/circlePrint.png" alt></p>
+<p>打印结果如下（要求额外空间复杂度为<code>O(1)</code>）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">8</span> <span class="number">12</span> <span class="number">16</span> <span class="number">15</span> <span class="number">14</span> <span class="number">13</span> <span class="number">9</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">11</span> <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>思路：这类问题需要将思维打开，从宏观的层面去找出问题存在的共性从而求解。如果你的思维局限在1是如何变到2的、4是怎么变到8的、11之后为什么时10、它们之间有什么关联，那么你就陷入死胡同了。</p>
+<p>从宏观的层面找共性，其实转圈打印的过程就是不断顺时针打印外围元素的过程，只要给你一个左上角的点（如<code>(0,0)</code>）和右下角的点（如<code>(3,3)</code>），你就能够打印出<code>1 2 3 4 8 12 16 15 14 13 9 5</code>；同样，给你<code>(1,1)</code>和<code>(2,2)</code>，你就能打印出<code>6 7 11 10</code>。这个根据两点打印正方形上元素的过程可以抽取出来，整个问题也就迎刃而解了。</p>
+</blockquote>
+<p>打印一个矩阵某个正方形上的点的逻辑如下：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/circlePrint1.png" alt></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FACTORIAL 4</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printSquare</span><span class="params">(<span class="keyword">int</span> leftUp[], <span class="keyword">int</span> rigthDown[],<span class="keyword">int</span> matrix[][FACTORIAL])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = leftUp[<span class="number">0</span>], j = leftUp[<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">while</span> (j &lt; rigthDown[<span class="number">1</span>]) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, matrix[i][j++]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; rigthDown[<span class="number">0</span>]) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, matrix[i++][j]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (j &gt; leftUp[<span class="number">1</span>]) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, matrix[i][j--]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (i &gt; leftUp[<span class="number">0</span>]) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d "</span>, matrix[i--][j]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printMatrixCircled</span><span class="params">(<span class="keyword">int</span> matrix[][FACTORIAL])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> leftUp[] = &#123;<span class="number">0</span>, <span class="number">0</span>&#125;, rightDown[] = &#123;FACTORIAL<span class="number">-1</span>,FACTORIAL<span class="number">-1</span>&#125;;</span><br><span class="line">    <span class="keyword">while</span> (leftUp[<span class="number">0</span>] &lt; rightDown[<span class="number">0</span>] &amp;&amp; leftUp[<span class="number">1</span>] &lt; rightDown[<span class="number">1</span>]) &#123;</span><br><span class="line">        printSquare(leftUp, rightDown, matrix);</span><br><span class="line">        ++leftUp[<span class="number">0</span>];</span><br><span class="line">        ++leftUp[<span class="number">1</span>];</span><br><span class="line">        --rightDown[<span class="number">0</span>];</span><br><span class="line">        --rightDown[<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> matrix[<span class="number">4</span>][<span class="number">4</span>] = &#123;</span><br><span class="line">            &#123;<span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>&#125;,</span><br><span class="line">            &#123;<span class="number">5</span>,  <span class="number">6</span>,  <span class="number">7</span>,  <span class="number">8</span>&#125;,</span><br><span class="line">            &#123;<span class="number">9</span>,  <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>&#125;,</span><br><span class="line">            &#123;<span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    printMatrixCircled(matrix);<span class="comment">//1 2 3 4 8 12 16 15 14 13 9 5 6 7 11 10</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="旋转方块矩阵"><a href="#旋转方块矩阵" class="headerlink" title="旋转方块矩阵"></a>旋转方块矩阵</h3><p>给定一个方块矩阵，请把该矩阵调整成顺时针旋转90°之后的样子，要求额外空间复杂度为<code>O(1)</code>。</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/rotatePrint.png" alt></p>
+<blockquote>
+<p>思路：拿上图举例，首先选取矩阵四个角上的点<code>1,3,9,7</code>，按顺时针的方向<code>1</code>到<code>3</code>的位置（<code>1-&gt;3</code>）、<code>3-&gt;9</code>、<code>9-&gt;7</code>、<code>7-&gt;1</code>，这样对于旋转后的矩阵而言，这四个点已经调整好了。接下来只需调整<code>2,6,8,4</code>的位置，调整方法是一样的。只需对矩阵第一行的前n-1个点采用同样的方法进行调整、对矩阵第二行的前前n-3个点……，那么调整n阶矩阵就容易了。</p>
+<p>这也是在宏观上观察数据变动的一般规律，找到以不变应万变的通解（给定一个点，确定矩阵上以该点为角的正方形，将该正方形旋转90°），整个问题就不攻自破了。</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/rotatePrint1.png" alt></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FACTORIAL 4</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">circleSquare</span><span class="params">(<span class="keyword">int</span> leftUp[],<span class="keyword">int</span> rightDown[],<span class="keyword">int</span> matrix[][FACTORIAL])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> p1[] = &#123;leftUp[<span class="number">0</span>], leftUp[<span class="number">1</span>]&#125;;</span><br><span class="line">    <span class="keyword">int</span> p2[] = &#123;leftUp[<span class="number">0</span>], rightDown[<span class="number">1</span>]&#125;;</span><br><span class="line">    <span class="keyword">int</span> p3[] = &#123;rightDown[<span class="number">0</span>], rightDown[<span class="number">1</span>]&#125;;</span><br><span class="line">    <span class="keyword">int</span> p4[] = &#123;rightDown[<span class="number">0</span>],leftUp[<span class="number">1</span>]&#125;;</span><br><span class="line">    <span class="keyword">while</span> (p1[<span class="number">1</span>] &lt; rightDown[<span class="number">1</span>]) &#123;</span><br><span class="line">        <span class="comment">//swap</span></span><br><span class="line">        <span class="keyword">int</span> tmp = matrix[p4[<span class="number">0</span>]][p4[<span class="number">1</span>]];</span><br><span class="line">        matrix[p4[<span class="number">0</span>]][p4[<span class="number">1</span>]] = matrix[p3[<span class="number">0</span>]][p3[<span class="number">1</span>]];</span><br><span class="line">        matrix[p3[<span class="number">0</span>]][p3[<span class="number">1</span>]] = matrix[p2[<span class="number">0</span>]][p2[<span class="number">1</span>]];</span><br><span class="line">        matrix[p2[<span class="number">0</span>]][p2[<span class="number">1</span>]] = matrix[p1[<span class="number">0</span>]][p1[<span class="number">1</span>]];</span><br><span class="line">        matrix[p1[<span class="number">0</span>]][p1[<span class="number">1</span>]] = tmp;</span><br><span class="line"></span><br><span class="line">        p1[<span class="number">1</span>]++;</span><br><span class="line">        p2[<span class="number">0</span>]++;</span><br><span class="line">        p3[<span class="number">1</span>]--;</span><br><span class="line">        p4[<span class="number">0</span>]--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">circleMatrix</span><span class="params">(<span class="keyword">int</span> matrix[][FACTORIAL])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> leftUp[] = &#123;<span class="number">0</span>, <span class="number">0</span>&#125;, rightDown[] = &#123;FACTORIAL - <span class="number">1</span>, FACTORIAL - <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">while</span> (leftUp[<span class="number">0</span>] &lt; rightDown[<span class="number">0</span>] &amp;&amp; leftUp[<span class="number">1</span>] &lt; rightDown[<span class="number">1</span>]) &#123;</span><br><span class="line">        circleSquare(leftUp, rightDown, matrix);</span><br><span class="line">        leftUp[<span class="number">0</span>]++;</span><br><span class="line">        leftUp[<span class="number">1</span>]++;</span><br><span class="line">        --rightDown[<span class="number">0</span>];</span><br><span class="line">        --rightDown[<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printMatrix</span><span class="params">(<span class="keyword">int</span> matrix[][FACTORIAL])</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; FACTORIAL; ++i) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; FACTORIAL; ++j) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%2d "</span>, matrix[i][j]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> matrix[FACTORIAL][FACTORIAL] = &#123;</span><br><span class="line">            &#123;<span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>&#125;,</span><br><span class="line">            &#123;<span class="number">5</span>,  <span class="number">6</span>,  <span class="number">7</span>,  <span class="number">8</span>&#125;,</span><br><span class="line">            &#123;<span class="number">9</span>,  <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>&#125;,</span><br><span class="line">            &#123;<span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    printMatrix(matrix);</span><br><span class="line">    circleMatrix(matrix);</span><br><span class="line">    printMatrix(matrix);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="之字形打印矩阵"><a href="#之字形打印矩阵" class="headerlink" title="之字形打印矩阵"></a>之字形打印矩阵</h3><p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/zigzagPrint.png" alt></p>
+<p>对如上矩阵的打印结果如下（要求额外空间复杂度为<code>O(1)</code>）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="number">2</span> <span class="number">7</span> <span class="number">13</span> <span class="number">8</span> <span class="number">3</span> <span class="number">4</span> <span class="number">9</span> <span class="number">14</span> <span class="number">15</span> <span class="number">10</span> <span class="number">5</span> <span class="number">6</span> <span class="number">11</span> <span class="number">16</span> <span class="number">17</span> <span class="number">12</span> <span class="number">18</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>此题也是需要从宏观上找出一个共性：给你两个，你能否将该两点连成的45°斜线上的点按给定的打印方向打印出来。拿上图举例，给出<code>(2,0)</code>、<code>(0,2)</code>和<code>turnUp=true</code>，应该打印出<code>13,8,3</code>。那么整个问题就变成了两点的走向问题了，开始时两点均为<code>(0,0)</code>，然后一个点往下走，另一个点往右走（如<code>1-&gt;7</code>，<code>1-&gt;2</code>）；当往下走的点是边界点时就往右走（如<code>13-&gt;14</code>），当往右走的点到边界时就往下走（如<code>6-&gt;12</code>）。每次两点走一步，并打印两点连线上的点。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> rows = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> cols = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printLine</span><span class="params">(<span class="keyword">int</span> leftDown[],<span class="keyword">int</span> rightUp[], <span class="keyword">bool</span> turnUp,<span class="keyword">int</span> matrix[rows][cols])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i,j;</span><br><span class="line">    <span class="keyword">if</span> (turnUp) &#123;</span><br><span class="line">        i = leftDown[<span class="number">0</span>], j = leftDown[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">while</span> (j &lt;= rightUp[<span class="number">1</span>]) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%d "</span>, matrix[i--][j++]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        i = rightUp[<span class="number">0</span>], j = rightUp[<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">while</span> (i &lt;= leftDown[<span class="number">0</span>]) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%d "</span>, matrix[i++][j--]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">zigZagPrintMatrix</span><span class="params">(<span class="keyword">int</span> matrix[rows][cols])</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (matrix==<span class="literal">NULL</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> leftDown[] = &#123;<span class="number">0</span>, <span class="number">0</span>&#125;, rightUp[] = &#123;<span class="number">0</span>, <span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">bool</span> turnUp = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">while</span> (leftDown[<span class="number">1</span>] &lt;= cols - <span class="number">1</span>) &#123;</span><br><span class="line">        printLine(leftDown, rightUp, turnUp, matrix);</span><br><span class="line">        turnUp = !turnUp;</span><br><span class="line">        <span class="keyword">if</span> (leftDown[<span class="number">0</span>] &lt; rows - <span class="number">1</span>) &#123;</span><br><span class="line">            leftDown[<span class="number">0</span>]++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            leftDown[<span class="number">1</span>]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (rightUp[<span class="number">1</span>] &lt; cols - <span class="number">1</span>) &#123;</span><br><span class="line">            ++rightUp[<span class="number">1</span>];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            ++rightUp[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> matrix[rows][cols] = &#123;</span><br><span class="line">            &#123;<span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>,  <span class="number">4</span>,  <span class="number">5</span>,  <span class="number">6</span>&#125;,</span><br><span class="line">            &#123;<span class="number">7</span>,  <span class="number">8</span>,  <span class="number">9</span>,  <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>&#125;,</span><br><span class="line">            &#123;<span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">17</span>, <span class="number">18</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    zigZagPrintMatrix(matrix);<span class="comment">//1 2 7 13 8 3 4 9 14 15 10 5 6 11 16 17 12 18</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="在行和列都排好序的矩阵上找数"><a href="#在行和列都排好序的矩阵上找数" class="headerlink" title="在行和列都排好序的矩阵上找数"></a>在行和列都排好序的矩阵上找数</h3><p>如图：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/findNumInSortedMatrix.png" alt></p>
+<p>任何一列或一行上的数是有序的，实现一个函数，判断某个数是否存在于矩阵中。要求时间复杂度为<code>O(M+N)</code>，额外空间复杂度为<code>O(1)</code>。</p>
+<blockquote>
+<p>从矩阵右上角的点开始取点与该数比较，如果大于该数，那么说明这个点所在的列都不存在该数，将这个点左移；如果这个点上的数小于该数，那么说明这个点所在的行不存在该数，将这个点下移。直到找到与该数相等的点为止。最坏的情况是，该数只有一个且在矩阵左下角上，那么时间复杂度为<code>O(M-1+N-1)=O(M+N)</code></p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> rows = <span class="number">4</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> cols = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">findNumInSortedMatrix</span><span class="params">(<span class="keyword">int</span> num,<span class="keyword">int</span> matrix[rows][cols])</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>, j = cols - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt;= rows - <span class="number">1</span> &amp;&amp; j &lt;= cols - <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (matrix[i][j] &gt; num) &#123;</span><br><span class="line">            --j;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (matrix[i][j] &lt; num) &#123;</span><br><span class="line">            ++i;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> matrix[rows][cols] = &#123;</span><br><span class="line">            &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;,</span><br><span class="line">            &#123;<span class="number">2</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">8</span>&#125;,</span><br><span class="line">            &#123;<span class="number">3</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">9</span>&#125;,</span><br><span class="line">            &#123;<span class="number">4</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">if</span> (findNumInSortedMatrix(<span class="number">7</span>, matrix)) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"find!"</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"not exist!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="岛问题"><a href="#岛问题" class="headerlink" title="岛问题"></a>岛问题</h2><p>一个矩阵中只有0和1两种值，每个位置都可以和自己的上、下、左、右四个位置相连，如果有一片1连在一起，这个部分叫做一个岛，求一个矩阵中有多少个岛？</p>
+<p>比如矩阵：</p>
+<table>
+<thead>
+<tr>
+<th align="left">1</th>
+<th align="left">0</th>
+<th align="left">1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="left">0</td>
+</tr>
+<tr>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">1</td>
+</tr>
+</tbody></table>
+<p>就有3个岛。</p>
+<blockquote>
+<p>分析：我们可以遍历矩阵中的每个位置，如果遇到1就将与其相连的一片1都感染成2，并自增岛数量。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IslandNum</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getIslandNums</span><span class="params">(<span class="keyword">int</span> matrix[][])</span></span>&#123;</span><br><span class="line">		<span class="keyword">int</span> res = <span class="number">0</span> ;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; matrix.length ; i++)&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span> ; j &lt; matrix[i].length ; j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(matrix[i][j] == <span class="number">1</span>)&#123;</span><br><span class="line">					res++;</span><br><span class="line">					infect(matrix , i , j);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> res;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">infect</span><span class="params">(<span class="keyword">int</span> matrix[][], <span class="keyword">int</span> i ,<span class="keyword">int</span> j)</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(i &lt; <span class="number">0</span> || i &gt;= matrix.length || j &lt; <span class="number">0</span> || j &gt;= matrix[i].length || matrix[i][j] != <span class="number">1</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		matrix[i][j] = <span class="number">2</span>;</span><br><span class="line">		infect(matrix , i-<span class="number">1</span> , j);</span><br><span class="line">		infect(matrix , i+<span class="number">1</span> , j);</span><br><span class="line">		infect(matrix , i , j-<span class="number">1</span>);</span><br><span class="line">		infect(matrix , i , j+<span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		<span class="keyword">int</span> matrix[][] = &#123;</span><br><span class="line">			&#123;<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>&#125;,</span><br><span class="line">			&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>&#125;,</span><br><span class="line">			&#123;<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>&#125;,</span><br><span class="line">			&#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">		System.out.println(getIslandNums(matrix));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/03/10/Java%E5%B9%B6%E5%8F%91%E4%B9%8BSynchronized%E8%AF%A6%E8%A7%A3/" rel="next" title="Java并发之Synchronized详解">
+                  <i class="fa fa-chevron-left"></i> Java并发之Synchronized详解
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/03/10/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%8F%AD%E7%AC%94%E8%AE%B0-%E6%8E%92%E5%BA%8F/" rel="prev" title="左神算法班笔记-排序">
+                  左神算法班笔记-排序 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#时间复杂度"><span class="nav-number">1.</span> <span class="nav-text">时间复杂度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#额外空间复杂度"><span class="nav-number">2.</span> <span class="nav-text">额外空间复杂度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#经典例题——举一反三"><span class="nav-number">3.</span> <span class="nav-text">经典例题——举一反三</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#找出B中不属于A的数"><span class="nav-number">3.1.</span> <span class="nav-text">找出B中不属于A的数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法一：遍历"><span class="nav-number">3.1.1.</span> <span class="nav-text">方法一：遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法二：二分查找"><span class="nav-number">3.1.2.</span> <span class="nav-text">方法二：二分查找</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法三：排序-外排"><span class="nav-number">3.1.3.</span> <span class="nav-text">方法三：排序+外排</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三种方法的比较"><span class="nav-number">3.1.4.</span> <span class="nav-text">三种方法的比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#荷兰国旗问题"><span class="nav-number">3.2.</span> <span class="nav-text">荷兰国旗问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#矩阵打印问题"><span class="nav-number">3.3.</span> <span class="nav-text">矩阵打印问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#转圈打印方块矩阵"><span class="nav-number">3.3.1.</span> <span class="nav-text">转圈打印方块矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#旋转方块矩阵"><span class="nav-number">3.3.2.</span> <span class="nav-text">旋转方块矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#之字形打印矩阵"><span class="nav-number">3.3.3.</span> <span class="nav-text">之字形打印矩阵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在行和列都排好序的矩阵上找数"><span class="nav-number">3.3.4.</span> <span class="nav-text">在行和列都排好序的矩阵上找数</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#岛问题"><span class="nav-number">3.4.</span> <span class="nav-text">岛问题</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Ke Xiang"
+    src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ke Xiang</p>
+  <div class="site-description" itemprop="description">Do more, Know more, Be more</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fi-null" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;fi-null" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xk123401@foxmail.com" title="E-Mail &amp;rarr; mailto:xk123401@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xk123401" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;xk123401" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ke & Xiang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'fi-null.github.io',
+      owner: 'fi-null',
+      admin: ['fi-null'],
+      id: '22c79a5d242afc2af81c6c3acbbfe886',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="388713953" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.5" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>

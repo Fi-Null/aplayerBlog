@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":240,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="RPC和RPC框架1.RPC(Remote Procedure Call)即远程过程调用, 主要解决远程通信间的问题，不需要了解底层网络的通信机制。2.RPC框架RPC框架负责屏蔽底层的传输方式（TCP或者UDP）、序列化方式、以及通信细节。实际使用中，并不需要关心底层通信细节和调用过程，让业务端专注于业务代码的实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何从0到1设计一个类Dubbo的RPC框架">
+<meta property="og:url" content="https://fi-null.github.io/2020/03/24/%E5%A6%82%E4%BD%95%E4%BB%8E0%E5%88%B01%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%B1%BBDubbo%E7%9A%84RPC%E6%A1%86%E6%9E%B6/index.html">
+<meta property="og:site_name" content="Xk&#39;s | Blog">
+<meta property="og:description" content="RPC和RPC框架1.RPC(Remote Procedure Call)即远程过程调用, 主要解决远程通信间的问题，不需要了解底层网络的通信机制。2.RPC框架RPC框架负责屏蔽底层的传输方式（TCP或者UDP）、序列化方式、以及通信细节。实际使用中，并不需要关心底层通信细节和调用过程，让业务端专注于业务代码的实现。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc4.png">
+<meta property="article:published_time" content="2020-03-24T15:33:35.000Z">
+<meta property="article:modified_time" content="2020-04-01T13:13:04.933Z">
+<meta property="article:author" content="Ke Xiang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc.png">
+  <link rel="canonical" href="https://fi-null.github.io/2020/03/24/%E5%A6%82%E4%BD%95%E4%BB%8E0%E5%88%B01%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%B1%BBDubbo%E7%9A%84RPC%E6%A1%86%E6%9E%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>如何从0到1设计一个类Dubbo的RPC框架 | Xk's | Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xk's | Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">Stay Hungry, Stay Foolish</h1>
+      
+    <!--
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-resume">
+
+    <a href="https://fi-null.github.io/resumeWeb" target="_blank" rel="section"><i class="fa fa-fw fa-handshake-o"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fi-null.github.io/2020/03/24/%E5%A6%82%E4%BD%95%E4%BB%8E0%E5%88%B01%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%B1%BBDubbo%E7%9A%84RPC%E6%A1%86%E6%9E%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ke Xiang">
+      <meta itemprop="description" content="Do more, Know more, Be more">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xk's | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          如何从0到1设计一个类Dubbo的RPC框架
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-24 23:33:35" itemprop="dateCreated datePublished" datetime="2020-03-24T23:33:35+08:00">2020-03-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Rpc/" itemprop="url" rel="index">
+                    <span itemprop="name">Rpc</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="RPC和RPC框架"><a href="#RPC和RPC框架" class="headerlink" title="RPC和RPC框架"></a><strong>RPC和RPC框架</strong></h2><p><strong>1.RPC(Remote Procedure Call)</strong></p><p>即远程过程调用, 主要解决远程通信间的问题，不需要了解底层网络的通信机制。</p><p><strong>2.RPC框架</strong></p><p>RPC框架负责屏蔽底层的传输方式（TCP或者UDP）、序列化方式、以及通信细节。</p><p>实际使用中，并不需要关心底层通信细节和调用过程，让业务端专注于业务代码的实现。</p><a id="more"></a>
+
+
+
+
+<p>国内大家熟知的PRC框架，阿里的HSF和<strong>Dubbo(开源)</strong></p>
+<h2 id="Dubbo的发展由来"><a href="#Dubbo的发展由来" class="headerlink" title="Dubbo的发展由来"></a><strong>Dubbo的发展由来</strong></h2><p><strong>1. 业务规模小</strong></p>
+<p>比如早期一个应用Java War包，将所有功能都打包，部署在一个单机服务器，调用接口也比较方便，不涉及到任何分布式场景。</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc.png" alt></p>
+<p><strong>2.业务规模变大</strong></p>
+<p>随着业务的快速发展，业务越来越多、子系统也越来越多时。比如：淘宝的交易系统、商品系统、用户系统、评价系统…上百个系统的出现。</p>
+<p>系统变得越来越复杂，业务代码依然耦合在一起。</p>
+<p>比如最早期的淘宝denali工程，包含所有业务系统的代码，就仅打包部署都需要很长的时间。</p>
+<p>并且，随着每个业务线的快速发展，业务代码耦合在一起，上线后出现问题急需要回滚代码，拉分支、大量的代码merge工作，这个过程极其痛苦。</p>
+<p>这个时候，你会发现技术已经成了业务的瓶颈，急需把业务单独抽离出来，各自单独部署。</p>
+<p><strong>3.Dubbo和HSF的出现</strong></p>
+<p>应用系统一旦涉及到拆分部署，问题就来了，急需一种高效的应用程序间的通讯手段来完成这种需求，这就会涉及到<strong>分布式远程调用</strong>。</p>
+<p>于是，淘宝就把denali按照业务为单位拆分成了类似这样的系统：UM(UserManger)、SM(ShopManager)..等等几十个工程代码。</p>
+<p>再按照业务为单位，把所有调用相关的接口以业务为单元进行拆分：UIC(用户中心服务)、SIC(店铺中心服务)…等等以业务为单位集群部署，按照业务提供服务。</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc1.png" alt></p>
+<p>所以，RPC的框架来了，阿里内部使用HSF，以及开源的RPC 框架：Dubbo。</p>
+<h2 id="如何设计一个RPC框架"><a href="#如何设计一个RPC框架" class="headerlink" title="如何设计一个RPC框架"></a>如何设计一个RPC框架</h2><p>前面mikechen提到了RPC的核心目标：主要是解决分布式系统中服务之间的调用问题。</p>
+<p>其实，走到这一步涉及的知识体系非常的多：要求对通信、远程调用、消息机制等有深入的理解和掌握，要求的都是从理论、硬件级、操作系统级以及所采用的语言的实现都有清楚的理解。</p>
+<p><strong>1.RPC框架三个核心角色</strong></p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc2.png" alt></p>
+<p><strong>1)服务提供者（Server）</strong></p>
+<p>对外提供后台服务，将自己的服务信息，注册到注册中心。</p>
+<p><strong>2)注册中心（Registry）</strong></p>
+<p>用于服务端注册远程服务以及客户端发现服务。</p>
+<p>目前主要的注册中心可以借由 zookeeper，eureka，consul，etcd 等开源框架实现。</p>
+<p>比如：阿里的Dubbo就是采用zookeeper实现注册中心。</p>
+<p><strong>3)服务消费者（Client）</strong></p>
+<p>从注册中心获取远程服务的注册信息，然后进行远程过程调用。</p>
+<p><strong>2.RPC远程调用过程</strong></p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc3.png" alt></p>
+<p>1）服务调用方（client）调用以本地调用方式调用服务；</p>
+<p>2）client stub接收到调用后负责将方法、参数等组装成能够进行网络传输的消息体；在Java里就是序列化的过程</p>
+<p>3）client stub找到服务地址，并将消息通过网络发送到服务端；</p>
+<p>4）server stub收到消息后进行解码,在Java里就是反序列化的过程；</p>
+<p>5）server stub根据解码结果调用本地的服务；</p>
+<p>6）本地服务执行处理逻辑；</p>
+<p>7）本地服务将结果返回给server stub；</p>
+<p>8）server stub将返回结果打包成消息，Java里的序列化；</p>
+<p>9）server stub将打包后的消息通过网络并发送至消费方</p>
+<p>10）client stub接收到消息，并进行解码, Java里的反序列化；</p>
+<p>11）服务调用方（client）得到最终结果。</p>
+<p><strong>RPC框架的目标就是要2~10这些步骤都封装起来。</strong></p>
+<h2 id="RPC框架涉及技术"><a href="#RPC框架涉及技术" class="headerlink" title="RPC框架涉及技术"></a>RPC框架涉及技术</h2><p><strong>1.建立通信</strong></p>
+<p>首先，要解决通讯的问题，主要是通过在客户端和服务器之间建立TCP连接，远程过程调用的所有交换的数据都在这个连接里传输。</p>
+<p><strong>2.服务寻址</strong></p>
+<p><strong>1）服务注册</strong></p>
+<p>首先需要把服务注册到服务中心。其实就是在注册中心进行一个登记，注册中心存储了该服务的IP、端口、调用方式(协议、序列化方式)等。</p>
+<p>比如：在zookeeper中，进行服务注册，实际上就是在zookeeper中创建了一个znode节点，该节点存储了上面所说的服务信息。</p>
+<p><strong>2）服务发现</strong></p>
+<p>服务消费者在第一次调用服务时，会通过注册中心找到相应的服务的IP地址列表，并缓存到本地，以供后续使用。当消费者调用服务时，不会再去请求注册中心，而是直接通过负载均衡算法从IP列表中取一个服务提供者的服务器调用服务。</p>
+<p><strong>3）注册服务</strong></p>
+<p>可靠的寻址方式（主要是提供服务的发现）是RPC的实现基石，比如可以zookeeper来实现注册服务等等。</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/architect/rpc4.png" alt></p>
+<p><strong>3.网络传输</strong></p>
+<p>数据传输采用什么协议，数据该如何序列化和反序列化</p>
+<p><strong>4.NIO通信</strong></p>
+<p>当前很多RPC框架都直接基于netty这一IO通信框架，比如阿里巴巴的HSF、dubbo，Hadoop Avro，推荐使用Netty 作为底层通信框架。</p>
+<p>5.<strong>服务调用</strong></p>
+<p>比如：B机器进行本地调用（通过代理Proxy）之后得到了返回值，此时还需要再把返回值发送回A机器，同样也需要经过序列化操作，然后再经过网络传输将二进制数据发送回A机器，而当A机器接收到这些返回值之后，则再次进行反序列化操作。</p>
+<p>总之，要实现一个RPC不算难，难的是实现一个高性能高可靠的RPC框架，后续将剖析Dubbo，看看Dubbo是如何来解决。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/03/24/Java-%E7%BA%BF%E7%A8%8B%E8%BF%9B%E9%98%B6/" rel="next" title="Java-线程进阶">
+                  <i class="fa fa-chevron-left"></i> Java-线程进阶
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC和RPC框架"><span class="nav-number">1.</span> <span class="nav-text">RPC和RPC框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dubbo的发展由来"><span class="nav-number">2.</span> <span class="nav-text">Dubbo的发展由来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何设计一个RPC框架"><span class="nav-number">3.</span> <span class="nav-text">如何设计一个RPC框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC框架涉及技术"><span class="nav-number">4.</span> <span class="nav-text">RPC框架涉及技术</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Ke Xiang"
+    src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ke Xiang</p>
+  <div class="site-description" itemprop="description">Do more, Know more, Be more</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fi-null" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;fi-null" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xk123401@foxmail.com" title="E-Mail &amp;rarr; mailto:xk123401@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xk123401" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;xk123401" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ke & Xiang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'fi-null.github.io',
+      owner: 'fi-null',
+      admin: ['fi-null'],
+      id: '77dbeefa587bbb1e22e812fed5664f0e',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="388713953" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.5" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>

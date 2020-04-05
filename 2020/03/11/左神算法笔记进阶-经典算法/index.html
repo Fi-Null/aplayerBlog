@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#CC543A">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.ico?v=7.4.1">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=7.4.1">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.1" color="#CC543A">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.1">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.1',
+    exturl: false,
+    sidebar: {"position":"left","width":240,"display":"post","offset":12,"onmobile":true},
+    copycode: {"enable":true,"show_result":true,"style":"flat"},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#CC543A","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Manacher算法原始问题Manacher算法是由题目“求字符串中最长回文子串的长度”而来。比如abcdcb的最长回文子串为bcdcb，其长度为5。我们可以遍历字符串中的每个字符，当遍历到某个字符时就比较一下其左边相邻的字符和其右边相邻的字符是否相同，如果相同则继续比较其右边的右边和其左边的左边是否相同，如果相同则继续比较……，我们暂且称这个过程为向外“扩”。当“扩”不动时，经过的所有字符组成的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="左神算法笔记进阶-经典算法">
+<meta property="og:url" content="https://fi-null.github.io/2020/03/11/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E8%BF%9B%E9%98%B6-%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="Xk&#39;s | Blog">
+<meta property="og:description" content="Manacher算法原始问题Manacher算法是由题目“求字符串中最长回文子串的长度”而来。比如abcdcb的最长回文子串为bcdcb，其长度为5。我们可以遍历字符串中的每个字符，当遍历到某个字符时就比较一下其左边相邻的字符和其右边相邻的字符是否相同，如果相同则继续比较其右边的右边和其左边的左边是否相同，如果相同则继续比较……，我们暂且称这个过程为向外“扩”。当“扩”不动时，经过的所有字符组成的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/bfprt.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris6.png">
+<meta property="article:published_time" content="2020-03-11T15:38:19.000Z">
+<meta property="article:modified_time" content="2020-04-01T13:13:04.918Z">
+<meta property="article:author" content="Ke Xiang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher.png">
+  <link rel="canonical" href="https://fi-null.github.io/2020/03/11/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E8%BF%9B%E9%98%B6-%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>左神算法笔记进阶-经典算法 | Xk's | Blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <!-- MetingJS start -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script>
+  <!-- MetingJS end -->
+<script>
+  (function(d) {
+    var config = {
+      kitId: 'tzu7ura',
+      scriptTimeout: 3000,
+      async: true
+    },
+    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+  })(document);
+</script>
+
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xk's | Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <h1 class="site-subtitle" itemprop="description">Stay Hungry, Stay Foolish</h1>
+      
+    <!--
+    -->
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-resume">
+
+    <a href="https://fi-null.github.io/resumeWeb" target="_blank" rel="section"><i class="fa fa-fw fa-handshake-o"></i>简历</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://fi-null.github.io/2020/03/11/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E8%BF%9B%E9%98%B6-%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Ke Xiang">
+      <meta itemprop="description" content="Do more, Know more, Be more">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xk's | Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          左神算法笔记进阶-经典算法
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-11 23:38:19" itemprop="dateCreated datePublished" datetime="2020-03-11T23:38:19+08:00">2020-03-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E8%BF%9B%E9%98%B6/" itemprop="url" rel="index">
+                    <span itemprop="name">左神算法进阶</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E8%BF%9B%E9%98%B6/%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">经典算法</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Manacher算法"><a href="#Manacher算法" class="headerlink" title="Manacher算法"></a>Manacher算法</h2><h3 id="原始问题"><a href="#原始问题" class="headerlink" title="原始问题"></a>原始问题</h3><p>Manacher算法是由题目“求字符串中最长回文子串的长度”而来。比如<code>abcdcb</code>的最长回文子串为<code>bcdcb</code>，其长度为5。</p><p>我们可以遍历字符串中的每个字符，当遍历到某个字符时就比较一下其左边相邻的字符和其右边相邻的字符是否相同，如果相同则继续比较其右边的右边和其左边的左边是否相同，如果相同则继续比较……，我们暂且称这个过程为向外“扩”。当“扩”不动时，经过的所有字符组成的子串就是以当前遍历字符为中心的最长回文子串。</p><a id="more"></a>
+
+<p>我们每次遍历都能得到一个最长回文子串的长度，使用一个全局变量保存最大的那个，遍历完后就能得到此题的解。但分析这种方法的时间复杂度：当来到第一个字符时，只能扩其本身即1个；来到第二个字符时，最多扩两个；……；来到字符串中间那个字符时，最多扩<code>(n-1)/2+1</code>个；因此时间复杂度为<code>1+2+……+(n-1)/2+1</code>即<code>O(N^2)</code>。但Manacher算法却能做到<code>O(N)</code>。</p>
+<p>Manacher算法中定义了如下几个概念：</p>
+<ul>
+<li>回文半径：串中某个字符最多能向外扩的字符个数称为该字符的回文半径。比如<code>abcdcb</code>中字符<code>d</code>，能扩一个<code>c</code>，还能再扩一个<code>b</code>，再扩就到字符串右边界了，再算上字符本身，字符<code>d</code>的回文半径是3。</li>
+<li>回文半径数组<code>pArr</code>：长度和字符串长度一样，保存串中每个字符的回文半径。比如<code>charArr=&quot;abcdcb&quot;</code>，其中<code>charArr[0]=&#39;a&#39;</code>一个都扩不了，但算上其本身有<code>pArr[0]=1</code>；而<code>charArr[3]=&#39;d&#39;</code>最多扩2个，算上其本身有<code>pArr[3]=3</code>。</li>
+<li>最右回文右边界<code>R</code>：遍历过程中，“扩”这一操作扩到的最右的字符的下标。比如<code>charArr=“abcdcb”</code>，当遍历到<code>a</code>时，只能扩<code>a</code>本身，向外扩不动，所以<code>R=0</code>；当遍历到<code>b</code>时，也只能扩<code>b</code>本身，所以更新<code>R=1</code>；但当遍历到<code>d</code>时，能向外扩两个字符到<code>charArr[5]=b</code>，所以<code>R</code>更新为5。</li>
+<li>最右回文右边界对应的回文中心<code>C</code>：<code>C</code>与<code>R</code>是对应的、同时更新的。比如<code>abcdcb</code>遍历到<code>d</code>时，<code>R=5</code>，<code>C</code>就是<code>charArr[3]=&#39;d&#39;</code>的下标<code>3</code>。</li>
+</ul>
+<p>处理回文子串长度为偶数的问题：上面拿<code>abcdcb</code>来举例，其中<code>bcdcb</code>属于一个回文子串，但如果回文子串长度为偶数呢？像<code>cabbac</code>，按照上面定义的“扩”的逻辑岂不是每个字符的回文半径都是0，但事实上<code>cabbac</code>的最长回文子串的长度是6。因为我们上面“扩”的逻辑默认是将回文子串当做奇数长度的串来看的，因此我们在使用Manacher算法之前还需要将字符串处理一下，这里有一个小技巧，那就是将字符串的首尾和每个字符之间加上一个特殊符号，这样就能将输入的串统一转为奇数长度的串了。比如<code>abba</code>处理过后为<code>#a#b#b#a</code>，这样的话就有<code>charArr[4]=&#39;#&#39;</code>的回文半径为4，也即原串的最大回文子串长度为4。相应代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">char</span>[] manacherString(String str)&#123;</span><br><span class="line">  <span class="keyword">char</span>[] source = str.toCharArray();</span><br><span class="line">  <span class="keyword">char</span> chs[] = <span class="keyword">new</span> <span class="keyword">char</span>[str.length() * <span class="number">2</span> + <span class="number">1</span>];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; chs.length; i++) &#123;</span><br><span class="line">    chs[i] = i % <span class="number">2</span> == <span class="number">0</span> ? <span class="string">'#'</span> : source[i / <span class="number">2</span>];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> chs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来分析，BFPRT算法是如何利用遍历过程中计算的<code>pArr</code>、<code>R</code>、<code>C</code>来为后续字符的回文半径的求解加速的。</p>
+<p>首先，情况1是，遍历到的字符下标<code>cur</code>在<code>R</code>的右边（起初另<code>R=-1</code>），这种情况下该字符的最大回文半径<code>pArr[cur]</code>的求解无法加速，只能一步步向外扩来求解。</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher.png" alt> </p>
+<p>情况2是，遍历到的字符下标<code>cur</code>在<code>R</code>的左边，这时<code>pArr[cur]</code>的求解过程可以利用之前遍历的字符回文半径信息来加速。分别做<code>cur</code>、<code>R</code>关于<code>C</code>的对称点<code>cur&#39;</code>和<code>L</code>：</p>
+<ul>
+<li>如果从<code>cur&#39;</code>向外扩的最大范围的左边界没有超过<code>L</code>，那么<code>pArr[cur]=pArr[cur&#39;]</code>。</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher1.png" alt> </p>
+<p>证明如下：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher2.png" alt> </p>
+<p>由于之前遍历过<code>cur&#39;</code>位置上的字符，所以该位置上能扩的步数我们是有记录的（<code>pArr[cur&#39;]</code>），也就是说<code>cur&#39;+pArr[cur&#39;]</code>处的字符<code>y&#39;</code>是不等于<code>cur&#39;-pArr[cur&#39;]</code>处的字符<code>x&#39;</code>的。根据<code>R</code>和<code>C</code>的定义，整个<code>L</code>到<code>R</code>范围的字符是关于<code>C</code>对称的，也就是说<code>cur</code>能扩出的最大回文子串和<code>cur&#39;</code>能扩出的最大回文子串相同，因此可以直接得出<code>pArr[cur]=pArr[cur&#39;]</code>。</p>
+<ul>
+<li>如果从<code>cur&#39;</code>向外扩的最大范围的左边界超过了<code>L</code>，那么<code>pArr[cur]=R-cur+1</code>。</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher3.png" alt> </p>
+<p>证明如下：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher4.png" alt> </p>
+<p><code>R</code>右边一个字符<code>x</code>，<code>x</code>关于<code>cur</code>对称的字符<code>y</code>，<code>x,y</code>关于<code>C</code>对称的字符<code>x&#39;,y&#39;</code>。根据<code>C,R</code>的定义有<code>x!=x&#39;</code>；由于<code>x&#39;,y&#39;</code>在以<code>cur&#39;</code>为中心的回文子串内且关于<code>cur&#39;</code>对称，所以有<code>x&#39;=y&#39;</code>，可推出<code>x!=y&#39;</code>；又<code>y,y&#39;</code>关于<code>C</code>对称，且在<code>L,R</code>内，所以有<code>y=y&#39;</code>。综上所述，有<code>x!=y</code>，因此<code>cur</code>的回文半径为<code>R-cur+1</code>。</p>
+<ul>
+<li>以<code>cur&#39;</code>为中心向外扩的最大范围的左边界正好是<code>L</code>，那么<code>pArr[cur] &gt;= （R-cur+1）</code></li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/manacher5.png" alt> </p>
+<p>这种情况下，<code>cur&#39;</code>能扩的范围是<code>cur&#39;-L</code>，因此对应有<code>cur</code>能扩的范围是<code>R-cur</code>。但<code>cur</code>能否扩的更大则取决于<code>x</code>和<code>y</code>是否相等。而我们所能得到的前提条件只有<code>x!=x&#39;</code>、<code>y=y&#39;</code>、<code>x&#39;!=y&#39;</code>，无法推导出<code>x,y</code>的关系，只知道<code>cur</code>的回文半径最小为<code>R-cur+1</code>（算上其本身），需要继续尝试向外扩以求解<code>pArr[cur]</code>。</p>
+<p>综上所述，<code>pArr[cur]</code>的计算有四种情况：暴力扩、等于<code>pArr[cur&#39;]</code>、等于<code>R-cur+1</code>、从<code>R-cur+1</code>继续向外扩。使用此算法求解原始问题的过程就是遍历串中的每个字符，每个字符都尝试向外扩到最大并更新<code>R</code>（只增不减），每次<code>R</code>增加的量就是此次能扩的字符个数，而<code>R</code>到达串尾时问题的解就能确定了，因此时间复杂度就是每次扩操作检查的次数总和，也就是<code>R</code>的变化范围（<code>-1~2N</code>，因为处理串时向串中添加了<code>N+1</code>个<code>#</code>字符），即<code>O(1+2N)=O(N)</code>。</p>
+<p>整体代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">maxPalindromeLength</span><span class="params">(String str)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span> charArr[] = manacherString(str);</span><br><span class="line">  <span class="keyword">int</span> pArr[] = <span class="keyword">new</span> <span class="keyword">int</span>[charArr.length];</span><br><span class="line">  <span class="keyword">int</span> R = -<span class="number">1</span>, C = -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> max = Integer.MIN_VALUE;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; charArr.length; i++) &#123;</span><br><span class="line">    pArr[i] = i &gt; R ? <span class="number">1</span> : Math.min(pArr[C * <span class="number">2</span> - i], R - i);</span><br><span class="line">    <span class="keyword">while</span> (i + pArr[i] &lt; charArr.length &amp;&amp; i - pArr[i] &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (charArr[i + pArr[i]] == charArr[i - pArr[i]]) &#123;</span><br><span class="line">        pArr[i]++;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (R &lt; i + pArr[i]) &#123;</span><br><span class="line">      R = i + pArr[i]-<span class="number">1</span>;</span><br><span class="line">      C = i;</span><br><span class="line">    &#125;</span><br><span class="line">    max = Math.max(max, pArr[i]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> max-<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  System.out.println(maxPalindromeLength(<span class="string">"zxabcdcbayq"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码将四种情况的分支处理浓缩到了<code>7~14</code>行。其中第<code>7</code>行是确定加速信息：如果当前遍历字符在<code>R</code>右边，先算上其本身有<code>pArr[i]=1</code>，后面检查如果能扩再直接<code>pArr[i]++</code>即可；否则，当前字符的<code>pArr[i]</code>要么是<code>pArr[i&#39;]</code>（<code>i</code>关于<code>C</code>对称的下标<code>i&#39;</code>的推导公式为<code>2*C-i</code>），要么是<code>R-i+1</code>，要么是<code>&gt;=R-i+1</code>，可以先将<code>pArr[i]</code>的值置为这三种情况中最小的那一个，后面再检查如果能扩再直接<code>pArr[i]++</code>即可。</p>
+<p>最后得到的<code>max</code>是处理之后的串（<code>length=2N+1</code>）的最长回文子串的半径，<code>max-1</code>刚好为原串中最长回文子串的长度。</p>
+<h3 id="进阶问题"><a href="#进阶问题" class="headerlink" title="进阶问题"></a>进阶问题</h3><p>给你一个字符串，要求添加尽可能少的字符使其成为一个回文字符串。</p>
+<blockquote>
+<p>思路：当<code>R</code>第一次到达串尾时，做<code>R</code>关于<code>C</code>的对称点<code>L</code>，将<code>L</code>之前的字符串逆序就是结果。</p>
+</blockquote>
+<h2 id="BFPRT算法"><a href="#BFPRT算法" class="headerlink" title="BFPRT算法"></a>BFPRT算法</h2><p>题目：给你一个整型数组，返回其中第K小的数。</p>
+<p>这道题可以利用荷兰国旗改进的<code>partition</code>和随机快排的思想：随机选出一个数，将数组以该数作比较划分为<code>&lt;,=,&gt;</code>三个部分，则<code>=</code>部分的数是数组中第几小的数不难得知，接着对<code>&lt;</code>（如果第K小的数在<code>&lt;</code>部分）或<code>&gt;</code>（如果第K小的数在<code>&gt;</code>部分）部分的数递归该过程，直到<code>=</code>部分的数正好是整个数组中第K小的数。这种做法不难求得时间复杂度的数学期望为<code>O(NlogN)</code>（以2为底）。但这毕竟是数学期望，在实际工程中的表现可能会有偏差，而BFPRT算法能够做到时间复杂度就是<code>O(NlogN)</code>。</p>
+<p>BFPRT算法首先将数组按5个元素一组划分成<code>N/5</code>个小部分（最后不足5个元素自成一个部分），再这些小部分的内部进行排序，然后将每个小部分的中位数取出来再排序得到中位数：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/bfprt.png" alt> </p>
+<p>BFPRT求解此题的步骤和开头所说的步骤大体类似，但是“随机选出一个的作为比较的那个数”这一步替换为上图所示最终选出来的那个数。</p>
+<p><code>O(NlogN)</code>的证明，为什么每一轮<code>partition</code>中的随机选数改为BFPRT定义的选数逻辑之后，此题的时间复杂度就彻底变为<code>O(NlogN)</code>了呢？下面分析一下这个算法的步骤：</p>
+<p>BFPRT算法，接收一个数组和一个K值，返回数组中的一个数</p>
+<ol>
+<li>数组被划分为了<code>N/5</code>个小部分，每个部分的5个数排序需要<code>O(1)</code>，所有部分排完需要<code>O(N/5)=O(N)</code></li>
+<li>取出每个小部分的中位数，一共有<code>N/5</code>个，递归调用BFPRT算法得到这些数中第<code>(N/5)/2</code>小的数（即这些数的中位数），记为<code>pivot</code></li>
+<li>以<code>pivot</code>作为比较，将整个数组划分为<code>pivot</code>三个区域</li>
+<li>判断第K小的数在哪个区域，如果在<code>=</code>区域则直接返回<code>pivot</code>，如果在<code>&lt;</code>或<code>&gt;</code>区域，则将这个区域的数递归调用BFPRT算法</li>
+<li><code>base case</code>：在某次递归调用BFPRT算法时发现这个区域只有一个数，那么这个数就是我们要找的数。</li>
+</ol>
+<p>代码示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getMinKthNum</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> K)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (arr == <span class="keyword">null</span> || K &gt; arr.length) &#123;</span><br><span class="line">    <span class="keyword">return</span> Integer.MIN_VALUE;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">int</span>[] copyArr = Arrays.copyOf(arr, arr.length);</span><br><span class="line">  <span class="keyword">return</span> bfprt(copyArr, <span class="number">0</span>, arr.length - <span class="number">1</span>, K - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">bfprt</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> begin, <span class="keyword">int</span> end, <span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (begin == end) &#123;</span><br><span class="line">    <span class="keyword">return</span> arr[begin];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">int</span> pivot = medianOfMedians(arr, begin, end);</span><br><span class="line">  <span class="keyword">int</span>[] pivotRange = partition(arr, begin, end, pivot);</span><br><span class="line">  <span class="keyword">if</span> (i &gt;= pivotRange[<span class="number">0</span>] &amp;&amp; i &lt;= pivotRange[<span class="number">1</span>]) &#123;</span><br><span class="line">    <span class="keyword">return</span> arr[i];</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (i &lt; pivotRange[<span class="number">0</span>]) &#123;</span><br><span class="line">    <span class="keyword">return</span> bfprt(arr, begin, pivotRange[<span class="number">0</span>] - <span class="number">1</span>, i);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> bfprt(arr, pivotRange[<span class="number">1</span>] + <span class="number">1</span>, end, i);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">medianOfMedians</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> begin, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> num = end - begin + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> offset = num % <span class="number">5</span> == <span class="number">0</span> ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span>[] medians = <span class="keyword">new</span> <span class="keyword">int</span>[num / <span class="number">5</span> + offset];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; medians.length; i++) &#123;</span><br><span class="line">    <span class="keyword">int</span> beginI = begin + i * <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">int</span> endI = beginI + <span class="number">4</span>;</span><br><span class="line">    medians[i] = getMedian(arr, beginI, Math.min(endI, end));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> bfprt(medians, <span class="number">0</span>, medians.length - <span class="number">1</span>, medians.length / <span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getMedian</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> begin, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">  insertionSort(arr, begin, end);</span><br><span class="line">  <span class="keyword">int</span> sum = end + begin;</span><br><span class="line">  <span class="keyword">int</span> mid = (sum / <span class="number">2</span>) + (sum % <span class="number">2</span>);</span><br><span class="line">  <span class="keyword">return</span> arr[mid];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insertionSort</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> begin, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (begin &gt;= end) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = begin + <span class="number">1</span>; i &lt;= end; i++) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j &gt; begin; j--) &#123;</span><br><span class="line">      <span class="keyword">if</span> (arr[j] &lt; arr[j - <span class="number">1</span>]) &#123;</span><br><span class="line">        swap(arr, j, j - <span class="number">1</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] partition(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> begin, <span class="keyword">int</span> end, <span class="keyword">int</span> pivot) &#123;</span><br><span class="line">  <span class="keyword">int</span> L = begin - <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> R = end + <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">int</span> cur = begin;</span><br><span class="line">  <span class="keyword">while</span> (cur != R) &#123;</span><br><span class="line">    <span class="keyword">if</span> (arr[cur] &gt; pivot) &#123;</span><br><span class="line">      swap(arr, cur, --R);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (arr[cur] &lt; pivot) &#123;</span><br><span class="line">      swap(arr, cur++, ++L);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      cur++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="keyword">int</span>[]&#123;L + <span class="number">1</span>, R - <span class="number">1</span>&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> i, <span class="keyword">int</span> j)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> tmp = arr[i];</span><br><span class="line">  arr[i] = arr[j];</span><br><span class="line">  arr[j] = tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[] arr = &#123;<span class="number">6</span>, <span class="number">9</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">1</span>, <span class="number">9</span>&#125;;</span><br><span class="line">  System.out.println(getMinKthNum(arr,<span class="number">13</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>时间复杂度为<code>O(NlogN)</code>（底数为2）的证明，分析<code>bfprt</code>的执行步骤（假设<code>bfprt</code>的时间复杂度为<code>T(N)</code>）：</p>
+<ol>
+<li>首先数组5个5个一小组并内部排序，对5个数排序为<code>O(1)</code>，所有小组排好序为<code>O(N/5)=O(N)</code></li>
+<li>由步骤1的每个小组抽出中位数组成一个中位数小组，共有<code>N/5</code>个数，递归调用<code>bfprt</code>求出这<code>N/5</code>个数中第<code>(N/5)/2</code>小的数（即中位数）为<code>T(N/5)</code>，记为<code>pivot</code></li>
+<li>对步骤2求出的<code>pivot</code>作为比较将数组分为小于、等于、大于三个区域，由于<code>pivot</code>是中位数小组中的中位数，所以中位数小组中有<code>N/5/2=N/10</code>个数比<code>pivot</code>小，这<code>N/10</code>个数分别又是步骤1中某小组的中位数，可推导出至少有<code>3N/10</code>个数比<code>pivot</code>小，也即最多有<code>7N/10</code>个数比<code>pivot</code>大。也就是说，大于区域（或小于）最大包含<code>7N/10</code>个数、最少包含<code>3N/10</code>个数，那么如果第<code>i</code>大的数不在等于区域时，无论是递归<code>bfprt</code>处理小于区域还是大于区域，最坏情况下子过程的规模最大为<code>7N/10</code>，即<code>T(7N/10)</code></li>
+</ol>
+<p>综上所述，<code>bfprt</code>的<code>T(N)</code>存在推导公式：<code>T(N/5)+T(7N/10)+O(N)</code>。根据 <strong>基础篇</strong> 中所介绍的Master公式可以求得<code>bfprt</code>的时间复杂度就是<code>O(NlogN)</code>（以2为底）。</p>
+<h2 id="morris遍历二叉树"><a href="#morris遍历二叉树" class="headerlink" title="morris遍历二叉树"></a>morris遍历二叉树</h2><blockquote>
+<p>关于二叉树先序、中序、后序遍历的递归和非递归版本在【直通BAT算法（基础篇）】中有讲到，但这6种遍历算法的时间复杂度都需要<code>O(H)</code>（其中<code>H</code>为树高）的额外空间复杂度，因为二叉树遍历过程中只能向下查找孩子节点而无法回溯父结点，因此这些算法借助栈来保存要回溯的父节点（递归的实质是系统帮我们压栈），并且栈要保证至少能容纳下<code>H</code>个元素（比如遍历到叶子结点时回溯父节点，要保证其所有父节点在栈中）。而morris遍历则能做到时间复杂度仍为<code>O(N)</code>的情况下额外空间复杂度只需<code>O(1)</code>。</p>
+</blockquote>
+<h3 id="遍历规则"><a href="#遍历规则" class="headerlink" title="遍历规则"></a>遍历规则</h3><p>首先在介绍morris遍历之前，我们先把先序、中序、后序定义的规则抛之脑后，比如先序遍历在拿到一棵树之后先遍历头结点然后是左子树最后是右子树，并且在遍历过程中对于子树的遍历仍是这样。</p>
+<p>忘掉这些遍历规则之后，我们来看一下morris遍历定义的标准：</p>
+<ol>
+<li>定义一个遍历指针<code>cur</code>，该指针首先指向头结点</li>
+<li>判断<code>cur</code>的左子树是否存在<ul>
+<li>如果<code>cur</code>的左孩子为空，说明<code>cur</code>的左子树不存在，那么<code>cur</code>右移来到<code>cur.right</code></li>
+<li>如果<code>cur</code>的左孩子不为空，说明<code>cur</code>的左子树存在，找出该左子树的最右结点，记为<code>mostRight</code><ul>
+<li>如果，<code>mostRight</code>的右孩子为空，那就让其指向<code>cur</code>（<code>mostRight.right=cur</code>），并左移<code>cur</code>（<code>cur=cur.left</code>）</li>
+<li>如果<code>mostRight</code>的右孩子不空，那么让<code>cur</code>右移（<code>cur=cur.right</code>），并将<code>mostRight</code>的右孩子置空</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>经过步骤2之后，如果<code>cur</code>不为空，那么继续对<code>cur</code>进行步骤2，否则遍历结束。</li>
+</ol>
+<p>下图所示举例演示morris遍历的整个过程：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris.png" alt> </p>
+<h3 id="先序、中序序列"><a href="#先序、中序序列" class="headerlink" title="先序、中序序列"></a>先序、中序序列</h3><p>遍历完成后对<code>cur</code>进过的节点序列稍作处理就很容易得到该二叉树的先序、中序序列：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris1.png" alt></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> data;</span><br><span class="line">    Node left;</span><br><span class="line">    Node right;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Node</span><span class="params">(<span class="keyword">int</span> data)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.data = data;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">preOrderByMorris</span><span class="params">(Node root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Node cur = root;</span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cur.left == <span class="keyword">null</span>) &#123;</span><br><span class="line">            System.out.print(cur.data+<span class="string">" "</span>);</span><br><span class="line">            cur = cur.right;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Node mostRight = cur.left;</span><br><span class="line">            <span class="keyword">while</span> (mostRight.right != <span class="keyword">null</span> &amp;&amp; mostRight.right != cur) &#123;</span><br><span class="line">                mostRight = mostRight.right;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (mostRight.right == <span class="keyword">null</span>) &#123;</span><br><span class="line">                System.out.print(cur.data+<span class="string">" "</span>);</span><br><span class="line">                mostRight.right = cur;</span><br><span class="line">                cur = cur.left;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                cur = cur.right;</span><br><span class="line">                mostRight.right = <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mediumOrderByMorris</span><span class="params">(Node root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Node cur = root;</span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cur.left == <span class="keyword">null</span>) &#123;</span><br><span class="line">            System.out.print(cur.data+<span class="string">" "</span>);</span><br><span class="line">            cur = cur.right;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Node mostRight = cur.left;</span><br><span class="line">            <span class="keyword">while</span> (mostRight.right != <span class="keyword">null</span> &amp;&amp; mostRight.right != cur) &#123;</span><br><span class="line">                mostRight = mostRight.right;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (mostRight.right == <span class="keyword">null</span>) &#123;</span><br><span class="line">                mostRight.right = cur;</span><br><span class="line">                cur = cur.left;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                System.out.print(cur.data+<span class="string">" "</span>);</span><br><span class="line">                cur = cur.right;</span><br><span class="line">                mostRight.right = <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Node root = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">    root.left = <span class="keyword">new</span> Node(<span class="number">2</span>);</span><br><span class="line">    root.right = <span class="keyword">new</span> Node(<span class="number">3</span>);</span><br><span class="line">    root.left.left = <span class="keyword">new</span> Node(<span class="number">4</span>);</span><br><span class="line">    root.left.right = <span class="keyword">new</span> Node(<span class="number">5</span>);</span><br><span class="line">    root.right.left = <span class="keyword">new</span> Node(<span class="number">6</span>);</span><br><span class="line">    root.right.right = <span class="keyword">new</span> Node(<span class="number">7</span>);</span><br><span class="line">    preOrderByMorris(root);</span><br><span class="line">    mediumOrderByMorris(root);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里值得注意的是：<strong>morris遍历会来到一个左孩子不为空的结点两次</strong>，而其它结点只会经过一次。因此使用morris遍历打印先序序列时，如果来到的结点无左孩子，那么直接打印即可（这种结点只会经过一次），否则如果来到的结点的左子树的最右结点的右孩子为空才打印（这是第一次来到该结点的时机），这样也就忽略了<code>cur</code>经过的结点序列中第二次出现的结点；而使用morris遍历打印中序序列时，如果来到的结点无左孩子，那么直接打印（这种结点只会经过一次，左中右，没了左，直接打印中），否则如果来到的结点的左子树的最右结点不为空时才打印（这是第二次来到该结点的时机），这样也就忽略了<code>cur</code>经过的结点序列中第一次出现的重复结点。 </p>
+<h3 id="后序序列"><a href="#后序序列" class="headerlink" title="后序序列"></a>后序序列</h3><p>使用morris遍历得到二叉树的后序序列就没那么容易了，因为对于树种的非叶结点，morris遍历最多会经过它两次，而我们后序遍历实在第三次来到该结点时打印该结点的。因此要想得到后序序列，仅仅改变在morris遍历时打印结点的时机是无法做到的。</p>
+<p>但其实，在morris遍历过程中，如果在每次遇到第二次经过的结点时，将该结点的左子树的右边界上的结点从下到上打印，最后再将整个树的右边界从下到上打印，最终就是这个数的后序序列：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris2.png" alt> </p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris3.png" alt> </p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris4.png" alt> </p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris5.png" alt> </p>
+<p>其中无非就是在morris遍历中在第二次经过的结点的时机执行一下打印操作。而从下到上打印一棵树的右边界，可以将该右边界上的结点看做以<code>right</code>指针为后继指针的链表，将其反转<code>reverse</code>然后打印，最后恢复成原始结构即可。示例代码如下（其中容易犯错的地方是<code>18</code>行和<code>19</code>行的代码不能调换）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">posOrderByMorris</span><span class="params">(Node root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Node cur = root;</span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cur.left == <span class="keyword">null</span>) &#123;</span><br><span class="line">            cur = cur.right;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Node mostRight = cur.left;</span><br><span class="line">            <span class="keyword">while</span> (mostRight.right != <span class="keyword">null</span> &amp;&amp; mostRight.right != cur) &#123;</span><br><span class="line">                mostRight = mostRight.right;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (mostRight.right == <span class="keyword">null</span>) &#123;</span><br><span class="line">                mostRight.right = cur;</span><br><span class="line">                cur = cur.left;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                mostRight.right = <span class="keyword">null</span>;</span><br><span class="line">                printRightEdge(cur.left);</span><br><span class="line">                cur = cur.right;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    printRightEdge(root);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printRightEdge</span><span class="params">(Node root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//reverse the right edge</span></span><br><span class="line">    Node cur = root;</span><br><span class="line">    Node pre = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">        Node next = cur.right;</span><br><span class="line">        cur.right = pre;</span><br><span class="line">        pre = cur;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//print </span></span><br><span class="line">    cur = pre;</span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">        System.out.print(cur.data + <span class="string">" "</span>);</span><br><span class="line">        cur = cur.right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//recover</span></span><br><span class="line">    cur = pre;</span><br><span class="line">    pre = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">while</span> (cur != <span class="keyword">null</span>) &#123;</span><br><span class="line">        Node next = cur.right;</span><br><span class="line">        cur.right = pre;</span><br><span class="line">        pre = cur;</span><br><span class="line">        cur = next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    Node root = <span class="keyword">new</span> Node(<span class="number">1</span>);</span><br><span class="line">    root.left = <span class="keyword">new</span> Node(<span class="number">2</span>);</span><br><span class="line">    root.right = <span class="keyword">new</span> Node(<span class="number">3</span>);</span><br><span class="line">    root.left.left = <span class="keyword">new</span> Node(<span class="number">4</span>);</span><br><span class="line">    root.left.right = <span class="keyword">new</span> Node(<span class="number">5</span>);</span><br><span class="line">    root.right.left = <span class="keyword">new</span> Node(<span class="number">6</span>);</span><br><span class="line">    root.right.right = <span class="keyword">new</span> Node(<span class="number">7</span>);</span><br><span class="line">    posOrderByMorris(root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="时间复杂度分析"><a href="#时间复杂度分析" class="headerlink" title="时间复杂度分析"></a>时间复杂度分析</h3><p>因为morris遍历中，只有左孩子非空的结点才会经过两次而其它结点只会经过一次，也就是说遍历的次数小于<code>2N</code>，因此使用morris遍历得到先序、中序序列的时间复杂度自然也是<code>O(1)</code>；但产生后序序列的时间复杂度还要算上<code>printRightEdge</code>的时间复杂度，但是你会发现整个遍历的过程中，所有的<code>printRightEdge</code>加起来也只是遍历并打印了<code>N</code>个结点：</p>
+<p><img src="https://raw.githubusercontent.com/Fi-Null/blog-pic/master/blog-pics/algorithms/morris6.png" alt> </p>
+<p>因此时间复杂度仍然为<code>O(N)</code>。</p>
+<blockquote>
+<p>morris遍历结点的顺序不是先序、中序、后序，而是按照自己的一套标准来决定接下来要遍历哪个结点。</p>
+<p>morris遍历的独特之处就是充分利用了叶子结点的无效引用（引用指向的是空，但该引用变量仍然占内存），从而实现了<code>O(1)</code>的时间复杂度。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/03/10/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%8F%AD%E7%AC%94%E8%AE%B0-%E5%93%88%E5%B8%8C/" rel="next" title="左神算法班笔记-哈希">
+                  <i class="fa fa-chevron-left"></i> 左神算法班笔记-哈希
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/03/11/%E5%B7%A6%E7%A5%9E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E8%BF%9B%E9%98%B6-%E7%BB%8F%E5%85%B8%E9%A2%98%E7%9B%AE/" rel="prev" title="左神算法笔记进阶-经典题目">
+                  左神算法笔记进阶-经典题目 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Manacher算法"><span class="nav-number">1.</span> <span class="nav-text">Manacher算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原始问题"><span class="nav-number">1.1.</span> <span class="nav-text">原始问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进阶问题"><span class="nav-number">1.2.</span> <span class="nav-text">进阶问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BFPRT算法"><span class="nav-number">2.</span> <span class="nav-text">BFPRT算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#morris遍历二叉树"><span class="nav-number">3.</span> <span class="nav-text">morris遍历二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#遍历规则"><span class="nav-number">3.1.</span> <span class="nav-text">遍历规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#先序、中序序列"><span class="nav-number">3.2.</span> <span class="nav-text">先序、中序序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后序序列"><span class="nav-number">3.3.</span> <span class="nav-text">后序序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间复杂度分析"><span class="nav-number">3.4.</span> <span class="nav-text">时间复杂度分析</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="Ke Xiang"
+    src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Ke Xiang</p>
+  <div class="site-description" itemprop="description">Do more, Know more, Be more</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">35</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/fi-null" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;fi-null" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:xk123401@foxmail.com" title="E-Mail &amp;rarr; mailto:xk123401@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/xk123401" title="Weibo &amp;rarr; https:&#x2F;&#x2F;weibo.com&#x2F;xk123401" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://steamcommunity.com/profiles/76561198313695590/" title="Steam &amp;rarr; https:&#x2F;&#x2F;steamcommunity.com&#x2F;profiles&#x2F;76561198313695590&#x2F;" rel="noopener" target="_blank"><i class="fa fa-fw fa-steam"></i>Steam</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 2018 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ke & Xiang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/pjax/pjax.min.js?v=0.2.8"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.4.1.js"></script>
+
+<script src="/js/motion.js?v=7.4.1.js"></script>
+
+
+<script src="/js/schemes/pisces.js?v=7.4.1.js"></script>
+
+
+<script src="/js/next-boot.js?v=7.4.1.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.getAttribute('pjax') !== null) {
+      element.setAttribute('pjax', '');
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script pjax>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+<script src="/js/local-search.js?v=7.4.1.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+
+  
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.css">
+
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/gh/macyrate/gitalk@2.0.0/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID: 'aa2288c6cbb5322cac6b',
+      clientSecret: '63492ee584a83a8479f1408f33e2ca04e3ef9f82',
+      repo: 'fi-null.github.io',
+      owner: 'fi-null',
+      admin: ['fi-null'],
+      id: '939eae692a856f5e248feb46bf8cb767',
+        language: 'zh-CN',
+      distractionFreeMode: 'true'
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+</script>
+
+    </div>
+</body>
+<div id="contentleft">
+  <div class="aplayer" 
+  data-id="388713953" 
+  data-server="netease" 
+  data-type="playlist" 
+  data-fixed="true" 
+  data-autoplay="true" 
+  data-order="random" 
+  data-volume="0.5" 
+  data-theme="#cc543a" 
+  date-preload="auto" 
+  ></div>
+  <meting-js
+	server="netease"
+	type="playlist"
+	id="60198">
+</meting-js>
+</div>
+</html>
